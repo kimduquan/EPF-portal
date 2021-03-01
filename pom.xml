@@ -233,36 +233,36 @@ generate mailto links. -->
 		<javax.portlet.version.major>3</javax.portlet.version.major>
 		<javax.portlet.version.minor>0</javax.portlet.version.minor>
 		<portals.portlet-api.version>3.0.1</portals.portlet-api.version>
-		<servlet-api.version>3.1.0</servlet-api.version>
+		<servlet-api.version>4.0.1</servlet-api.version>
 		<tomcat.servlet-api.version>8.0.28</tomcat.servlet-api.version>
-		<jsp-api.version>8.0.28</jsp-api.version>
-		<jstl.version>8.0.28</jstl.version>
-		<el-api.version>8.0.28</el-api.version>
-		<taglibs.standard.version>1.2.1</taglibs.standard.version>
-		<jaxb.version>2.1</jaxb.version>
-		<jaxb-impl.version>2.1.9</jaxb-impl.version>
+		<jsp-api.version>10.0.2</jsp-api.version>
+		<jstl.version>10.0.2</jstl.version>
+		<el-api.version>10.0.2</el-api.version>
+		<taglibs.standard.version>1.2.5</taglibs.standard.version>
+		<jaxb.version>2.3.1</jaxb.version>
+		<jaxb-impl.version>3.0.0</jaxb-impl.version>
 		<stax.impl.version>1.2.0</stax.impl.version>
-		<commons-digester.version>1.8</commons-digester.version>
-		<commons-cli.version>1.0</commons-cli.version>
+		<commons-digester.version>2.1</commons-digester.version>
+		<commons-cli.version>1.4</commons-cli.version>
 		<slf4j.version>1.7.5</slf4j.version>
-		<springframework.version>5.1.5.RELEASE</springframework.version>
-		<maven.version>2.0.5</maven.version>
-		<ant.version>1.6.5</ant.version>
+		<springframework.version>5.3.4</springframework.version>
+		<maven.version>3.6.3</maven.version>
+		<ant.version>1.7.0</ant.version>
 		<commons-lang.scope>provided</commons-lang.scope>
-		<commons-lang.version>3.4</commons-lang.version>
-		<commons-io.version>2.4</commons-io.version>
+		<commons-lang.version>3.11</commons-lang.version>
+		<commons-io.version>2.8.0</commons-io.version>
 		<ccpp-api.version>1.0</ccpp-api.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>4.13.2</junit.version>
 		<jmock.version>1.2.0</jmock.version>
-		<xmlunit.version>1.1</xmlunit.version>
-		<cdi.version>2.3.1.Final</cdi.version>
+		<xmlunit.version>1.6</xmlunit.version>
+		<cdi.version>2.4.8.Final</cdi.version>
 		<annotation-detector.version>3.0.5</annotation-detector.version>
 		<!-- MVC ================================================== -->
-		<classmate.version>1.3.4</classmate.version>
-		<hibernate-validator.version>6.0.14.Final</hibernate-validator.version>
+		<classmate.version>1.5.1</classmate.version>
+		<hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
 		<jaxrs-api.version>2.1.1</jaxrs-api.version>
-		<mvc-api.version>1.0-pfd</mvc-api.version>
-		<jboss-logging.version>3.3.2.Final</jboss-logging.version>
+		<mvc-api.version>1.0.0</mvc-api.version>
+		<jboss-logging.version>3.4.1.Final</jboss-logging.version>
 		<validation-api.version>2.0.1.Final</validation-api.version>
 		<!-- scope of certain dependencies is "compile" for deployment on tomcat,
          but "provided" for deployment on tomee. See tomee profile. -->
@@ -304,7 +304,7 @@ generate mailto links. -->
 			<dependency>
 				<groupId>javax.annotation</groupId>
 				<artifactId>javax.annotation-api</artifactId>
-				<version>1.3.1</version>
+				<version>1.3.2</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -356,7 +356,7 @@ generate mailto links. -->
 			<dependency>
 				<groupId>javax.enterprise</groupId>
 				<artifactId>cdi-api</artifactId>
-				<version>1.2</version>
+				<version>2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jboss.weld.servlet</groupId>
@@ -454,7 +454,7 @@ generate mailto links. -->
 			<dependency>
 				<groupId>ognl</groupId>
 				<artifactId>ognl</artifactId>
-				<version>3.1.2</version>
+				<version>3.2.18</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.maven</groupId>
@@ -509,25 +509,25 @@ generate mailto links. -->
 			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>
 				<artifactId>selenium-api</artifactId>
-				<version>3.11.0</version>
+				<version>3.141.59</version>
 				<scope>compile</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>
 				<artifactId>selenium-java</artifactId>
-				<version>3.11.0</version>
+				<version>3.141.59</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.seleniumhq.selenium</groupId>
 				<artifactId>htmlunit-driver</artifactId>
-				<version>2.31.0</version>
+				<version>2.47.1</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.codeborne</groupId>
 				<artifactId>phantomjsdriver</artifactId>
-				<version>1.3.0</version>
+				<version>1.4.4</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -568,7 +568,7 @@ generate mailto links. -->
 			<dependency>
 				<groupId>org.thymeleaf</groupId>
 				<artifactId>thymeleaf</artifactId>
-				<version>3.0.11.RELEASE</version>
+				<version>3.0.12.RELEASE</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-io</groupId>
