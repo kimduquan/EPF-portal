@@ -107,7 +107,6 @@
 			<plugin>
 				<groupId>org.apache.portals.pluto</groupId>
 				<artifactId>pluto-maven-plugin</artifactId>
-				<version>${project.version}</version>
 				<executions>
 					<execution>
 						<phase>generate-resources</phase>
