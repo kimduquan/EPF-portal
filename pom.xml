@@ -234,10 +234,9 @@ generate mailto links. -->
 		<javax.portlet.version.minor>0</javax.portlet.version.minor>
 		<portals.portlet-api.version>3.0.1</portals.portlet-api.version>
 		<servlet-api.version>4.0.1</servlet-api.version>
-		<tomcat.servlet-api.version>8.0.28</tomcat.servlet-api.version>
-		<jsp-api.version>10.0.2</jsp-api.version>
+		<jsp-api.version>2.3.3</jsp-api.version>
 		<jstl.version>10.0.2</jstl.version>
-		<el-api.version>10.0.2</el-api.version>
+		<el-api.version>3.0.0</el-api.version>
 		<taglibs.standard.version>1.2.5</taglibs.standard.version>
 		<jaxb.version>2.3.1</jaxb.version>
 		<jaxb-impl.version>3.0.0</jaxb-impl.version>
@@ -323,12 +322,6 @@ generate mailto links. -->
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>${servlet-api.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.tomcat</groupId>
-				<artifactId>tomcat-servlet-api</artifactId>
-				<version>${tomcat.servlet-api.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -482,13 +475,8 @@ generate mailto links. -->
 				<version>${maven.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.tomcat</groupId>
-				<artifactId>tomcat-jsp-api</artifactId>
-				<version>${jsp-api.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.tomcat</groupId>
-				<artifactId>tomcat-el-api</artifactId>
+				<groupId>javax.el</groupId>
+				<artifactId>javax.el-api</artifactId>
 				<version>${el-api.version}</version>
 			</dependency>
 			<dependency>
@@ -553,17 +541,17 @@ generate mailto links. -->
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-config</artifactId>
-				<version>${springframework.version}</version>
+				<version>5.4.5</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-core</artifactId>
-				<version>${springframework.version}</version>
+				<version>5.4.5</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-web</artifactId>
-				<version>${springframework.version}</version>
+				<version>5.4.5</version>
 			</dependency>
 			<dependency>
 				<groupId>org.thymeleaf</groupId>
@@ -606,6 +594,19 @@ generate mailto links. -->
 						<artifactId>commons-logging</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/clojure-interop/javax.activity -->
+			<dependency>
+			    <groupId>clojure-interop</groupId>
+			    <artifactId>javax.activity</artifactId>
+			    <version>1.0.5</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api -->
+			<dependency>
+			    <groupId>javax.servlet.jsp</groupId>
+			    <artifactId>javax.servlet.jsp-api</artifactId>
+			    <version>${jsp-api.version}</version>
+			    <scope>provided</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
