@@ -197,6 +197,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.2.0</version>
 					<configuration>
 						<skipIfEmpty>true</skipIfEmpty>
 					</configuration>
@@ -329,12 +330,14 @@
 				<!-- Don't attach source or javadoc archive (for release plugin)-->
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
+					<version>3.2.1</version>
 					<configuration>
 						<attach>false</attach>
 					</configuration>
 				</plugin>
 				<plugin>
 					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.2.0</version>
 					<configuration>
 						<skip>true</skip>
 					</configuration>

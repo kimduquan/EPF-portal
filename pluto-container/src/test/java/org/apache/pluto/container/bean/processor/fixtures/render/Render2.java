@@ -19,11 +19,9 @@
 
 package org.apache.pluto.container.bean.processor.fixtures.render;
 
-import javax.activity.InvalidActivityException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.annotations.RenderMethod;
-
 import org.apache.pluto.container.bean.processor.fixtures.InvocationResults;
 
 /**
@@ -59,7 +57,7 @@ public class Render2 {
    
    // invalid signature, bad exception
    @RenderMethod(portletNames="portlet8")
-   public String render8(RenderRequest req, RenderResponse resp) throws InvalidActivityException {return null;}
+   public String render8(RenderRequest req, RenderResponse resp) throws Exception {return null;}
    
    @RenderMethod(portletNames= {"portlet6", "portlet7"})
    public void render6and7(RenderRequest req, RenderResponse resp) {
