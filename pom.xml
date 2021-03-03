@@ -271,6 +271,18 @@ generate mailto links. -->
 		<includeDemosBegin />
 		<includeDemosEnd />
 	</properties>
+	<repositories>
+		<repository>
+			<id>Clojars</id>
+			<url>https://repo.clojars.org/</url>
+			<snapshots>
+			  <enabled>true</enabled>
+			</snapshots>
+			<releases>
+			  <enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
 	<dependencyManagement>
 		<dependencies>
 			<!-- Logging =========================================== -->
@@ -607,6 +619,12 @@ generate mailto links. -->
 			    <artifactId>javax.servlet.jsp-api</artifactId>
 			    <version>${jsp-api.version}</version>
 			    <scope>provided</scope>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
+			<dependency>
+				<groupId>org.glassfish.jaxb</groupId>
+				<artifactId>jaxb-runtime</artifactId>
+				<version>3.0.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
