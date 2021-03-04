@@ -20,7 +20,8 @@ package org.apache.pluto.container.driver;
 
 import java.io.InputStream;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.annotations.PortletApplication;
 import javax.portlet.annotations.PortletConfiguration;
 import javax.portlet.annotations.PortletConfigurations;
@@ -33,12 +34,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 import javax.servlet.annotation.HandlesTypes;
-
 import org.apache.pluto.container.PortletInvokerService;
 import org.apache.pluto.container.om.portlet.PortletDefinition;
 import org.apache.pluto.container.om.portlet.impl.ConfigurationHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Servlet container initializer that reads the configuration and adds the
@@ -56,9 +54,8 @@ public class PortletContainerInitializer implements ServletContainerInitializer 
    private static final String PORTLET_XML = "/WEB-INF/portlet.xml";
 
    /** Logger. */
-   private static final Logger LOG         = LoggerFactory
-                                                 .getLogger(PortletContainerInitializer.class);
-   private static boolean      isDebug     = LOG.isDebugEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletContainerInitializer.class.getName());
+   private static boolean      isDebug     = LOG.isLoggable(Level.INFO);
 
    /*
     * (non-Javadoc)
@@ -98,7 +95,7 @@ public class PortletContainerInitializer implements ServletContainerInitializer 
                   (classes != null) ? classes.size() : "null");
             txt.append(", found web.xml: ").append(win != null);
             txt.append(", found portlet.xml: ").append(pin != null);
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
 
          // Now read the XML configuration and validate the resulting explicit config
@@ -137,7 +134,7 @@ public class PortletContainerInitializer implements ServletContainerInitializer 
                   txt.append(pn);
                   txt.append(", servlet name: ").append(servletName);
                   txt.append(", mapping: ").append(mapping);
-                  LOG.debug(txt.toString());
+                  LOG.info(txt.toString());
                }
 
                ServletRegistration.Dynamic sr = ctx.addServlet(servletName, PortletServlet3.class);
@@ -164,10 +161,10 @@ public class PortletContainerInitializer implements ServletContainerInitializer 
 //             
 //             ctx.addListener("org.jboss.weld.servlet.WeldTerminalListener");
 
-            LOG.debug("Completed deployment of servlets & filters for context: " + ctx.getContextPath());
+            LOG.info("Completed deployment of servlets & filters for context: " + ctx.getContextPath());
 
          } else {
-            LOG.debug("No portlet definitions for context: " + ctx.getServletContextName());
+            LOG.info("No portlet definitions for context: " + ctx.getServletContextName());
          }
 
       } catch (Exception e) {

@@ -30,9 +30,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.servlet.http.Cookie;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,9 +43,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -66,9 +64,9 @@ import org.xml.sax.SAXParseException;
 public class HeaderData {
 
    /** Logger. */
-   private static final Logger       LOG                = LoggerFactory.getLogger(HeaderData.class);
-   private static final boolean      isDebug            = LOG.isDebugEnabled();
-   private static final boolean      isTrace            = LOG.isTraceEnabled();
+   private static final Logger       LOG                = Logger.getLogger(HeaderData.class.getName());
+   private static final boolean      isDebug            = LOG.isLoggable(Level.INFO);
+   private static final boolean      isTrace            = LOG.isLoggable(Level.FINE);
 
    // for document processing
    private DocumentBuilder           docBuilder         = null;
@@ -152,7 +150,7 @@ public class HeaderData {
             StringBuilder txt = new StringBuilder();
             txt.append("Error converting tags to string. Exception: ");
             txt.append(e.toString());
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
          }
       }
 
@@ -160,7 +158,7 @@ public class HeaderData {
          StringBuilder sb = new StringBuilder();
          sb.append("returning tags: ");
          sb.append((tags.length() > 0) ? "\n" + tags : "");
-         LOG.trace(sb.toString());
+         LOG.fine(sb.toString());
       }
 
       return tags;
@@ -258,7 +256,7 @@ public class HeaderData {
                   err.append("Invalid node type: ");
                   err.append(type);
                   err.append(", node name: ").append(node.getNodeName());
-                  LOG.warn(err.toString());
+                  LOG.warning(err.toString());
                   
                   if (chkArgs) {
                      throw new IllegalArgumentException(err.toString());
@@ -278,7 +276,7 @@ public class HeaderData {
                      err.append(node.getNodeValue());
                      err.append(", node name: ").append(node.getNodeName());
                      txt.append(", allowed tags: ").append(allowedTags.toString());
-                     LOG.warn(err.toString());
+                     LOG.warning(err.toString());
                      
                      if (chkArgs) {
                         throw new IllegalArgumentException(err.toString());
@@ -299,7 +297,7 @@ public class HeaderData {
                      err.append("Invalid tag: ");
                      err.append(name);
                      err.append(", node name: ").append(node.getNodeName());
-                     LOG.warn(err.toString());
+                     LOG.warning(err.toString());
                      
                      if (chkArgs) {
                         throw new IllegalArgumentException(err.toString());
@@ -333,7 +331,7 @@ public class HeaderData {
             e.printStackTrace(pw);
             pw.flush();
             err.append(sw.toString());
-            LOG.warn(err.toString());
+            LOG.warning(err.toString());
          }
 
       }
@@ -346,7 +344,7 @@ public class HeaderData {
     */
    public void resetBuffer() {
       if (isDebug) {
-         LOG.debug("Resetting buffer.");
+         LOG.info("Resetting buffer.");
       }
       if (baoStream != null) {
          baoStream.reset();
@@ -375,7 +373,7 @@ public class HeaderData {
          pWriter = new PrintWriter(sWriter);
       }
       if (isDebug) {
-         LOG.debug("returning writer.");
+         LOG.info("returning writer.");
       }
       return pWriter;
    }
@@ -388,7 +386,7 @@ public class HeaderData {
          baoStream = new ByteArrayOutputStream(bufferSize);
       }
       if (isDebug) {
-         LOG.debug("returning output stream.");
+         LOG.info("returning output stream.");
       }
       return baoStream;
    }
@@ -458,7 +456,7 @@ public class HeaderData {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Ignoring element with disallowed tag name: ").append(tag);
          txt.append(", allowed tags: ").append(allowedTags.toString());
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       }
    }
 

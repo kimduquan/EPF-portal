@@ -22,7 +22,8 @@ import java.io.StringWriter;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -55,7 +56,6 @@ import javax.servlet.ServletResponseWrapper;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.pluto.container.FilterManager;
 import org.apache.pluto.container.PortletAsyncManager;
 import org.apache.pluto.container.PortletContainerException;
@@ -73,8 +73,6 @@ import org.apache.pluto.container.bean.processor.PortletStateScopedBeanHolder;
 import org.apache.pluto.container.bean.processor.RedirectScopedBeanHolder;
 import org.apache.pluto.container.impl.HttpServletPortletRequestWrapper;
 import org.apache.pluto.container.om.portlet.impl.ConfigurationHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Portlet Invocation Servlet. This servlet receives cross context requests from the the container and services the
@@ -87,7 +85,7 @@ public class PortletServlet3 extends HttpServlet {
    private static final long  serialVersionUID = -5096339022539360365L;
    
    /** Logger. */
-   private static final Logger LOG = LoggerFactory.getLogger(PortletServlet3.class);
+   private static final Logger LOG = Logger.getLogger(PortletServlet3.class.getName());
 
    /**
     * Portlet name constant, needed by portlet container initializer
@@ -175,10 +173,10 @@ public class PortletServlet3 extends HttpServlet {
       } catch (Throwable e) {}
 
       if (ibm != null) {
-         LOG.debug("BeanManager by JNDI lookup, portlet name: " + portletName);
+         LOG.info("BeanManager by JNDI lookup, portlet name: " + portletName);
          beanmgr = ibm;
       } else {
-         LOG.debug("BeanManager by injection, portlet name: " + portletName);
+         LOG.info("BeanManager by injection, portlet name: " + portletName);
          beanmgr = injectedBeanmgr;
       }
       
@@ -187,12 +185,12 @@ public class PortletServlet3 extends HttpServlet {
             Set<Bean<?>> beans = beanmgr.getBeans(AnnotatedConfigBean.class);
             Bean<?> bean = beanmgr.resolve(beans);
             acb = (AnnotatedConfigBean) beanmgr.getReference(bean, bean.getBeanClass(), beanmgr.createCreationalContext(bean));
-            LOG.debug("ACB instance: " + acb + ", RS config: " + ((acb==null) ? "null" : acb.getSessionScopedConfig()));
+            LOG.info("ACB instance: " + acb + ", RS config: " + ((acb==null) ? "null" : acb.getSessionScopedConfig()));
             acb.getRedirectScopedConfig().activate(beanmgr);
             acb.getSessionScopedConfig().activate(beanmgr);
             acb.getStateScopedConfig().activate(beanmgr);
          } catch (Throwable t) {
-            LOG.debug("Could not retrieve annotated config bean.");
+            LOG.info("Could not retrieve annotated config bean.");
          }
       }
       
@@ -200,12 +198,12 @@ public class PortletServlet3 extends HttpServlet {
       holder = (ConfigurationHolder) config.getServletContext().getAttribute(ConfigurationHolder.ATTRIB_NAME);
       try {
          if (holder == null || holder.getMethodStore() == null) {
-            LOG.error("Could not obtain configuration bean for portlet " + portletName + ". Exiting.");
+            LOG.severe("Could not obtain configuration bean for portlet " + portletName + ". Exiting.");
             return;
          } else {
             holder.instantiatePortlets(beanmgr);
             invoker = new PortletInvoker(holder.getMethodStore(), portletName);
-            LOG.debug("Created the portlet invoker for portlet: " + portletName);
+            LOG.info("Created the portlet invoker for portlet: " + portletName);
          }
       } catch(Exception e) {
          StringBuilder txt = new StringBuilder(128);
@@ -218,7 +216,7 @@ public class PortletServlet3 extends HttpServlet {
          pw.flush();
          txt.append(sw.toString());
          
-         LOG.error(txt.toString());
+         LOG.severe(txt.toString());
 
          // take out of service
          
@@ -296,7 +294,7 @@ public class PortletServlet3 extends HttpServlet {
             pw.flush();
             txt.append(sw.toString());
             
-            LOG.error(txt.toString());
+            LOG.severe(txt.toString());
 
             // take out of service
             
@@ -364,12 +362,12 @@ public class PortletServlet3 extends HttpServlet {
     * @throws IOException
     */
    private void dispatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      if (LOG.isDebugEnabled()) {
+      if (LOG.isLoggable(Level.INFO)) {
          StringBuilder txt = new StringBuilder();
          txt.append("Processing request.");
          txt.append(" Dispatcher type: ").append(request.getDispatcherType());
          txt.append(", request URI: ").append(request.getRequestURI());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       // Retrieve attributes from the servlet request.
@@ -377,7 +375,7 @@ public class PortletServlet3 extends HttpServlet {
       
       // check for out of service. If it's a render, display string.
       if (isOutOfService) {
-         LOG.warn("Portlet is out of service. Portlet name: " + portletName);
+         LOG.warning("Portlet is out of service. Portlet name: " + portletName);
          if (methodId == PortletInvokerService.METHOD_RENDER) {
             PrintWriter writer = response.getWriter();
             writer.write("<p>Out of service.</p>");
@@ -400,7 +398,7 @@ public class PortletServlet3 extends HttpServlet {
             (FilterManager) request.getAttribute(PortletInvokerService.FILTER_MANAGER);
       filterManager.setBeanManager(beanmgr);
 
-      if (LOG.isTraceEnabled()) {
+      if (LOG.isLoggable(Level.FINE)) {
          StringBuilder txt = new StringBuilder(128);
          txt.append("\nRequest wrapper stack: ");
          ServletRequest wreq = request;
@@ -427,7 +425,7 @@ public class PortletServlet3 extends HttpServlet {
          }
          txt.append("\nLevel ").append(n++).append(": ").append(wresp.getClass().getCanonicalName());
          txt.append(", equal to req context resp: ").append(wresp == tstresp);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       
       if (request.getDispatcherType() == DispatcherType.ASYNC) {
@@ -445,14 +443,14 @@ public class PortletServlet3 extends HttpServlet {
             HttpServletRequest hreq = (HttpServletRequest) ((HttpServletPortletRequestWrapper) wreq).getRequest();
             HttpServletResponse hresp = requestContext.getServletResponse();
             
-            LOG.debug("Extracted wrapped request. Dispatch type: " + hreq.getDispatcherType());
+            LOG.info("Extracted wrapped request. Dispatch type: " + hreq.getDispatcherType());
 
             requestContext.init(portletConfig, getServletContext(), hreq, hresp, responseContext);
             requestContext.setAsyncServletRequest(request);       // store original request
             responseContext.init(portletConfig, hreq, hresp);
             
          } else {
-            LOG.debug("Couldn't find the portlet async wrapper.");
+            LOG.info("Couldn't find the portlet async wrapper.");
          }
 
          // enable contextual support for async
@@ -575,7 +573,7 @@ public class PortletServlet3 extends HttpServlet {
          
          if (!request.isAsyncStarted() && (request.getDispatcherType() != DispatcherType.ASYNC)) {
 
-            LOG.debug("Async not being processed, releasing resources. executing req body: " + requestContext.isExecutingRequestBody());
+            LOG.info("Async not being processed, releasing resources. executing req body: " + requestContext.isExecutingRequestBody());
 
             request.removeAttribute(PortletInvokerService.METHOD_ID);
             request.removeAttribute(PortletInvokerService.PORTLET_REQUEST);
@@ -585,7 +583,7 @@ public class PortletServlet3 extends HttpServlet {
             afterInvoke(portletRequest, portletResponse);
 
          } else {
-            LOG.debug("Async started, not releasing resources. executing req body: " + requestContext.isExecutingRequestBody());
+            LOG.info("Async started, not releasing resources. executing req body: " + requestContext.isExecutingRequestBody());
 
             if (requestContext instanceof PortletResourceRequestContext) {
                PortletResourceRequestContext resctx = (PortletResourceRequestContext)requestContext;
@@ -594,10 +592,10 @@ public class PortletServlet3 extends HttpServlet {
                   pac.deregisterContext(false);
                   pac.launchRunner();
                } else {
-                  LOG.warn("Couldn't get portlet async context.");
+                  LOG.warning("Couldn't get portlet async context.");
                }
             } else {
-               LOG.warn("Wrong kind of request context: " + requestContext.getClass().getCanonicalName());
+               LOG.warning("Wrong kind of request context: " + requestContext.getClass().getCanonicalName());
             }
 
          }
@@ -641,13 +639,13 @@ public class PortletServlet3 extends HttpServlet {
          // Set up the artifact producer with request, response, and portlet config
          PortletArtifactProducer.setPrecursors(req, resp, config);
          
-         if (LOG.isTraceEnabled()) {
-            LOG.trace("CDI context is now set up.");
+         if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("CDI context is now set up.");
          }
 
       } else {
-         if (LOG.isTraceEnabled()) {
-            LOG.trace("CDI contextual support not available");
+         if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("CDI contextual support not available");
          }
       }      
       
@@ -684,8 +682,8 @@ public class PortletServlet3 extends HttpServlet {
          // remove the portlet artifact producer
          PortletArtifactProducer.remove();
          
-         if (LOG.isTraceEnabled()) {
-            LOG.trace("CDI context is now deactivated.");
+         if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("CDI context is now deactivated.");
          }
       
       }
