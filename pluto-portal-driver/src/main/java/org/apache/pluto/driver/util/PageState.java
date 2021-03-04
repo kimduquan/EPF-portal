@@ -280,9 +280,9 @@ public class PageState {
       json.append("{\"portlets\" : {\n");
       
       Collection<PortalURLParameter> pups = getParameters();
-      Map<String, String[]> pubparms = getPublicParameters();
+      getPublicParameters();
       PublicRenderParameterMapper mapper = portalUrl.getPublicRenderParameterMapper();
-      int numGroups = mapper.getNumberOfGroups();
+      mapper.getNumberOfGroups();
       
       boolean sep = false;
       for (String pid : getPortletIds()) {

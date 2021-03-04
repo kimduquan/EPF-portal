@@ -21,12 +21,9 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.portlet.PortletMode;
 import javax.portlet.PortletSecurityException;
 import javax.portlet.WindowState;
-
-import org.apache.pluto.container.PortletURLProvider.ParamType;
 
 /**
  * Defines the interface used by the portlet container to create Portlet URLs.

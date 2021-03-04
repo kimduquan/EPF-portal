@@ -17,9 +17,7 @@
 package org.apache.pluto.container;
 
 import java.util.List;
-
 import javax.portlet.PortletURLGenerationListener;
-
 import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
 
 public interface PortletURLListenerService

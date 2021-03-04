@@ -17,7 +17,6 @@
 package org.apache.pluto.driver.tags;
 
 import java.io.IOException;
-
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.pluto.driver.core.PortalRequestContext;
 import org.apache.pluto.driver.url.PortalURL;
 

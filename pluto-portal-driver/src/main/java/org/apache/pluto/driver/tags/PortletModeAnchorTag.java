@@ -42,7 +42,13 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
  */
 public class PortletModeAnchorTag extends BodyTagSupport {
     
-    /** Logger. */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	/** Logger. */
     private static final Logger LOG = Logger.getLogger(PortletModeAnchorTag.class.getName());
         
     

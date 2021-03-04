@@ -26,7 +26,12 @@ import javax.servlet.ServletException;
  */
 public class DriverAdministrationException extends ServletException {
 
-    public DriverAdministrationException(String string) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public DriverAdministrationException(String string) {
         super(string);
     }
 
