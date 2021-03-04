@@ -17,11 +17,9 @@
 package org.apache.pluto.container.bean.mvc;
 
 import java.lang.reflect.Method;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.inject.Vetoed;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -30,7 +28,7 @@ import org.slf4j.LoggerFactory;
 @Vetoed
 public class SpringCsrfToken {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SpringCsrfToken.class);
+	private static final Logger LOG = Logger.getLogger(SpringCsrfToken.class.getName());
 
 	private String name;
 	private String value;
@@ -51,7 +49,7 @@ public class SpringCsrfToken {
 				value = (String) getTokenMethod.invoke(springCsrfToken, null);
 			}
 			catch (Exception e) {
-				LOG.error(e.getMessage(), e);
+				LOG.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 	}

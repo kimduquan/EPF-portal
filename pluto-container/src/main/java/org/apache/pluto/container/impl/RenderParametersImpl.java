@@ -22,14 +22,12 @@ package org.apache.pluto.container.impl;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.RenderParameters;
 import javax.portlet.MutableRenderParameters;
-
 import org.apache.pluto.container.PortletURLProvider;
 import org.apache.pluto.container.PortletURLProvider.ParamType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author nick
@@ -37,13 +35,13 @@ import org.slf4j.LoggerFactory;
  */
 public class RenderParametersImpl extends PortletParametersImpl implements
       RenderParameters {
-   private static final Logger   LOGGER     = LoggerFactory.getLogger(RenderParametersImpl.class);
-   private static final boolean  isTrace    = LOGGER.isTraceEnabled();
+   private static final Logger   LOGGER     = Logger.getLogger(RenderParametersImpl.class.getName());
+   private static final boolean  isTrace    = LOGGER.isLoggable(Level.FINE);
 
    // called to force class loading in Container thread
    public static final void load() {
       if (isTrace) {
-         LOGGER.debug("Loaded.");
+         LOGGER.info("Loaded.");
       }
    };
    
@@ -77,7 +75,7 @@ public class RenderParametersImpl extends PortletParametersImpl implements
    @Override
    public MutableRenderParameters clone() {
       if (isTrace) {
-         LOGGER.debug("Window ID: " + windowId + ", ParameterType: " + type);
+         LOGGER.info("Window ID: " + windowId + ", ParameterType: " + type);
       }
 
       // create a mutable clone, breaking link to the underlying URL provider.
@@ -95,7 +93,7 @@ public class RenderParametersImpl extends PortletParametersImpl implements
          txt.append("Window ID: ").append(windowId)
             .append(", Name: ").append(name)
             .append(", isPublic: ").append(isPublic);
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       
       return isPublic;

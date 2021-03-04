@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Locale;
-
 import javax.portlet.ActionResponse;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletRequest;
@@ -32,7 +31,6 @@ import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-
 import org.apache.pluto.container.util.DummyPrintWriter;
 import org.apache.pluto.container.util.DummyServletOutputStream;
 

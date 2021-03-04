@@ -21,10 +21,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.Event;
 import javax.portlet.MutableRenderParameters;
 import javax.portlet.PortletMode;
@@ -33,7 +31,6 @@ import javax.portlet.StateAwareResponse;
 import javax.portlet.WindowState;
 import javax.portlet.WindowStateException;
 import javax.xml.namespace.QName;
-
 import org.apache.pluto.container.PortletStateAwareResponseContext;
 import org.apache.pluto.container.PortletWindow;
 import org.apache.pluto.container.util.ArgumentUtility;
@@ -45,9 +42,9 @@ import org.apache.pluto.container.util.ArgumentUtility;
  */
 public abstract class StateAwareResponseImpl extends PortletResponseImpl
       implements StateAwareResponse {
-   private final Logger  LOGGER  = LoggerFactory.getLogger(StateAwareResponseImpl.class);
+   private final Logger  LOGGER  = Logger.getLogger(StateAwareResponseImpl.class.getName());
    @SuppressWarnings("unused")
-   private final boolean isDebug = LOGGER.isDebugEnabled();
+   private final boolean isDebug = LOGGER.isLoggable(Level.INFO);
 
    protected PortletStateAwareResponseContext responseContext;
    private final String                     windowId;
@@ -98,11 +95,11 @@ public abstract class StateAwareResponseImpl extends PortletResponseImpl
    public void setEvent(QName qname, Serializable value) {
       ArgumentUtility.validateNotNull("qname", qname);
       
-      if (LOGGER.isTraceEnabled()) {
+      if (LOGGER.isLoggable(Level.FINE)) {
          StringBuilder txt = new StringBuilder(128);
          txt.append("QName: ").append(qname.toString());
          txt.append(", value class: ").append((value == null) ? "null": value.getClass().getCanonicalName());
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
 
       Event event = responseContext.getEventProvider()

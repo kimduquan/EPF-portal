@@ -20,7 +20,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Event;
@@ -36,7 +37,6 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.pluto.container.ContainerServices;
 import org.apache.pluto.container.FilterManager;
 import org.apache.pluto.container.HeaderData;
@@ -53,8 +53,6 @@ import org.apache.pluto.container.PortletRequestContextService;
 import org.apache.pluto.container.PortletResourceRequestContext;
 import org.apache.pluto.container.PortletResourceResponseContext;
 import org.apache.pluto.container.PortletWindow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -67,7 +65,7 @@ public class PortletContainerImpl implements PortletContainer
 {
 
     /** Internal logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(PortletContainerImpl.class);
+    private static final Logger LOG = Logger.getLogger(PortletContainerImpl.class.getName());
 
 
     // Private Member Variables ------------------------------------------------
@@ -281,7 +279,7 @@ public class PortletContainerImpl implements PortletContainer
                 responseContext.close();
                 responseContext.release();
             } else {
-               LOG.debug("Async started for resource request. responseContext not released.");
+               LOG.info("Async started for resource request. responseContext not released.");
             }
         }
 
@@ -369,7 +367,7 @@ public class PortletContainerImpl implements PortletContainer
            pw.flush();
            txt.append(sw.toString());
            
-           LOG.warn(txt.toString());
+           LOG.warning(txt.toString());
 
         }
         finally
@@ -553,7 +551,7 @@ public class PortletContainerImpl implements PortletContainer
            pw.flush();
            txt.append(sw.toString());
            
-           LOG.warn(txt.toString());
+           LOG.warning(txt.toString());
 
         }
         finally
@@ -587,8 +585,8 @@ public class PortletContainerImpl implements PortletContainer
      * @param message  log message.
      */
     private void debugWithName(String message) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Portlet Container [" + name + "]: " + message);
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Portlet Container [" + name + "]: " + message);
         }
     }
 
@@ -597,8 +595,8 @@ public class PortletContainerImpl implements PortletContainer
      * @param message  log message.
      */
     private void infoWithName(String message) {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Portlet Container [" + name + "]: " + message);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Portlet Container [" + name + "]: " + message);
         }
     }
 

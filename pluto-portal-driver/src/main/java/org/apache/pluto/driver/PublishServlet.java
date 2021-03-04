@@ -17,12 +17,11 @@
 package org.apache.pluto.driver;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.pluto.driver.config.AdminConfiguration;
 import org.apache.pluto.driver.services.portal.admin.DriverAdministrationException;
 import org.apache.pluto.driver.services.portal.admin.PortletRegistryAdminService;
@@ -36,9 +35,19 @@ import org.apache.pluto.driver.services.portal.admin.PortletRegistryAdminService
  * @version 1.0
  * @since Nov 23, 2005
  */
+@WebServlet(
+		description = "Portlet Application Publisher Service",
+		displayName = "Portlet Application Publisher",
+		name = "portletApplicationPublisher"
+		)
 public class PublishServlet extends HttpServlet {
 
-    protected void doGet(HttpServletRequest req,
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest req,
                          HttpServletResponse res)
     throws ServletException, IOException {
 

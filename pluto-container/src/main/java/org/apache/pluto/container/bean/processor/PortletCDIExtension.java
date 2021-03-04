@@ -23,7 +23,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -38,17 +39,14 @@ import javax.enterprise.inject.spi.BeforeBeanDiscovery;
 import javax.enterprise.inject.spi.Extension;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
 import javax.portlet.PortletConfig;
-
 import org.apache.pluto.container.bean.mvc.MvcExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Scott
  *
  */
 public class PortletCDIExtension implements Extension {
-   private static final Logger LOG = LoggerFactory.getLogger(PortletCDIExtension.class);
+   private static final Logger LOG = Logger.getLogger(PortletCDIExtension.class.getName());
   
    
    // Holds deployment error descriptions and other information for display.
@@ -63,7 +61,7 @@ public class PortletCDIExtension implements Extension {
    }
    
    void beforeBeanDiscovery(@Observes BeforeBeanDiscovery bbd) {
-      LOG.debug("PortletCDIExtension - scanning.");
+      LOG.info("PortletCDIExtension - scanning.");
    }
 
    /**
@@ -83,12 +81,12 @@ public class PortletCDIExtension implements Extension {
       final Set<Type> types = new HashSet<Type>(pcfg.getTypeClosure());
       
       if (types.contains(PortletConfig.class)) {
-         if (LOG.isTraceEnabled()) {
+         if (LOG.isLoggable(Level.FINE)) {
             StringBuilder txt = new StringBuilder(128);
             txt.append("Found a PortletConfig.");
             txt.append(" Class: ").append(pcfg.getJavaClass().getCanonicalName());
             txt.append(", Base type: ").append(((Class<?>)pcfg.getBaseType()).getCanonicalName());
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
          
          // wrap the type, removing the PortletConfig from the type closure so as to 
@@ -184,16 +182,16 @@ public class PortletCDIExtension implements Extension {
       // Done processing the annotations, so put the resulting configuration in an
       // application scoped bean to pass it to the servlet
       
-      LOG.trace("Now attempting to get the AnnotatedConfigBean ...");
+      LOG.fine("Now attempting to get the AnnotatedConfigBean ...");
       Set<Bean<?>> beans = bm.getBeans(AnnotatedConfigBean.class);
       @SuppressWarnings("unchecked")
       Bean<AnnotatedConfigBean> bean = (Bean<AnnotatedConfigBean>) bm.resolve(beans);
       if (bean != null) {
-         LOG.trace("Got AnnotatedConfigBean bean: " + bean.getBeanClass().getCanonicalName());
+         LOG.fine("Got AnnotatedConfigBean bean: " + bean.getBeanClass().getCanonicalName());
          try {
             CreationalContext<AnnotatedConfigBean> cc = bm.createCreationalContext(bean);
             acb = (AnnotatedConfigBean) bm.getReference(bean, AnnotatedConfigBean.class, cc);
-            LOG.trace("Got AnnotatedConfigBean instance.");
+            LOG.fine("Got AnnotatedConfigBean instance.");
             acb.setMethodStore(ams);
             acb.setSummary(summary);
             acb.setRedirectScopedConfig(par.getRedirectScopedConfig());
@@ -203,10 +201,10 @@ public class PortletCDIExtension implements Extension {
             StringBuilder txt = new StringBuilder(128);
             txt.append("Exception getting AnnotatedConfigBean bean instance: ");
             txt.append(e.toString());
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
          }
       } else {
-         LOG.warn("AnnotatedConfigBean bean was null.");
+         LOG.warning("AnnotatedConfigBean bean was null.");
       }
       LOG.info("Portlet CDI Extension complete. Config bean: " + acb);
    }

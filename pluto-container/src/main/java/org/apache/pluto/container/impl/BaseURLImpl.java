@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.portlet.ActionURL;
 import javax.portlet.BaseURL;
@@ -40,22 +42,19 @@ import javax.portlet.RenderParameters;
 import javax.portlet.RenderURL;
 import javax.portlet.ResourceURL;
 import javax.portlet.WindowState;
-
 import org.apache.pluto.container.PortletResponseContext;
 import org.apache.pluto.container.PortletURLListenerService;
 import org.apache.pluto.container.PortletURLProvider;
 import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
 import org.apache.pluto.container.util.ArgumentUtility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Scott Nicklous
  *
  */
 public abstract class BaseURLImpl implements BaseURL {
-   private static final Logger    LOGGER  = LoggerFactory.getLogger(BaseURLImpl.class);
-   private static final boolean   isTrace = LOGGER.isTraceEnabled();
+   private static final Logger    LOGGER  = Logger.getLogger(BaseURLImpl.class.getName());
+   private static final boolean   isTrace = LOGGER.isLoggable(Level.FINE);
 
    protected PortletResponseContext responseContext;
    protected PortalContext          portalContext;
@@ -80,7 +79,7 @@ public abstract class BaseURLImpl implements BaseURL {
          txt.append("URL provider type=").append(urlProvider.getType());
          txt.append(", WindowId=").append(windowId);
          txt.append(", isRender=").append(renderURL);
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
    }
 
@@ -125,7 +124,7 @@ public abstract class BaseURLImpl implements BaseURL {
             } else if (this instanceof RenderURL)  {
                listener.filterRenderURL((RenderURL)this);
             } else {
-               LOGGER.warn("Could not filter URL. Bad URL type: " + this.getClass().getSimpleName());
+               LOGGER.warning("Could not filter URL. Bad URL type: " + this.getClass().getSimpleName());
             }
          }
       } finally {

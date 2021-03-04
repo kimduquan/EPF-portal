@@ -19,13 +19,13 @@
 package org.apache.pluto.container.bean.processor;
 
 import static javax.portlet.ActionRequest.ACTION_NAME;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.ActionParameters;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -49,10 +49,7 @@ import javax.portlet.annotations.RenderMethod;
 import javax.portlet.annotations.ServeResourceMethod;
 import javax.servlet.DispatcherType;
 import javax.xml.namespace.QName;
-
 import org.apache.pluto.container.PortletInvokerService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Provides an easy-to-use facade for the portlet methods.
@@ -64,8 +61,8 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
 
    public static final String LAST_METHOD = PortletInvoker.class.getName() + ".LAST_METHOD";
 
-   private static final Logger       LOG     = LoggerFactory.getLogger(PortletInvoker.class);
-   private static final boolean      isDebug = LOG.isDebugEnabled();
+   private static final Logger       LOG     = Logger.getLogger(PortletInvoker.class.getName());
+   private static final boolean      isDebug = LOG.isLoggable(Level.INFO);
 
    private final AnnotatedMethodStore  methodStore;
    private final String                portletName;
@@ -109,7 +106,7 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
       // retry with the default dispatch ID ("").
 
       if (isDebug) {
-         LOG.debug("Retrieving method for method identifier: " + mi.toString());
+         LOG.info("Retrieving method for method identifier: " + mi.toString());
       }
 
       List<AnnotatedMethod> meths = methodStore.getMethods(mi);
@@ -118,7 +115,7 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
          if ((id != null) && (id instanceof String) && ((String) id).length() > 0) {
             mi.setId("");
             if (isDebug) {
-               LOG.debug("Retrying retrieval with method identifier: " + mi.toString());
+               LOG.info("Retrying retrieval with method identifier: " + mi.toString());
             }
             meths = methodStore.getMethods(mi);
          }
@@ -184,7 +181,7 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
          if (isDebug) {
             StringBuilder txt = new StringBuilder(128);
             txt.append("Init method not found for portlet: ").append(portletName);
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
          return;
       }
@@ -215,7 +212,7 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
          if (isDebug) {
             StringBuilder txt = new StringBuilder(128);
             txt.append("Destroy method not found for portlet: ").append(portletName);
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
          return;
       }
@@ -247,10 +244,10 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
          if (meth == null) {
             StringBuilder txt = new StringBuilder(128);
             txt.append("Async processing error. ServeResource method attribute could not be retrieved.");
-            LOG.error(txt.toString());
+            LOG.severe(txt.toString());
             return;
          }
-         LOG.debug("Processing async dispatch. method: " + meth.toString());
+         LOG.info("Processing async dispatch. method: " + meth.toString());
          meths.add(meth);
       } else {
          meths = getMethods(mi);
@@ -264,7 +261,7 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
 
          StringBuilder txt = new StringBuilder(128);
          txt.append("ServeResource method not found. Resource ID=\"").append(id).append("\"");
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
          return;
       }
 
@@ -312,7 +309,7 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
             // async dispatch.
             // also, after async is started, no further methods can be invoked.
 
-            LOG.debug("Async processing was started during method: " + meth.toString());
+            LOG.info("Async processing was started during method: " + meth.toString());
             req.setAttribute(PortletInvokerService.ASYNC_METHOD, meth);
             break;
 
@@ -358,7 +355,7 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
 
             StringBuilder txt = new StringBuilder(128);
             txt.append("Event method not found. Event qname=").append(qn);
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
             return;
          }
       }
@@ -394,7 +391,7 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
 
          StringBuilder txt = new StringBuilder(128);
          txt.append("Action method not found. Action name=\"").append(an).append("\"");
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
          return;
       }
       assert meths.size() == 1;
@@ -413,7 +410,7 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
       // https://issues.apache.org/jira/browse/PLUTO-765
       ResourceBundle resourceBundle = config.getResourceBundle(req.getLocale());
       if (isDebug) {
-         LOG.debug("PLUTO-765 resourceBundle={}", resourceBundle);
+         LOG.info(String.format("PLUTO-765 resourceBundle={}", resourceBundle));
       }
 
       String pm = req.getPortletMode().toString();
@@ -425,7 +422,7 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
          // No render methods available
          StringBuilder txt = new StringBuilder(128);
          txt.append("Render method not found. Portlet mode: \"").append(pm).append("\"");
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
          return;
       }
 
@@ -490,7 +487,7 @@ public class PortletInvoker implements Portlet, ResourceServingPortlet, EventPor
          // No header methods available
          StringBuilder txt = new StringBuilder(128);
          txt.append("Header method not found. Portlet mode: \"").append(pm).append("\"");
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
          return;
       }
 

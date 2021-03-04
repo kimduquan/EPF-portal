@@ -22,17 +22,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.pluto.container.HeaderData;
 import org.apache.pluto.container.PageResourceId;
 import org.apache.pluto.container.PortletContainer;
@@ -60,6 +60,13 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  * @since Sep 22, 2004
  */
+@WebServlet(
+		description = "Pluto Portal Driver Controller",
+		displayName = "Pluto Portal Driver",
+		name = "plutoPortalDriver",
+		asyncSupported = true
+		)
+@MultipartConfig(fileSizeThreshold = 1048576)
 public class PortalDriverServlet extends HttpServlet {
 
    private static final long   serialVersionUID = 1L;

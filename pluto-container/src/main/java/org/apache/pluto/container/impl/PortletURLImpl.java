@@ -17,7 +17,8 @@
 package org.apache.pluto.container.impl;
 
 import java.util.Enumeration;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.inject.spi.Bean;
 import javax.portlet.MimeResponse.Copy;
 import javax.portlet.MutableRenderParameters;
@@ -28,7 +29,6 @@ import javax.portlet.WindowState;
 import javax.portlet.WindowStateException;
 import javax.portlet.annotations.PortletSerializable;
 import javax.portlet.annotations.RenderStateScoped;
-
 import org.apache.pluto.container.PortletResponseContext;
 import org.apache.pluto.container.PortletURLProvider;
 import org.apache.pluto.container.bean.processor.PortletStateScopedBeanHolder;
@@ -36,8 +36,6 @@ import org.apache.pluto.container.om.portlet.CustomPortletMode;
 import org.apache.pluto.container.om.portlet.PortletDefinition;
 import org.apache.pluto.container.om.portlet.Supports;
 import org.apache.pluto.container.util.ArgumentUtility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -46,13 +44,13 @@ import org.slf4j.LoggerFactory;
  * @since 2.0
  */
 public abstract class PortletURLImpl extends BaseURLImpl implements PortletURL {
-   private static final Logger    LOGGER  = LoggerFactory.getLogger(PortletURLImpl.class);
-   private static final boolean   isDebug = LOGGER.isDebugEnabled();
+   private static final Logger    LOGGER  = Logger.getLogger(PortletURLImpl.class.getName());
+   private static final boolean   isDebug = LOGGER.isLoggable(Level.INFO);
 
    // Called to force class loading in Container thread
    public static final void load() {
       if (isDebug) {
-         LOGGER.debug("Loaded.");
+         LOGGER.info("Loaded.");
       }
    };
 

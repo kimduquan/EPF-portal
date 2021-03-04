@@ -22,7 +22,6 @@ package org.apache.pluto.container.om.portlet.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
 import org.apache.pluto.container.om.portlet.CustomWindowState;
 import org.apache.pluto.container.om.portlet.Description;
 

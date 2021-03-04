@@ -24,16 +24,14 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequestDispatcher;
 import javax.servlet.ServletContext;
-
 import org.apache.pluto.container.ContainerInfo;
 import org.apache.pluto.container.RequestDispatcherService;
 import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Default Portlet Context Implementation.
@@ -44,8 +42,8 @@ public class PortletContextImpl implements PortletContext
 {
    
    /** Logger. */
-   private static final Logger LOG = LoggerFactory.getLogger(PortletContextImpl.class);
-   private static final boolean isDebug = LOG.isDebugEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletContextImpl.class.getName());
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
    
     // Private Member Variables ------------------------------------------------
     
@@ -201,7 +199,7 @@ public class PortletContextImpl implements PortletContext
                StringBuilder txt = new StringBuilder();
                txt.append("Problem parsing version. Version string: ").append(portletApp.getVersion());
                txt.append(", tokens: ").append(Arrays.toString(toks));
-               LOG.debug(txt.toString());
+               LOG.info(txt.toString());
             }
 	      } else {
 	         vers[0] = Integer.parseInt(toks[0]);
@@ -211,7 +209,7 @@ public class PortletContextImpl implements PortletContext
          StringBuilder txt = new StringBuilder();
          txt.append("Problem parsing version. Version string: ").append(portletApp.getVersion());
          txt.append(", tokens: ").append(Arrays.toString(toks));
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
 	   }
 	   return vers;
 	}

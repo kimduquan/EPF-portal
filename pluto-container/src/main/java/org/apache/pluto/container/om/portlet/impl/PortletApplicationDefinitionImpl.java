@@ -25,10 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
-
 import org.apache.pluto.container.om.portlet.ContainerRuntimeOption;
 import org.apache.pluto.container.om.portlet.CustomPortletMode;
 import org.apache.pluto.container.om.portlet.CustomWindowState;
@@ -41,8 +41,6 @@ import org.apache.pluto.container.om.portlet.PortletDefinition;
 import org.apache.pluto.container.om.portlet.PublicRenderParameter;
 import org.apache.pluto.container.om.portlet.SecurityConstraint;
 import org.apache.pluto.container.om.portlet.UserAttribute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Portlet application definition
@@ -53,7 +51,7 @@ public class PortletApplicationDefinitionImpl implements
       PortletApplicationDefinition {
    
    /** Logger. */
-   private static final Logger LOG = LoggerFactory.getLogger(PortletApplicationDefinitionImpl.class);
+   private static final Logger LOG = Logger.getLogger(PortletApplicationDefinitionImpl.class.getName());
 
    private String id;
    private String name;
@@ -267,7 +265,7 @@ public class PortletApplicationDefinitionImpl implements
    @Override
    public void addPortlet(PortletDefinition pd) {
       if (portlets.remove(pd)) {
-         LOG.debug("Removed duplicate portlet: " + pd.getPortletName());
+         LOG.info("Removed duplicate portlet: " + pd.getPortletName());
       }
       portlets.add( pd);
    }
@@ -300,7 +298,7 @@ public class PortletApplicationDefinitionImpl implements
    @Override
    public void addEventDefinition(EventDefinition ed) {
       if (events.remove(ed)) {
-         LOG.debug("Removed duplicate event definition: " + ed.getQName());
+         LOG.info("Removed duplicate event definition: " + ed.getQName());
       }
       events.add(ed);
    }
@@ -342,7 +340,7 @@ public class PortletApplicationDefinitionImpl implements
          txt.append("Removed duplicate public render parameter definition for QName: ");
          txt.append(tprp.getQName());
          txt.append(", id: ").append(tprp.getIdentifier());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       prps.add(prp);
    }
@@ -375,7 +373,7 @@ public class PortletApplicationDefinitionImpl implements
    @Override
    public void addCustomPortletMode(CustomPortletMode cpm) {
       if (cpms.remove(cpm)) {
-         LOG.debug("Removed duplicate custom portlet mode: " + cpm.getPortletMode());
+         LOG.info("Removed duplicate custom portlet mode: " + cpm.getPortletMode());
       }
       cpms.add(cpm);
    }
@@ -408,7 +406,7 @@ public class PortletApplicationDefinitionImpl implements
    @Override
    public void addCustomWindowState(CustomWindowState cws) {
       if (cwss.remove(cws)) {
-         LOG.debug("Removed duplicate custom window state: " + cws.getWindowState());
+         LOG.info("Removed duplicate custom window state: " + cws.getWindowState());
       }
       cwss.add(cws);
    }
@@ -441,7 +439,7 @@ public class PortletApplicationDefinitionImpl implements
    @Override
    public void addUserAttribute(UserAttribute ua) {
       if (uattrs.remove(ua)) {
-         LOG.debug("Removed duplicate user attribute: " + ua.getName());
+         LOG.info("Removed duplicate user attribute: " + ua.getName());
       }
       uattrs.add(ua);
    }
@@ -477,7 +475,7 @@ public class PortletApplicationDefinitionImpl implements
       boolean removed = filters.remove(filter);
       
       if (removed) {
-         LOG.debug("Removed duplicate filter definition: " + filter.getFilterName());
+         LOG.info("Removed duplicate filter definition: " + filter.getFilterName());
       } 
       
       // If a filter class is present, add the new one. Otherwise, if the filter was
@@ -488,7 +486,7 @@ public class PortletApplicationDefinitionImpl implements
          // the list will remain in the original order.
          Collections.sort(filters, new FilterComparator());
       } else {
-         LOG.debug("No filter class for filter. Deleting filter mapping. filter name: " + filter.getFilterName());
+         LOG.info("No filter class for filter. Deleting filter mapping. filter name: " + filter.getFilterName());
          removeFilterMapping(getFilterMapping(filter.getFilterName()));
       }
    }
@@ -522,12 +520,12 @@ public class PortletApplicationDefinitionImpl implements
    public void addFilterMapping(FilterMapping fm) {
       // If the filter mapping has no portlet names, remove the filter mapping definition, otherwise replace it
       if (fmaps.remove(fm)) {
-         LOG.debug("Removed duplicate filter mapping: " + fm.getFilterName());
+         LOG.info("Removed duplicate filter mapping: " + fm.getFilterName());
       }
       if (fm.getPortletNames().size() > 0) {
          fmaps.add(fm);
       } else {
-         LOG.debug("No portlet names for filter mapping. Filter name: " + fm.getFilterName());
+         LOG.info("No portlet names for filter mapping. Filter name: " + fm.getFilterName());
       }
    }
 
@@ -559,7 +557,7 @@ public class PortletApplicationDefinitionImpl implements
    @Override
    public void addContainerRuntimeOption(ContainerRuntimeOption cro) {
       if (cros.remove(cro)) {
-         LOG.debug("Removed duplicate container runtime option: " + cro.getName());
+         LOG.info("Removed duplicate container runtime option: " + cro.getName());
       }
       cros.add(cro);
    }
@@ -598,7 +596,7 @@ public class PortletApplicationDefinitionImpl implements
          for (int ii = 0; ii < listeners.size(); ii++) {
             if (listeners.get(ii).getListenerName().equals(listener.getListenerName())) {
                listeners.remove(ii);
-               LOG.debug("Removed duplicate listener with name: " + listener.getListenerName());
+               LOG.info("Removed duplicate listener with name: " + listener.getListenerName());
                break;
             }
          }
@@ -606,7 +604,7 @@ public class PortletApplicationDefinitionImpl implements
 
          // If the listener class is null, remove the listener definition, otherwise replace it
          if (listeners.remove(listener)) {
-            LOG.debug("Removed duplicate listener for class: " + listener.getListenerClass());
+            LOG.info("Removed duplicate listener for class: " + listener.getListenerClass());
          } 
       } 
       
@@ -616,7 +614,7 @@ public class PortletApplicationDefinitionImpl implements
          // the list will remain in the original order.
          Collections.sort(listeners, new ListenerComparator());
       } else {
-         LOG.debug("No listener class for listener: " + listener.getListenerName());
+         LOG.info("No listener class for listener: " + listener.getListenerName());
       }
    }
 
@@ -637,7 +635,7 @@ public class PortletApplicationDefinitionImpl implements
    @Override
    public void addSecurityConstraint(SecurityConstraint sc) {
       if (constraints.remove(sc)) {
-         LOG.debug("Removed duplicate security constraint: " + sc.getUserDataConstraint().getTransportGuarantee());
+         LOG.info("Removed duplicate security constraint: " + sc.getUserDataConstraint().getTransportGuarantee());
       }
       constraints.add(sc);
    }

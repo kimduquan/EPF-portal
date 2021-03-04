@@ -21,14 +21,12 @@ package org.apache.pluto.container.impl;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.MutablePortletParameters;
 import javax.portlet.PortletParameters;
-
 import org.apache.pluto.container.PortletURLProvider;
 import org.apache.pluto.container.PortletURLProvider.ParamType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author nick
@@ -36,8 +34,8 @@ import org.slf4j.LoggerFactory;
  */
 public class MutablePortletParametersImpl extends
       PortletParametersImpl implements MutablePortletParameters {
-   private static final Logger   LOGGER     = LoggerFactory.getLogger(MutablePortletParametersImpl.class);
-   private static final boolean  isTrace    = LOGGER.isTraceEnabled();
+   private static final Logger   LOGGER     = Logger.getLogger(MutablePortletParametersImpl.class.getName());
+   private static final boolean  isTrace    = LOGGER.isLoggable(Level.FINE);
 
    /**
     * Constructor used by extending classes for instantiation
@@ -87,7 +85,7 @@ public class MutablePortletParametersImpl extends
             .append(", Type: ").append(type)
             .append(", Old Value: ").append(val)
             .append(", New Value: ").append(value);
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       
       return val;
@@ -121,7 +119,7 @@ public class MutablePortletParametersImpl extends
             .append(", Type: ").append(type)
             .append(", Old Values: ").append(Arrays.toString(vals))
             .append(", New Values: ").append(Arrays.toString(values));
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       
       return vals;
@@ -152,7 +150,7 @@ public class MutablePortletParametersImpl extends
             .append(", Name: ").append(name)
             .append(", Type: ").append(type)
             .append(", Removed: ").append(isContains);
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       
       return isContains;
@@ -196,7 +194,7 @@ public class MutablePortletParametersImpl extends
          txt.append("Window ID: ").append(windowId)
             .append(", Removed values from old map:  ").append(removed)
             .append(", set ").append(ctr).append(" values.");
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
  
       return oldparms;
@@ -228,7 +226,7 @@ public class MutablePortletParametersImpl extends
          StringBuilder txt = new StringBuilder();
          txt.append("Window ID: ").append(windowId)
             .append(", added ").append(ctr).append(" values.");
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
  
       return oldparms;
@@ -253,7 +251,7 @@ public class MutablePortletParametersImpl extends
          StringBuilder txt = new StringBuilder();
          txt.append("Window ID: ").append(windowId)
             .append(", removed ").append(ctr).append(" values.");
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
    }
 

@@ -21,7 +21,8 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Priority;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -48,12 +49,8 @@ import javax.portlet.filter.RenderURLWrapper;
 import javax.portlet.filter.ResourceURLWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.HttpHeaders;
-
 import org.apache.pluto.container.bean.processor.MethodType;
 import org.apache.pluto.container.bean.processor.PortletInvoker;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -66,7 +63,7 @@ public class ControllerInterceptor implements Serializable {
 
 	private static final long serialVersionUID = 1573287230987622411L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(ControllerInterceptor.class);
+	private static final Logger LOG = Logger.getLogger(ControllerInterceptor.class.getName());
 
 	@Inject
 	private ActionResponse actionResponse;
@@ -185,7 +182,7 @@ public class ControllerInterceptor implements Serializable {
 						actionResponse.sendRedirect(redirectURL.toString());
 					}
 					catch (IOException ioe) {
-						LOG.error(ioe.getMessage(), ioe);
+						LOG.log(Level.SEVERE, ioe.getMessage(), ioe);
 					}
 				}
 			}
@@ -225,7 +222,7 @@ public class ControllerInterceptor implements Serializable {
 						new ResourceInfoImpl(target.getClass(), invocationContextMethod), new UriInfoImpl(), location));
 			}
 			catch (URISyntaxException urise) {
-				LOG.error(urise.getMessage(), urise);
+				LOG.log(Level.SEVERE, urise.getMessage(), urise);
 			}
 		}
 

@@ -26,7 +26,6 @@ import static org.apache.pluto.container.bean.processor.MethodDescription.METH_R
 import static org.apache.pluto.container.bean.processor.MethodDescription.METH_RES;
 import static org.apache.pluto.container.bean.processor.MethodDescription.METH_DES;
 import static org.apache.pluto.container.bean.processor.MethodDescription.METH_INI;
-
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -37,7 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.logging.Logger;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -62,15 +61,12 @@ import javax.portlet.annotations.RenderMethod;
 import javax.portlet.annotations.RenderStateScoped;
 import javax.portlet.annotations.ServeResourceMethod;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author Scott
  *
  */
 public class PortletAnnotationRecognizer extends AnnotationRecognizer {
-   private static final Logger LOG = LoggerFactory.getLogger(PortletAnnotationRecognizer.class);
+   private static final Logger LOG = Logger.getLogger(PortletAnnotationRecognizer.class.getName());
    
    
    private final static Set<Class<? extends Annotation>> classAnnotations = 
@@ -240,7 +236,7 @@ public class PortletAnnotationRecognizer extends AnnotationRecognizer {
       super(classAnnotations, filterDescriptions(descriptions, mvc), summary);
       this.ams = pms;
       this.mvc = mvc;
-      LOG.trace("Created the PortletAnnotationRecognizer.");
+      LOG.fine("Created the PortletAnnotationRecognizer.");
    }
 
    private static Map<Class<? extends Annotation>,List<MethodDescription>> filterDescriptions(Map<Class<? extends Annotation>, List<MethodDescription>> descriptions, boolean mvc) {
@@ -287,7 +283,7 @@ public class PortletAnnotationRecognizer extends AnnotationRecognizer {
             txt.append("Annotation problem: An @RedirectScoped bean must implement java.io.Serializable.");
             txt.append("Annotation: ").append(anno.annotationType().getSimpleName());
             txt.append(", Class: ").append(typeName);
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
             summary.addStateBeanErrorString(theClass, txt.toString());
          } else {
             redirectScopedConfig.addAnnotation(theClass, (RedirectScoped) anno);
@@ -303,7 +299,7 @@ public class PortletAnnotationRecognizer extends AnnotationRecognizer {
             txt.append("Annotation problem: An @RenderStateScoped bean must implement PortletSerializable. ");
             txt.append("Annotation: ").append(anno.annotationType().getSimpleName());
             txt.append(", Class: ").append(typeName);
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
             summary.addStateBeanErrorString(theClass, txt.toString());
          } else {
             stateScopedConfig.addAnnotation(theClass, (RenderStateScoped) anno);
@@ -321,7 +317,7 @@ public class PortletAnnotationRecognizer extends AnnotationRecognizer {
             txt.append("Annotation: ").append(anno.annotationType().getSimpleName());
             txt.append(", Scope: ").append(pss.value());
             txt.append(", Class: ").append(typeName);
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
             summary.addSessionBeanErrorString(theClass, txt.toString());
          } else {
             sessionScopedConfig.addAnnotation(theClass, pss);
@@ -355,7 +351,7 @@ public class PortletAnnotationRecognizer extends AnnotationRecognizer {
          txt.append("Unrecognized class annotation: ")
             .append(anno.annotationType().getSimpleName());
          txt.append(", Class: ").append(typeName);
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       }
       return null;
    }
@@ -405,7 +401,7 @@ public class PortletAnnotationRecognizer extends AnnotationRecognizer {
             .append(anno.annotationType().getSimpleName());
          txt.append(", Method: ").append(meth.getName());
          txt.append(", Class: ").append(beanClass.getCanonicalName());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
          
          // Store the error for each portlet name in array 
          for (String n : getDisplayNames(anno)) {
@@ -432,7 +428,7 @@ public class PortletAnnotationRecognizer extends AnnotationRecognizer {
             txt.append(" Annotation: ").append(anno.annotationType().getSimpleName());
             txt.append(", Method: ").append(meth.getName());
             txt.append(", Class: ").append(beanClass.getCanonicalName());
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
             summary.addErrorString(portletName, txt.toString());
             return;
          }
@@ -445,7 +441,7 @@ public class PortletAnnotationRecognizer extends AnnotationRecognizer {
             txt.append(" Annotation: ").append(anno.annotationType().getSimpleName());
             txt.append(", Method: ").append(meth.getName());
             txt.append(", Class: ").append(beanClass.getCanonicalName());
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
             summary.addErrorString(portletName, txt.toString());
             continue;
          }

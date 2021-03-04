@@ -23,9 +23,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletMode;
-
 import org.apache.pluto.container.om.portlet.ContainerRuntimeOption;
 import org.apache.pluto.container.om.portlet.Dependency;
 import org.apache.pluto.container.om.portlet.Description;
@@ -38,8 +38,6 @@ import org.apache.pluto.container.om.portlet.PortletInfo;
 import org.apache.pluto.container.om.portlet.Preferences;
 import org.apache.pluto.container.om.portlet.SecurityRoleRef;
 import org.apache.pluto.container.om.portlet.Supports;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Scott Nicklous
@@ -48,7 +46,7 @@ import org.slf4j.LoggerFactory;
 public class PortletDefinitionImpl implements PortletDefinition {
 
    /** Logger. */
-   private static final Logger                  LOG                = LoggerFactory.getLogger(PortletDefinitionImpl.class);
+   private static final Logger                  LOG                = Logger.getLogger(PortletDefinitionImpl.class.getName());
 
    private PortletApplicationDefinition         pad;
 
@@ -222,7 +220,7 @@ public class PortletDefinitionImpl implements PortletDefinition {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Removed duplicate init parameter. name: ").append(x.getParamName());
          txt.append(", value: ").append(x.getParamValue());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       iparms.add(ip);
    }
@@ -295,7 +293,7 @@ public class PortletDefinitionImpl implements PortletDefinition {
    @Override
    public void addSupportedProcessingEvent(EventDefinitionReference edr) {
       if (proEvtRefs.remove(edr)) {
-         LOG.debug("Removed duplicate supported processing event ref: " + edr.getQualifiedName());
+         LOG.info("Removed duplicate supported processing event ref: " + edr.getQualifiedName());
       }
       proEvtRefs.add(edr);
    }
@@ -324,7 +322,7 @@ public class PortletDefinitionImpl implements PortletDefinition {
    @Override
    public void addSupportedPublishingEvent(EventDefinitionReference edr) {
       if (pubEvtRefs.remove(edr)) {
-         LOG.debug("Removed duplicate supported publishing event ref: " + edr.getQualifiedName());
+         LOG.info("Removed duplicate supported publishing event ref: " + edr.getQualifiedName());
       }
       pubEvtRefs.add(edr);
    }
@@ -352,7 +350,7 @@ public class PortletDefinitionImpl implements PortletDefinition {
    @Override
    public void addSupportedPublicRenderParameter(String identifier) {
       if (pubParms.remove(identifier)) {
-         LOG.debug("Removed duplicate supported render param: " + identifier);
+         LOG.info("Removed duplicate supported render param: " + identifier);
       }
       pubParms.add(identifier);
    }
@@ -416,7 +414,7 @@ public class PortletDefinitionImpl implements PortletDefinition {
    @Override
    public void addSecurityRoleRef(SecurityRoleRef srr) {
       if (secRefs.remove(srr)) {
-         LOG.debug("Removed duplicate security role ref: " + srr.getRoleName());
+         LOG.info("Removed duplicate security role ref: " + srr.getRoleName());
       }
       secRefs.add(srr);
    }
@@ -455,7 +453,7 @@ public class PortletDefinitionImpl implements PortletDefinition {
    @Override
    public void addSupports(Supports supp) {
       if (supps.remove(supp)) {
-         LOG.warn("Overwriting duplicate supports block for: " + supp.getMimeType());
+         LOG.warning("Overwriting duplicate supports block for: " + supp.getMimeType());
       }
       supps.add(supp);
    }
@@ -520,12 +518,12 @@ public class PortletDefinitionImpl implements PortletDefinition {
          }
       }
       
-      if (LOG.isDebugEnabled()) {
+      if (LOG.isLoggable(Level.INFO)) {
          StringBuilder txt = new StringBuilder();
          txt.append("Portlet mode: ").append(pm.toString());
          txt.append(", MIME type: ").append(mimeType);
          txt.append(", is supported: ").append(supported);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       
       return supported;
@@ -565,7 +563,7 @@ public class PortletDefinitionImpl implements PortletDefinition {
    @Override
    public void addDependency(Dependency dep) {
       if (dependencies.remove(dep)) {
-         LOG.debug("Removed duplicate dependencies block for: " + dep.getName());
+         LOG.info("Removed duplicate dependencies block for: " + dep.getName());
       }
       dependencies.add(dep);
    }
@@ -608,7 +606,7 @@ public class PortletDefinitionImpl implements PortletDefinition {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Removed duplicate description for locale: ").append(desc.getLocale().toString());
          txt.append(", description: ").append(desc.getText());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       descs.add(desc);
    }
@@ -651,7 +649,7 @@ public class PortletDefinitionImpl implements PortletDefinition {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Removed duplicate description for locale: ").append(dispName.getLocale().toString());
          txt.append(", description: ").append(dispName.getText());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       dispNames.add(dispName);
    }
@@ -674,7 +672,7 @@ public class PortletDefinitionImpl implements PortletDefinition {
    @Override
    public void addSupportedLocale(String lang) {
       if (supportedLocales.remove(lang)) {
-         LOG.debug("Removed duplicate supported locale: " + lang);
+         LOG.info("Removed duplicate supported locale: " + lang);
       }
       supportedLocales.add(lang);
    }
@@ -765,7 +763,7 @@ public class PortletDefinitionImpl implements PortletDefinition {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Removed duplicate portlet container runtime option: ").append(x.getName());
          txt.append(", vals: ").append(x.getValues().toString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       crtOptions.add(new ContainerRuntimeOptionImpl(cro));
    }

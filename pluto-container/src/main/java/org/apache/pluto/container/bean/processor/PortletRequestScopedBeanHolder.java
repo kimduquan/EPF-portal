@@ -22,13 +22,11 @@ package org.apache.pluto.container.bean.processor;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is a container for PortletRequestScoped CDI beans.
@@ -39,8 +37,8 @@ import org.slf4j.LoggerFactory;
 public class PortletRequestScopedBeanHolder implements Serializable {
    
    /** Logger. */
-   private static final Logger LOG = LoggerFactory.getLogger(PortletRequestScopedBeanHolder.class);
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletRequestScopedBeanHolder.class.getName());
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
    
    private static final long serialVersionUID = 6014843414216617217L;
    
@@ -76,7 +74,7 @@ public class PortletRequestScopedBeanHolder implements Serializable {
          StringBuilder txt = new StringBuilder(80);
          txt.append("Setting portlet request bean holder.");
          txt.append(" ThreadId=").append(Thread.currentThread().getId());
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
 
       PortletRequestScopedBeanHolder holder = new PortletRequestScopedBeanHolder();
@@ -100,7 +98,7 @@ public class PortletRequestScopedBeanHolder implements Serializable {
          StringBuilder txt = new StringBuilder(80);
          txt.append("Removed portlet request bean holder.");
          txt.append(" ThreadId=").append(Thread.currentThread().getId());
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
    }
    
@@ -171,7 +169,7 @@ public class PortletRequestScopedBeanHolder implements Serializable {
             StringBuilder txt = new StringBuilder(80);
             txt.append("Created bean: ");
             txt.append(((Bean<?>) bean).getBeanClass().getSimpleName());
-            LOG.trace(txt.toString());
+            LOG.fine(txt.toString());
          }
 
       }
@@ -197,7 +195,7 @@ public class PortletRequestScopedBeanHolder implements Serializable {
          if (bi == null) {
             txt.append(", instance is null.");
          }
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
 
       if (bi != null) {

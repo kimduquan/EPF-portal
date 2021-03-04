@@ -20,7 +20,6 @@
 package org.apache.pluto.container.om.portlet.impl;
 
 import java.util.Comparator;
-
 import org.apache.pluto.container.om.portlet.Filter;
 
 

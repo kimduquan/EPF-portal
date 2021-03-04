@@ -23,7 +23,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.Typed;
 import javax.inject.Named;
@@ -59,9 +60,6 @@ import javax.portlet.annotations.PortletRequestScoped;
 import javax.portlet.annotations.WindowId;
 import javax.servlet.http.Cookie;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Contains producer methods for portlet artifacts that are dependent on the portlet
  * request, response, or configuration.
@@ -70,8 +68,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class PortletArtifactProducer {
-   private static final Logger LOG = LoggerFactory.getLogger(PortletArtifactProducer.class);
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletArtifactProducer.class.getName());
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
    
    
    // There needs to be a single producer instance per thread.
@@ -103,7 +101,7 @@ public class PortletArtifactProducer {
             StringBuilder txt = new StringBuilder(80);
             txt.append("Created new empty PortletArtifactProducer");
             txt.append(", ThreadId=").append(Thread.currentThread().getId());
-            LOG.trace(txt.toString());
+            LOG.fine(txt.toString());
          }
 
       }
@@ -121,7 +119,7 @@ public class PortletArtifactProducer {
          StringBuilder txt = new StringBuilder(80);
          txt.append("Disposed of the PortletArtifactProducer");
          txt.append(", ThreadId=").append(Thread.currentThread().getId());
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
    }
    
@@ -142,7 +140,7 @@ public class PortletArtifactProducer {
          txt.append("Set precursors.");
          txt.append(" ThreadId=").append(Thread.currentThread().getId());
          txt.append(", Portlet name: ").append(config == null ? "null" : config.getPortletName());
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
 
    }
@@ -160,7 +158,7 @@ public class PortletArtifactProducer {
          txt.append(" ThreadId=").append(Thread.currentThread().getId());
          txt.append(", Portlet name: ").append(pap.config.getPortletName());
          txt.append(", Init param names: ").append(Collections.list(pap.config.getInitParameterNames()).toString());
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
 
       return pap.config;

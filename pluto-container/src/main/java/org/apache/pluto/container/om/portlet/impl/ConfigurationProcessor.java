@@ -7,7 +7,6 @@ import static org.apache.pluto.container.bean.processor.MethodDescription.METH_H
 import static org.apache.pluto.container.bean.processor.MethodDescription.METH_INI;
 import static org.apache.pluto.container.bean.processor.MethodDescription.METH_REN;
 import static org.apache.pluto.container.bean.processor.MethodDescription.METH_RES;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -24,7 +23,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.portlet.Portlet;
@@ -40,7 +40,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
-
 import org.apache.pluto.container.bean.processor.AnnotatedMethod;
 import org.apache.pluto.container.bean.processor.AnnotatedMethodStore;
 import org.apache.pluto.container.bean.processor.MethodDescription;
@@ -51,8 +50,6 @@ import org.apache.pluto.container.om.portlet.EventDefinitionReference;
 import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
 import org.apache.pluto.container.om.portlet.PortletDefinition;
 import org.apache.pluto.container.om.portlet.Supports;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -83,9 +80,9 @@ import org.xml.sax.SAXException;
 public abstract class ConfigurationProcessor {
 
    /** Logger. */
-   private static final Logger            LOG     = LoggerFactory.getLogger(ConfigurationProcessor.class);
-   private static final boolean           isDebug = LOG.isDebugEnabled();
-   private static final boolean           isTrace = LOG.isTraceEnabled();
+   private static final Logger            LOG     = Logger.getLogger(ConfigurationProcessor.class.getName());
+   private static final boolean           isDebug = LOG.isLoggable(Level.INFO);
+   private static final boolean           isTrace = LOG.isLoggable(Level.FINE);
 
    protected PortletApplicationDefinition pad;
 
@@ -188,7 +185,7 @@ public abstract class ConfigurationProcessor {
       txt.append(clsName);
       if (!isValidIdentifier(clsName)) {
          txt.append(". Invalid java identifier.");
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
          throw new IllegalArgumentException(txt.toString());
       }
 
@@ -214,7 +211,7 @@ public abstract class ConfigurationProcessor {
             pw.flush();
             txt.append("\n").append(sw.toString());
          }
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
          throw new IllegalArgumentException(txt.toString(), e);
       }
    }
@@ -232,7 +229,7 @@ public abstract class ConfigurationProcessor {
       txt.append(bundleName);
       if (!isValidIdentifier(bundleName)) {
          txt.append(". Invalid java identifier.");
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
          throw new IllegalArgumentException(txt.toString());
       }
 
@@ -244,7 +241,7 @@ public abstract class ConfigurationProcessor {
          @SuppressWarnings("unused")
          ResourceBundle rb = ResourceBundle.getBundle(bundleName, Locale.getDefault(), cl);
       } catch (Exception e) {
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
          throw new IllegalArgumentException(txt.toString(), e);
       }
    }
@@ -314,7 +311,7 @@ public abstract class ConfigurationProcessor {
          pad.addLocaleEncodingMapping(locale, encstr);
          mappings++;
       }
-      LOG.debug("done parsing web DD, # mappings: " + mappings);
+      LOG.info("done parsing web DD, # mappings: " + mappings);
    }
 
    /**
@@ -413,7 +410,7 @@ public abstract class ConfigurationProcessor {
       if (isDebug) {
          StringBuilder txt = new StringBuilder();
          txt.append("Beginning reconciliation. Annotated portlets: ").append(portletNames.toString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       ams.setDefaultNamespace(pad.getDefaultNamespace());
@@ -475,7 +472,7 @@ public abstract class ConfigurationProcessor {
                   txt.append(",    portlet modes: ");
                   txt.append(((Supports)mimeSupps.get(mt)).getPortletModes().toString());
                }
-               LOG.debug(txt.toString());
+               LOG.info(txt.toString());
             }
 
          }
@@ -506,7 +503,7 @@ public abstract class ConfigurationProcessor {
                txt.append("No event definition found for annotated processing event reference.");
                txt.append(" Portlet name: ").append(pn);
                txt.append(", QName: ").append(qn);
-               LOG.warn(txt.toString());
+               LOG.warning(txt.toString());
 
                // remove the defective method from the store
                MethodIdentifier mi = new MethodIdentifier(pd.getPortletName(), qn, MethodType.EVENT);
@@ -530,7 +527,7 @@ public abstract class ConfigurationProcessor {
                txt.append("No event definition found for annotated publishing event reference.");
                txt.append(" Portlet name: ").append(pn);
                txt.append(", QName: ").append(qn);
-               LOG.warn(txt.toString());
+               LOG.warning(txt.toString());
                continue;
             }
             EventDefinitionReference newedr = new EventDefinitionReferenceImpl(qn);
@@ -570,7 +567,7 @@ public abstract class ConfigurationProcessor {
                if (cls == null) {
                   txt.append(" Portlet name: ").append(pd.getPortletName());
                   txt.append(", Portlet class: ").append(clsName);
-                  LOG.warn(txt.toString());
+                  LOG.warning(txt.toString());
                }
             }
          }
@@ -657,7 +654,7 @@ public abstract class ConfigurationProcessor {
             txt.append(sep).append(mi.toString());
             sep = ";";
          }
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       for (MethodIdentifier mi : mis) {
@@ -691,7 +688,7 @@ public abstract class ConfigurationProcessor {
             StringBuilder txt = new StringBuilder();
             txt.append("Portlet does not have a render, resource, or header method, so cannot be taken into service. ");
             txt.append("Portlet name: ").append(pd.getPortletName());
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
          }
          
       }
@@ -707,13 +704,13 @@ public abstract class ConfigurationProcessor {
          Set<String> finalNames = ams.getPortletNames();
          finalNames.remove("*"); // don't display wildcard
          txt.append("Resulting portlet list: ").append(finalNames.toString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       
       if (isTrace) {
          StringBuilder txt = new StringBuilder();
          txt.append(ams.getMethodsAsString());
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
 
    }
@@ -729,7 +726,7 @@ public abstract class ConfigurationProcessor {
          txt.append("Instantiating the portlets.");
          txt.append(" beanMgr: ").append((bm == null) ? "null" : "not null");
          txt.append(", portlet names: ").append(Arrays.toString(ams.getPortletNames().toArray()));
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       ams.activateMethods(bm);
@@ -775,9 +772,9 @@ public abstract class ConfigurationProcessor {
                // archive, as a JSR 286 portlet might be. Try to get a regular old instance.
 
                if (instance == null) {
-                  LOG.debug("Could not create bean (possibly not in a valid bean archive). Now directly instantiating class: " + cls.getCanonicalName());
+                  LOG.info("Could not create bean (possibly not in a valid bean archive). Now directly instantiating class: " + cls.getCanonicalName());
                   try {
-                     instance = cls.newInstance();
+                     instance = cls.getDeclaredConstructor().newInstance();
                   } catch (Exception e) {
                      txt.append(" Exception creating instance of class: ").append(e.toString());
                   }
@@ -801,7 +798,7 @@ public abstract class ConfigurationProcessor {
                      str.append(" portlet name: ").append(pd.getPortletName());
                      str.append(", class: ").append(cls.getCanonicalName());
                      str.append(", instance: ").append((instance == null) ? "null" : "not null");
-                     LOG.debug(str.toString());
+                     LOG.info(str.toString());
                   }
 
                }
@@ -811,11 +808,11 @@ public abstract class ConfigurationProcessor {
                if (instance == null) {
                   txt.append(" Portlet name: ").append(pd.getPortletName());
                   txt.append(", portlet class: ").append(cls);
-                  LOG.warn(txt.toString());
+                  LOG.warning(txt.toString());
                }
 
             } catch (ClassNotFoundException e) {
-               LOG.debug("Could not instantiate portlet class: " + clsName);
+               LOG.info("Could not instantiate portlet class: " + clsName);
             }
 
          }
@@ -841,7 +838,7 @@ public abstract class ConfigurationProcessor {
                         txt.append("Exception creating instance of class: ").append(e.toString());
                         txt.append(" Portlet name: ").append(pd.getPortletName());
                         txt.append(", portlet class: ").append(cls);
-                        LOG.warn(txt.toString());
+                        LOG.warning(txt.toString());
                      }
                   }
                }
@@ -871,7 +868,7 @@ public abstract class ConfigurationProcessor {
             txt.append(" Method name: ").append(name);
             txt.append(", Class: ").append(cls.getCanonicalName());
             txt.append(", Argument types: ").append(md.getArgTypes());
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
       }
       return am;

@@ -21,15 +21,13 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.PreferencesValidator;
 import javax.portlet.ReadOnlyException;
 import javax.portlet.ValidatorException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletPreference;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletContainerException;
@@ -48,7 +46,7 @@ import org.apache.pluto.container.util.StringManager;
 public class PortletPreferencesImpl implements PortletPreferences {
 	
 	/** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(PortletPreferencesImpl.class);
+    private static final Logger LOG = Logger.getLogger(PortletPreferencesImpl.class.getName());
     
     private static final StringManager EXCEPTIONS = StringManager.getManager(
     		PortletPreferencesImpl.class.getPackage().getName());
@@ -93,8 +91,8 @@ public class PortletPreferencesImpl implements PortletPreferences {
         // Get the portlet preferences service from container.
         preferencesService = container.getContainerServices()
         		.getPortletPreferencesService();
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Using PortletPreferencesService: "
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Using PortletPreferencesService: "
             		+ preferencesService.getClass().getName());
         }
         
@@ -106,8 +104,8 @@ public class PortletPreferencesImpl implements PortletPreferences {
                     preferences.put(p.getName(), p.clone());
                 }
             }
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Loaded default preferences: " + toString());
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Loaded default preferences: " + toString());
             }
             
             // Merge stored portlet preferences into preferences map.
@@ -117,11 +115,11 @@ public class PortletPreferencesImpl implements PortletPreferences {
             preferences.putAll(storedPreferences);
         	
         } catch (PortletContainerException ex) {
-            LOG.error("Error retrieving preferences.", ex);
+            LOG.log(Level.SEVERE, "Error retrieving preferences.", ex);
             //TODO: Rethrow up the stack????
         }
-        if (LOG.isTraceEnabled()) {
-        	LOG.trace("Merged stored preferences: " + toString());
+        if (LOG.isLoggable(Level.FINE)) {
+        	LOG.fine("Merged stored preferences: " + toString());
         }
     }
     
@@ -221,15 +219,15 @@ public class PortletPreferencesImpl implements PortletPreferences {
         // Try to reset preference to the default values.
         PortletPreference p = defaultPreferences.get(key);
         if (p != null) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Resetting preference for key: " + key);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Resetting preference for key: " + key);
             }
             preferences.put(key,p.clone());
         }       
         // Remove preference if default values are not defined (PLT.14.1).
         else {
-        	if (LOG.isTraceEnabled()) {
-        		LOG.trace("Resetting preference to null for key: " + key);
+        	if (LOG.isLoggable(Level.FINE)) {
+        		LOG.fine("Resetting preference to null for key: " + key);
         	}
         	preferences.remove(key);
         }
@@ -282,7 +280,7 @@ public class PortletPreferencesImpl implements PortletPreferences {
         try {
         	preferencesService.store(window, request, preferences);
         } catch (PortletContainerException ex) {
-            LOG.error("Error storing preferences.", ex);
+            LOG.log(Level.SEVERE, "Error storing preferences.", ex);
             throw new IOException("Error storing perferences: " + ex.getMessage());
         }
     }

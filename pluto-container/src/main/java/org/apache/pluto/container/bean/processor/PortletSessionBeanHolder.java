@@ -19,14 +19,12 @@
 package org.apache.pluto.container.bean.processor;
 
 import java.io.Serializable;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is a container for PortletSessionScoped CDI beans.
@@ -35,9 +33,8 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class PortletSessionBeanHolder implements Serializable {
-   private static final Logger  LOG              = LoggerFactory
-                                                       .getLogger(PortletSessionBeanHolder.class);
-   private static final boolean isTrace          = LOG.isTraceEnabled();
+   private static final Logger  LOG              = Logger.getLogger(PortletSessionBeanHolder.class.getName());
+   private static final boolean isTrace          = LOG.isLoggable(Level.FINE);
 
    private static final long    serialVersionUID = 4713451590109713169L;
    private static final String  ATTRIBNAME       = "portletSessionBeanHolder";
@@ -94,7 +91,7 @@ public class PortletSessionBeanHolder implements Serializable {
          txt.append(", PortletSession: ").append(ps.getId());
          txt.append(", WindowId: ").append(windowId);
          txt.append(", Added new BeanMap to session: ").append(createdMap);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 
@@ -108,7 +105,7 @@ public class PortletSessionBeanHolder implements Serializable {
          StringBuilder txt = new StringBuilder(80);
          txt.append("Removed portlet session bean holder.");
          txt.append(" ThreadId=").append(Thread.currentThread().getId());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 

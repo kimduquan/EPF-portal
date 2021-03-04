@@ -19,15 +19,13 @@ package org.apache.pluto.container.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
-
 import org.apache.pluto.container.PortletAppDescriptorService;
 import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
 import org.apache.pluto.container.om.portlet.impl.ConfigurationHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Service that reads the portlet deployment descriptor.
@@ -36,9 +34,9 @@ import org.slf4j.LoggerFactory;
 public class PortletAppDescriptorServiceImpl implements PortletAppDescriptorService {
    
    /** Logger. */
-   private static final Logger LOG = LoggerFactory.getLogger(PortletAppDescriptorServiceImpl.class);
+   private static final Logger LOG = Logger.getLogger(PortletAppDescriptorServiceImpl.class.getName());
    @SuppressWarnings("unused")
-   private static final boolean isDebug = LOG.isDebugEnabled();
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
    
 
    public PortletAppDescriptorServiceImpl() {

@@ -22,16 +22,14 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class AnnotatedMethod {
-   private static final Logger LOG = LoggerFactory.getLogger(AnnotatedMethod.class);
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(AnnotatedMethod.class.getName());
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
    
    
    private final Class<?>           beanClass; 
@@ -133,7 +131,7 @@ public class AnnotatedMethod {
          txt.append("ID: ").append(toString());
          txt.append(", beanMgr == null?: ").append(beanMgr == null);
          txt.append(", bean == null?: ").append(bean == null);
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
    }
    
@@ -150,7 +148,7 @@ public class AnnotatedMethod {
          str.append("Updating class instance.");
          str.append(", bean class: ").append(beanClass.getCanonicalName());
          str.append(", instance: ").append((beanInstance == null) ? "null" : "not null");
-         LOG.debug(str.toString());
+         LOG.info(str.toString());
       }
 
       this.beanInstance = beanInstance;
@@ -178,7 +176,7 @@ public class AnnotatedMethod {
             txt.append("ID: ").append(toString());
             txt.append(", beanMgr == null?").append(beanMgr == null);
             txt.append(", bean == null?").append(bean == null);
-            LOG.trace(txt.toString());
+            LOG.fine(txt.toString());
          }
          
          beanInstance = beanMgr.getReference(bean, bean.getBeanClass(), beanMgr.createCreationalContext(bean));

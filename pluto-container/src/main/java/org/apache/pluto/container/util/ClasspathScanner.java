@@ -24,13 +24,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClasspathScanner {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ClasspathScanner.class);
+    private static final Logger LOG = Logger.getLogger(ClasspathScanner.class.getName());
 
     /**
      * Retrieve a lit of all urls matching the specified
@@ -44,7 +43,7 @@ public class ClasspathScanner {
         list.addAll(scan(path, Thread.currentThread().getContextClassLoader()));
         list.add(ClasspathScanner.class.getResource(path));
 
-        if(LOG.isInfoEnabled()) {
+        if(LOG.isLoggable(Level.FINE)) {
             LOG.info("Found "+list.size()+" resources for path '"+path+"'.");
         }
 
@@ -103,7 +102,7 @@ public class ClasspathScanner {
                         try {
                             classes.add(Class.forName(token));
                         } catch (ClassNotFoundException cnfe) {
-                            LOG.warn("Unable to find configured implementation " + impl + " of interface " + implemented.getName());
+                            LOG.warning("Unable to find configured implementation " + impl + " of interface " + implemented.getName());
                         }
                     }
                 }

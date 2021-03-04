@@ -23,16 +23,14 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.portlet.PortletRequest;
 import javax.portlet.StateAwareResponse;
 import javax.portlet.annotations.PortletSerializable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is a container for RenderStateScoped CDI beans.
@@ -43,8 +41,8 @@ import org.slf4j.LoggerFactory;
 public class PortletStateScopedBeanHolder implements Serializable {
    
    /** Logger. */
-   private static final Logger LOG = LoggerFactory.getLogger(PortletStateScopedBeanHolder.class);
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletStateScopedBeanHolder.class.getName());
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
    
    private static final long serialVersionUID = 6014843414216617217L;
    
@@ -89,7 +87,7 @@ public class PortletStateScopedBeanHolder implements Serializable {
          txt.append("Setting render state bean holder.");
          txt.append(" ThreadId=").append(Thread.currentThread().getId());
          txt.append(", config: ").append((config == null) ? "null" : config.getConfigAsString());
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
 
       PortletStateScopedBeanHolder holder = new PortletStateScopedBeanHolder(req, config);
@@ -114,7 +112,7 @@ public class PortletStateScopedBeanHolder implements Serializable {
          StringBuilder txt = new StringBuilder(80);
          txt.append("Removed render state bean holder.");
          txt.append(" ThreadId=").append(Thread.currentThread().getId());
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
    }
    
@@ -201,7 +199,7 @@ public class PortletStateScopedBeanHolder implements Serializable {
             txt.append(((Bean<?>) bean).getBeanClass().getSimpleName());
             txt.append(", Render parameter name: ").append(parmName);
             txt.append(", Values: ").append(Arrays.toString(vals));
-            LOG.trace(txt.toString());
+            LOG.fine(txt.toString());
          }
 
       }
@@ -231,7 +229,7 @@ public class PortletStateScopedBeanHolder implements Serializable {
          if (bi == null) {
             txt.append(", instance is null.");
          }
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
 
       if (bi != null) {
@@ -260,7 +258,7 @@ public class PortletStateScopedBeanHolder implements Serializable {
                txt.append(resp.getNamespace());
                txt.append(", paramName: ").append(pn);
                txt.append(", Values: ").append(Arrays.toString(vals));
-               LOG.trace(txt.toString());
+               LOG.fine(txt.toString());
             }
          }
          remove(bean);

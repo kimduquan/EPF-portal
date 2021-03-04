@@ -18,7 +18,8 @@ package org.apache.pluto.container.impl;
 
 import java.io.IOException;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
@@ -34,11 +35,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
-
 import org.apache.pluto.container.PortletInvokerService;
 import org.apache.pluto.container.PortletRequestContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of the <code>PortletRequestDispatcher</code> interface. The portlet request dispatcher is used to
@@ -47,8 +45,8 @@ import org.slf4j.LoggerFactory;
  */
 public class PortletRequestDispatcherImpl implements PortletRequestDispatcher, RequestDispatcher {
    /** Logger. */
-   private static final Logger  LOG     = LoggerFactory.getLogger(PortletRequestDispatcherImpl.class);
-   private final static boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger  LOG     = Logger.getLogger(PortletRequestDispatcherImpl.class.getName());
+   private final static boolean isTrace = LOG.isLoggable(Level.FINE);
 
    // Private Member Variables ------------------------------------------------
 
@@ -77,7 +75,7 @@ public class PortletRequestDispatcherImpl implements PortletRequestDispatcher, R
       this.path = path;
 
       if (isTrace) {
-         LOG.debug("Request dispatcher created.");
+         LOG.info("Request dispatcher created.");
       }
    }
 
@@ -209,21 +207,21 @@ public class PortletRequestDispatcherImpl implements PortletRequestDispatcher, R
 
    public void forward(PortletRequest request, PortletResponse response) throws PortletException, IOException {
       if (isTrace) {
-         LOG.debug("Doing request dispatcher forward for portlet request.");
+         LOG.info("Doing request dispatcher forward for portlet request.");
       }
       doDispatch(request, response, false);
    }
 
    public void include(PortletRequest request, PortletResponse response) throws PortletException, IOException {
       if (isTrace) {
-         LOG.debug("Doing request dispatcher include for portlet request.");
+         LOG.info("Doing request dispatcher include for portlet request.");
       }
       doDispatch(request, response, true);
    }
 
    public void include(RenderRequest request, RenderResponse response) throws PortletException, IOException {
       if (isTrace) {
-         LOG.debug("Doing request dispatcher include for render request.");
+         LOG.info("Doing request dispatcher include for render request.");
       }
       doDispatch(request, response, true);
    }
@@ -239,7 +237,7 @@ public class PortletRequestDispatcherImpl implements PortletRequestDispatcher, R
          txt.append("Forwarding ... ");
          txt.append(" hreq: ").append((req == null) ? "null" : "not null");
          txt.append(" hresp: ").append((res == null) ? "null" : "not null");
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       res.resetBuffer();

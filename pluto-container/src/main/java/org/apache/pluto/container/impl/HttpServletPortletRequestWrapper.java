@@ -28,7 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.ClientDataRequest;
 import javax.portlet.HeaderRequest;
 import javax.portlet.PortletException;
@@ -49,14 +50,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
-
 import org.apache.pluto.container.NamespaceMapper;
 import org.apache.pluto.container.PortletInvokerService;
 import org.apache.pluto.container.PortletRequestContext;
 import org.apache.pluto.container.PortletResourceRequestContext;
 import org.apache.pluto.container.PortletWindowID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Provides special handling for servlet request methods to make them behave as defined by the portlet specification
@@ -73,10 +71,9 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper {
-   private static final Logger       LOG                  = LoggerFactory
-                                                                .getLogger(HttpServletPortletRequestWrapper.class);
-   private static final boolean      isDebug              = LOG.isDebugEnabled();
-   private static final boolean      isTrace              = LOG.isTraceEnabled();
+   private static final Logger       LOG                  = Logger.getLogger(HttpServletPortletRequestWrapper.class.getName());
+   private static final boolean      isDebug              = LOG.isLoggable(Level.INFO);
+   private static final boolean      isTrace              = LOG.isLoggable(Level.FINE);
 
    private static final String       FORWARD_CONTEXT_PATH = "javax.servlet.forward.context_path";
    private static final String       FORWARD_PATH_INFO    = "javax.servlet.forward.path_info";
@@ -163,7 +160,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
                   txt.append("Servlet path from method not substring of original path.");
                   txt.append(" original: ").append(osp);
                   txt.append(", current: ").append(sp);
-                  LOG.trace(txt.toString());
+                  LOG.fine(txt.toString());
                }
             } else {
                String pathinfo = osp.substring(sp.length());
@@ -179,7 +176,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
                   txt.append(", req URI: ").append(origin.get(FORWARD_REQUEST_URI));
                   txt.append(", context path: ").append(origin.get(FORWARD_CONTEXT_PATH));
                   txt.append(", query string: ").append(origin.get(FORWARD_QUERY_STRING));
-                  LOG.debug(txt.toString());
+                  LOG.info(txt.toString());
                }
 
             }
@@ -286,7 +283,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
             txt.append("\norigin_path_info:      ").append(origin.get("javax.servlet.forward.path_info"));
             txt.append("\norigin_query_string:   ").append(origin.get("javax.servlet.forward.query_string"));
          }
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 
@@ -338,7 +335,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
          txt.append("\nmethod_servlet_path:  ").append(getHreq().getServletPath());
          txt.append("\nmethod_path_info:     ").append(getHreq().getPathInfo());
          txt.append("\nmethod_query_string:  ").append(getHreq().getQueryString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 
@@ -421,7 +418,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
          StringBuilder txt = new StringBuilder();
          txt.append("Ending async processing.");
          txt.append(" remaining dispatch stack: ").append(types.toString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       dispatches.clear();
@@ -469,7 +466,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
             txt.append(",  active dispatch type: ");
             txt.append(dispatches.get(dispatches.size()-1).type);
          }
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 
@@ -548,7 +545,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
       if (isTrace) {
          StringBuilder txt = new StringBuilder();
          txt.append("Returning real path for: ").append(pinfo);
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
 
       // base the return value on the derived path method value
@@ -625,7 +622,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
             txt.append("Getting: ");
             txt.append(name).append(", value: ").append((val == null) ? "null" : val.toString());
             txt.append(", encoded: ").append(encoded);
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
          return val;
       }
@@ -646,7 +643,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
          StringBuilder txt = new StringBuilder(128);
          txt.append("Attempt to set protected attribute ").append(name);
          txt.append(" will be ignored.");
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       } else {
          
          // if attribute by encoded name exists, store with encoded name. otherwise
@@ -666,7 +663,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
             txt.append("Setting: ");
             txt.append(name).append(", value: ").append((o == null) ? "null" : o.toString());
             txt.append(", encoded: ").append(encoded);
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
       }
       handleServletPathInfo();
@@ -680,7 +677,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
          StringBuilder txt = new StringBuilder(128);
          txt.append("Attempt to remove protected attribute ").append(name);
          txt.append(" will be ignored.");
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       } else {
          
          // if attribute by encoded name exists, remove with encoded name.
@@ -699,7 +696,7 @@ public class HttpServletPortletRequestWrapper extends HttpServletRequestWrapper 
             txt.append("Removing: ");
             txt.append(name);
             txt.append(", encoded: ").append(encoded);
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
       }
    }

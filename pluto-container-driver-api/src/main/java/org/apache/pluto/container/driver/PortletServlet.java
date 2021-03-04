@@ -19,6 +19,8 @@
 
 package org.apache.pluto.container.driver;
 
+import javax.servlet.annotation.WebInitParam;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
 /**
@@ -30,6 +32,11 @@ import javax.servlet.http.HttpServlet;
  * @see PortletContainerInitializer
  * @author Scott Nicklous
  */
+@WebServlet(
+		name = "AboutPortlet",
+		initParams = {@WebInitParam(name = "portlet-name", value = "AboutPortlet")},
+		loadOnStartup = 1
+		)
 public class PortletServlet extends HttpServlet {
    private static final long serialVersionUID = -2550104981099637033L;
 

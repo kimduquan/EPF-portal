@@ -16,8 +16,8 @@
  */
 package org.apache.pluto.container.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Static class that provides utility static methods for argument validation.
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 public class ArgumentUtility {
 
 	/** Logger. */
-    public static final Logger LOG = LoggerFactory.getLogger(ArgumentUtility.class);
+    public static final Logger LOG = Logger.getLogger(ArgumentUtility.class.getName());
 
 
     // Static Utility Methods --------------------------------------------------
@@ -40,8 +40,8 @@ public class ArgumentUtility {
     public static void validateNotNull(String argumentName, Object argument)
     throws IllegalArgumentException {
         if (argument == null) {
-        	if (LOG.isDebugEnabled()) {
-        		LOG.debug("Validation failed for argument: " + argumentName
+        	if (LOG.isLoggable(Level.INFO)) {
+        		LOG.info("Validation failed for argument: " + argumentName
         				+ ": argument should not be null.");
         	}
         	throw new IllegalArgumentException(
@@ -59,8 +59,8 @@ public class ArgumentUtility {
     public static void validateNotEmpty(String argumentName, String argument)
     throws IllegalArgumentException {
         if (argument == null || "".equals(argument)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Validation failed for argument: " + argumentName
+            if (LOG.isLoggable(Level.INFO)) {
+                LOG.info("Validation failed for argument: " + argumentName
                 		+ ": argument should not be null or empty.");
             }
             throw new IllegalArgumentException(

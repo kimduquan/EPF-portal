@@ -26,7 +26,8 @@ import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.annotations.ActionMethod;
 import javax.portlet.annotations.DestroyMethod;
 import javax.portlet.annotations.EventMethod;
@@ -35,10 +36,6 @@ import javax.portlet.annotations.InitMethod;
 import javax.portlet.annotations.RenderMethod;
 import javax.portlet.annotations.ServeResourceMethod;
 import javax.servlet.ServletContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.infomas.annotation.AnnotationDetector;
 
 /**
@@ -48,8 +45,8 @@ import eu.infomas.annotation.AnnotationDetector;
  * 
  */
 public class MethodAnnotationRecognizer extends PortletAnnotationRecognizer implements AnnotationDetector.MethodReporter {
-   private static final Logger LOG = LoggerFactory.getLogger(MethodAnnotationRecognizer.class);
-   private static final boolean isDebug = LOG.isDebugEnabled();
+   private static final Logger LOG = Logger.getLogger(MethodAnnotationRecognizer.class.getName());
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
    
    private static final String  CLASSDIR  = "/WEB-INF/classes";
    private static final String  LIBDIR    = "/WEB-INF/lib";
@@ -103,7 +100,7 @@ public class MethodAnnotationRecognizer extends PortletAnnotationRecognizer impl
             txt.append(", class name: ").append(className);
             txt.append(", method name: ").append(methName);
             txt.append(", class: ").append((valClass == null) ? "could not be loaded." : "loaded.");
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
 
          if (valClass != null) {
@@ -149,7 +146,7 @@ public class MethodAnnotationRecognizer extends PortletAnnotationRecognizer impl
          pw.flush();
          txt.append(sw.toString());
          
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       }
       long delta = System.currentTimeMillis() - start;
       
@@ -163,7 +160,7 @@ public class MethodAnnotationRecognizer extends PortletAnnotationRecognizer impl
             txt.append(sep).append(file.toString());
             sep = ", ";
          }
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
    
@@ -203,7 +200,7 @@ public class MethodAnnotationRecognizer extends PortletAnnotationRecognizer impl
                   pw.flush();
                   txt.append(sw.toString());
 
-                  LOG.warn(txt.toString());
+                  LOG.warning(txt.toString());
                }
             }
          }
@@ -239,7 +236,7 @@ public class MethodAnnotationRecognizer extends PortletAnnotationRecognizer impl
                   pw.flush();
                   txt.append(sw.toString());
                   
-                  LOG.warn(txt.toString());
+                  LOG.warning(txt.toString());
                }
             }
          }

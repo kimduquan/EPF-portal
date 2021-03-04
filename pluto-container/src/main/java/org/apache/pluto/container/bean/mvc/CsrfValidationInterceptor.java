@@ -18,7 +18,8 @@ package org.apache.pluto.container.bean.mvc;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -29,9 +30,6 @@ import javax.mvc.security.Csrf;
 import javax.mvc.security.CsrfProtected;
 import javax.portlet.ClientDataRequest;
 import javax.ws.rs.core.Configuration;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -44,7 +42,7 @@ public class CsrfValidationInterceptor implements Serializable {
 
 	private static final long serialVersionUID = 1348567603498123441L;
 
-	private static final Logger LOG = LoggerFactory.getLogger(CsrfValidationInterceptor.class);
+	private static final Logger LOG = Logger.getLogger(CsrfValidationInterceptor.class.getName());
 
 	@Inject
 	private Configuration configuration;
@@ -70,7 +68,7 @@ public class CsrfValidationInterceptor implements Serializable {
 					csrfOptions = Csrf.CsrfOptions.valueOf(csrfProtection.toString());
 				}
 				catch (IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
+					LOG.log(Level.SEVERE ,e.getMessage(), e);
 				}
 			}
 		}
@@ -109,7 +107,7 @@ public class CsrfValidationInterceptor implements Serializable {
 						proceed = true;
 					}
 					else {
-						LOG.error("Invalid CSRF token");
+						LOG.severe("Invalid CSRF token");
 					}
 
 				}
@@ -118,11 +116,11 @@ public class CsrfValidationInterceptor implements Serializable {
 				}
 			}
 			else {
-				LOG.error("First parameter of method signature must be ActionRequest or ResourceRequest");
+				LOG.severe("First parameter of method signature must be ActionRequest or ResourceRequest");
 			}
 		}
 		else {
-			LOG.error("Method signature must include ActionRequest,ActionResponse or ResourceRequest,ResourceResponse");
+			LOG.severe("Method signature must include ActionRequest,ActionResponse or ResourceRequest,ResourceResponse");
 		}
 
 		if (proceed) {

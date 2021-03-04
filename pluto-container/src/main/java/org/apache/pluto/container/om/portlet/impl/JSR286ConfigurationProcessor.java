@@ -21,7 +21,8 @@ package org.apache.pluto.container.om.portlet.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.Portlet;
 import javax.portlet.PortletURLGenerationListener;
 import javax.portlet.PreferencesValidator;
@@ -29,7 +30,6 @@ import javax.portlet.filter.PortletFilter;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
-
 import org.apache.pluto.container.om.portlet.ContainerRuntimeOption;
 import org.apache.pluto.container.om.portlet.CustomPortletMode;
 import org.apache.pluto.container.om.portlet.CustomWindowState;
@@ -81,8 +81,6 @@ import org.apache.pluto.container.om.portlet20.impl.UserAttributeType;
 import org.apache.pluto.container.om.portlet20.impl.UserDataConstraintType;
 import org.apache.pluto.container.om.portlet20.impl.ValueType;
 import org.apache.pluto.container.om.portlet20.impl.WindowStateType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Processes configuration for JSR 168 portlet app.
@@ -93,10 +91,9 @@ import org.slf4j.LoggerFactory;
 public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
 
    /** Logger. */
-   private static final Logger          LOG     = LoggerFactory
-                                                      .getLogger(JSR286ConfigurationProcessor.class);
-   // private static final boolean isDebug = LOG.isDebugEnabled();
-   private static final boolean         isTrace = LOG.isTraceEnabled();
+   private static final Logger          LOG     = Logger.getLogger(JSR286ConfigurationProcessor.class.getName());
+   // private static final boolean isDebug = LOG.isLoggable(Level.INFO);
+   private static final boolean         isTrace = LOG.isLoggable(Level.FINE);
 
    public JSR286ConfigurationProcessor(PortletApplicationDefinition pad) {
       super(pad);
@@ -124,7 +121,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
 
       if ((app.getVersion() == null) || !app.getVersion().equals("2.0")) {
          String warning = "Bad version. Expected 2.0, was: " + app.getVersion();
-         LOG.warn(warning);
+         LOG.warning(warning);
          throw new IllegalArgumentException(warning);
       }
       pad.setVersion(app.getVersion());
@@ -136,7 +133,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          txt.append(app.getVersion());
          txt.append(", ID: ");
          txt.append(app.getId());
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
 
       if (app.getDefaultNamespace() != null
@@ -185,7 +182,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
 
          if (dispName.getValue() == null) {
             String warning = "Bad display name - no display name value; will be ignored. continuing ...";
-            LOG.warn(warning);
+            LOG.warning(warning);
             continue;
          }
 
@@ -206,7 +203,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
 
          if (desc.getValue() == null) {
             String warning = "Bad description - no description value; will be ignored. continuing ...";
-            LOG.warn(warning);
+            LOG.warning(warning);
             continue;
          }
 
@@ -227,7 +224,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          // validate data
          if ((uat.getName() == null) || (uat.getName().getValue() == null)) {
             String warning = "Bad user attribute will be ignored. Name was null. Continuing ...";
-            LOG.warn(warning);
+            LOG.warning(warning);
             continue;
          }
 
@@ -254,7 +251,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          if ((item.getFilterName() == null) || (item.getFilterName().length() == 0)
                || (item.getFilterClass() == null) || (item.getFilterClass().length() == 0)) {
             String warning = "Bad Filter definition. name or class was null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -290,7 +287,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          String fname = item.getFilterName();
          if ((fname == null) || (item.getPortletName().size() == 0)) {
             String warning = "Bad FilterMapping definition. Filter name or portlet name is null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
          
@@ -315,7 +312,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          // validate data
          if (item.getListenerClass() == null || item.getListenerClass().length() == 0) {
             String warning = "Bad Listener definition. Class was null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -344,14 +341,14 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          if ((cpm.getPortletMode() == null)
                || (cpm.getPortletMode().getValue() == null)) {
             String warning = "Custom portlet mode cannot be null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          } else {
             String val = cpm.getPortletMode().getValue();
             if (val.equalsIgnoreCase("view") || val.equalsIgnoreCase("edit")
                   || val.equalsIgnoreCase("help")) {
                String warning = "Bad custom portlet mode: " + val;
-               LOG.warn(warning);
+               LOG.warning(warning);
                throw new IllegalArgumentException(warning);
             }
          }
@@ -386,14 +383,14 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          if ((cws.getWindowState() == null)
                || (cws.getWindowState().getValue() == null)) {
             String warning = "Custom window state cannot be null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          } else {
             String val = cws.getWindowState().getValue();
             if (val.equalsIgnoreCase("normal") || val.equalsIgnoreCase("maximized")
                   || val.equalsIgnoreCase("minimized")) {
                String warning = "Bad custom window state: " + val;
-               LOG.warn(warning);
+               LOG.warning(warning);
                throw new IllegalArgumentException(warning);
             }
          }
@@ -423,13 +420,13 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          if ((pct == null) || (pct.getPortletName() == null)
                || (pct.getPortletName().size() == 0)) {
             String warning = "Portlet collection is empty.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          } else {
             for (PortletNameType pnt : pct.getPortletName()) {
                if (pnt.getValue().length() == 0) {
                   String warning = "Portlet name may not be null.";
-                  LOG.warn(warning);
+                  LOG.warning(warning);
                   throw new IllegalArgumentException(warning);
                }
             }
@@ -439,7 +436,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          if ((udc == null) || (udc.getTransportGuarantee() == null)
                || (udc.getTransportGuarantee().value() == null)) {
             String warning = "User data constraint contains null value.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -473,18 +470,18 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          MimeTypeType mtt = st.getMimeType();
          if (mtt == null || mtt.getValue() == null) {
             String warning = "Null Mime type, ignoring Supports block.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             continue;
          }
          List<PortletModeType> pmlist = st.getPortletMode();
          if (pmlist.size() == 0) {
             String info = "No portlet modes found in Supports block.";
-            LOG.trace(info);
+            LOG.fine(info);
          }
          List<WindowStateType> wslist = st.getWindowState();
          if (wslist.size() == 0) {
             String info = "No window states found in Supports block.";
-            LOG.trace(info);
+            LOG.fine(info);
          }
 
          // set up Supports, discarding MIME type parameters & blanks
@@ -515,7 +512,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          if ((parm.getName() == null) || (parm.getName().getValue() == null) ||
                (parm.getName().getValue().length() == 0)) {
             String warning = "Bad init parameter. Parameter name was null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -543,7 +540,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          if ((item.getName() == null) || (item.getName().getValue() == null) ||
                (item.getName().getValue().length() == 0)) {
             String warning = "Bad portlet preference. Preference name was null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -574,7 +571,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          if ((arg.getName() == null) || (arg.getName().getValue() == null)
                || arg.getName().getValue().equals("")) {
             String warning = "Bad container runtime option. Name was null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -604,7 +601,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          // validate data
          if ((item.getRoleName() == null) || (item.getRoleName().length() == 0)) {
             String warning = "Bad security role reference. Name was null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -639,7 +636,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          // validate data
          if ((item.getName() == null) && (item.getQname() == null)) {
             String warning = "Bad Even definition reference. Name and QName are null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -669,7 +666,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          // validate data
          if ((item.getName() == null) && (item.getQname() == null)) {
             String warning = "Bad Event definition. Name and QName are null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -706,13 +703,13 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          // validate data
          if ((item.getName() == null) && (item.getQname() == null)) {
             String warning = "Bad public render parameter definition. Name and QName are null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
          String id = item.getIdentifier();
          if ((id == null) || (id.length() == 0)) {
             String warning = "Bad public render parameter definition. Identifier is null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -749,7 +746,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          if (portlet.getPortletName() == null || portlet.getPortletName().getValue() == null ||
                portlet.getPortletName().getValue().length() == 0) {
             warning = "Portlet name may not be null";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
          String pn = portlet.getPortletName().getValue();
@@ -757,7 +754,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          String clsName = portlet.getPortletClass();
          if (clsName == null || clsName.length() == 0) {
             warning = "Portlet class may not be null";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -841,7 +838,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
          for (String prp : portlet.getSupportedPublicRenderParameter()) {
             if ((prp == null) || (prp.length() == 0)) {
                warning = "Supported public render parameter definition may not be null.";
-               LOG.warn(warning);
+               LOG.warning(warning);
                throw new IllegalArgumentException(warning);
             }
             pd.addSupportedPublicRenderParameter(prp);
@@ -924,7 +921,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
             txt.append("Bad filter mapping definition. Filter name: ").append(fm.getFilterName());
             txt.append(", Portlet names: ").append(fm.getPortletNames().toString());
             txt.append(", Filter definition not found: ").append(fname);
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
             pad.removeFilterMapping(fm);
          }
          if (pad.getVersion().equals("2.0")) {
@@ -934,7 +931,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
                   txt.append("Bad filter mapping definition. Filter name: ").append(fm.getFilterName());
                   txt.append(", Portlet names: ").append(fm.getPortletNames().toString());
                   txt.append(", Portlet definition not found: ").append(pn);
-                  LOG.warn(txt.toString());
+                  LOG.warning(txt.toString());
                   pad.removeFilterMapping(fm);
                }
             }
@@ -991,7 +988,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
             }
             if (!ok) {
                txt.append(". Public render parameter definition not found for: ").append(prp);
-               LOG.warn(txt.toString());
+               LOG.warning(txt.toString());
                portlet.removeSupportedPublicRenderParameter(prp);
             }
          }
@@ -1009,7 +1006,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
                   txt.append(sep).append(def.getQName());
                   sep = ", ";
                }
-               LOG.warn(txt.toString());
+               LOG.warning(txt.toString());
                portlet.removeSupportedPublishingEvent(edr);
             }
          }
@@ -1027,7 +1024,7 @@ public class JSR286ConfigurationProcessor extends JSR168ConfigurationProcessor {
                   txt.append(sep).append(def.getQName());
                   sep = ", ";
                }
-               LOG.warn(txt.toString());
+               LOG.warning(txt.toString());
                portlet.removeSupportedProcessingEvent(edr);
             }
          }

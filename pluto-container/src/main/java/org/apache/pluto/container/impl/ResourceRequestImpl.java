@@ -18,7 +18,8 @@ package org.apache.pluto.container.impl;
 
 import java.util.Enumeration;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.CacheControl;
 import javax.portlet.PortletAsyncContext;
 import javax.portlet.PortletMode;
@@ -29,16 +30,13 @@ import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceURL;
 import javax.portlet.WindowState;
 import javax.servlet.DispatcherType;
-
 import org.apache.pluto.container.PortletResourceRequestContext;
 import org.apache.pluto.container.PortletResourceResponseContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ResourceRequestImpl extends ClientDataRequestImpl implements ResourceRequest {
 
    /** Internal logger. */
-   private static final Logger LOG = LoggerFactory.getLogger(ResourceRequestImpl.class);
+   private static final Logger LOG = Logger.getLogger(ResourceRequestImpl.class.getName());
 
    private CacheControl        cacheControl;
 
@@ -96,7 +94,7 @@ public class ResourceRequestImpl extends ClientDataRequestImpl implements Resour
    @Override
    public String getParameter(String name) {
       String val = super.getParameter(name);
-      if (LOG.isTraceEnabled()) {
+      if (LOG.isLoggable(Level.FINE)) {
          Map<String, String[]> pmap = super.getParameterMap();
          StringBuffer txt = new StringBuffer(1024);
          txt.append("Resource Request parameter map dump:");
@@ -109,7 +107,7 @@ public class ResourceRequestImpl extends ClientDataRequestImpl implements Resour
                sep = ", ";
             }
          }
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       return val;
    }

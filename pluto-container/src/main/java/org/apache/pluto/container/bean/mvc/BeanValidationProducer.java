@@ -17,7 +17,8 @@
 package org.apache.pluto.container.bean.mvc;
 
 import java.util.Iterator;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
@@ -30,9 +31,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * @author  Neil Griffin
@@ -40,7 +38,7 @@ import org.slf4j.LoggerFactory;
 @ApplicationScoped
 public class BeanValidationProducer {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BeanValidationProducer.class);
+	private static final Logger LOG = Logger.getLogger(BeanValidationProducer.class.getName());
 
 	private MessageInterpolator messageInterpolator;
 	private Validator validator;
@@ -74,8 +72,8 @@ public class BeanValidationProducer {
 
 		if (validatorFactory == null) {
 
-			if (LOG.isWarnEnabled()) {
-				LOG.warn("ValidatorFactory was not injected -- if using Hibernate " + "Validator, please include the " +
+			if (LOG.isLoggable(Level.WARNING)) {
+				LOG.warning("ValidatorFactory was not injected -- if using Hibernate " + "Validator, please include the " +
 					"hibernate-validator-cdi dependency.");
 			}
 
@@ -83,21 +81,21 @@ public class BeanValidationProducer {
 				validatorFactory = Validation.buildDefaultValidatorFactory();
 			}
 			catch (NoProviderFoundException npfe) {
-				LOG.error(npfe.getMessage(), npfe);
+				LOG.log(Level.SEVERE, npfe.getMessage(), npfe);
 			}
 		}
 
 		if (validatorFactory != null) {
 			messageInterpolator = validatorFactory.getMessageInterpolator();
 
-			if ((messageInterpolator == null) && LOG.isWarnEnabled()) {
-				LOG.warn("Bean validation MessageInterpolator not available");
+			if ((messageInterpolator == null) && LOG.isLoggable(Level.WARNING)) {
+				LOG.warning("Bean validation MessageInterpolator not available");
 			}
 
 			validator = validatorFactory.getValidator();
 
-			if ((validator == null) && LOG.isWarnEnabled()) {
-				LOG.warn("Bean validation validator not available");
+			if ((validator == null) && LOG.isLoggable(Level.WARNING)) {
+				LOG.warning("Bean validation validator not available");
 			}
 		}
 	}

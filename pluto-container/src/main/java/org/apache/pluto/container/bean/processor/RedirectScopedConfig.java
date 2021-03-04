@@ -19,9 +19,6 @@
 
 package org.apache.pluto.container.bean.processor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
@@ -33,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Configuration for RedirectScoped CDI beans.
@@ -43,8 +42,8 @@ import java.util.Set;
  */
 public class RedirectScopedConfig implements Serializable {
    private static final long serialVersionUID = 4387223464722335532L;
-   private final Logger LOG = LoggerFactory.getLogger(RedirectScopedConfig.class);
-   private final boolean isTrace = LOG.isTraceEnabled();
+   private final Logger LOG = Logger.getLogger(RedirectScopedConfig.class.getName());
+   private final boolean isTrace = LOG.isLoggable(Level.FINE);
    
    
    // Contains a sorted list of RedirectScoped annotated class names. The sorted list
@@ -115,7 +114,7 @@ public class RedirectScopedConfig implements Serializable {
          txt.append("RedirectScopedBeanHolder configuration.");
          txt.append(" Annotated Beans: ");
          txt.append(getConfigAsString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
    

@@ -22,7 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.portlet.annotations.PortletApplication;
 import javax.portlet.annotations.PortletConfiguration;
@@ -38,14 +39,11 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
 import org.apache.pluto.container.bean.processor.AnnotatedMethodStore;
 import org.apache.pluto.container.bean.processor.ConfigSummary;
 import org.apache.pluto.container.bean.processor.MethodAnnotationRecognizer;
 import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
 import org.apache.pluto.container.om.portlet.PortletDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class processes the web app deployment descriptor and the portlet deployment descriptor files.
@@ -61,8 +59,8 @@ public class ConfigurationHolder {
    private ConfigurationProcessor       jcp          = null;
 
    /** Logger. */
-   private static final Logger          LOG          = LoggerFactory.getLogger(ConfigurationHolder.class);
-   private static final boolean         isDebug      = LOG.isDebugEnabled();
+   private static final Logger          LOG          = Logger.getLogger(ConfigurationHolder.class.getName());
+   private static final boolean         isDebug      = LOG.isLoggable(Level.INFO);
 
    private static final String          JAXB_CONTEXT = "org.apache.pluto.container.om.portlet10.impl:"
                                                            + "org.apache.pluto.container.om.portlet20.impl:"
@@ -159,7 +157,7 @@ public class ConfigurationHolder {
 
       if (jel == null) {
          String warning = "Nothing could be unmarshalled. Stream didn't produce object";
-         LOG.warn(warning);
+         LOG.warning(warning);
          throw new IOException(warning);
       }
 
@@ -167,7 +165,7 @@ public class ConfigurationHolder {
          StringBuilder txt = new StringBuilder();
          txt.append("Unmarshalled stream. ===> Object type: ");
          txt.append(jel.getValue().getClass().getCanonicalName());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       if (jel.getValue() instanceof org.apache.pluto.container.om.portlet10.impl.PortletAppType) {
@@ -189,7 +187,7 @@ public class ConfigurationHolder {
 
       } else {
          String warning = "Unknown application type: " + jel.getValue().getClass().getCanonicalName();
-         LOG.warn(warning);
+         LOG.warning(warning);
          throw new IOException(warning);
       }
 
@@ -205,7 +203,7 @@ public class ConfigurationHolder {
             txt.append(sep).append(pd.getPortletName());
             sep = ", ";
          }
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
    }
@@ -334,7 +332,7 @@ public class ConfigurationHolder {
    public void scanMethodAnnotations(ServletContext ctx) {
       MethodAnnotationRecognizer mar = new MethodAnnotationRecognizer(methodStore, configSummary);
       mar.scanContext(ctx);
-      LOG.debug("Scan complete: \n" + methodStore.getMethodsAsString());
+      LOG.info("Scan complete: \n" + methodStore.getMethodsAsString());
    }
    
    /**
@@ -357,7 +355,7 @@ public class ConfigurationHolder {
    public void scanMethodAnnotations(Set<File> files, boolean mvc) {
       MethodAnnotationRecognizer mar = new MethodAnnotationRecognizer(methodStore, configSummary, mvc);
       mar.scanFiles(files);
-      LOG.debug("Scan complete: \n" + methodStore.getMethodsAsString());
+      LOG.info("Scan complete: \n" + methodStore.getMethodsAsString());
    }
 
 }

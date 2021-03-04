@@ -24,23 +24,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.MutablePortletParameters;
 import javax.portlet.PortletParameters;
-
 import org.apache.pluto.container.PortletURLProvider;
 import org.apache.pluto.container.PortletURLProvider.ParamType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Scott Nicklous
  *
  */
 public abstract class PortletParametersImpl implements PortletParameters {
-   private static final Logger   LOGGER     = LoggerFactory.getLogger(PortletParametersImpl.class);
-   //private static final boolean  isDebug    = LOGGER.isDebugEnabled();
-   private static final boolean  isTrace    = LOGGER.isTraceEnabled();
+   private static final Logger   LOGGER     = Logger.getLogger(PortletParametersImpl.class.getName());
+   //private static final boolean  isDebug    = LOGGER.isLoggable(Level.INFO);
+   private static final boolean  isTrace    = LOGGER.isLoggable(Level.FINE);
    
    protected final PortletURLProvider  urlProvider;
    protected final String              windowId;
@@ -60,7 +58,7 @@ public abstract class PortletParametersImpl implements PortletParameters {
       this.type = type;
       this.params = this.urlProvider.getParameterMap(windowId, type);
       if (isTrace) {
-         LOGGER.debug("Created PortletParameters object for window: " + windowId + ", Type: " + type);
+         LOGGER.info("Created PortletParameters object for window: " + windowId + ", Type: " + type);
       }
    }
    
@@ -102,7 +100,7 @@ public abstract class PortletParametersImpl implements PortletParameters {
       String[] vals = params.get(name);
       String val = (vals == null || vals.length == 0) ? null : vals[0];
       if (isTrace) {
-         LOGGER.debug("Name: " + name + ", Value: " + val);
+         LOGGER.info("Name: " + name + ", Value: " + val);
       }
       return val;
    }
@@ -116,7 +114,7 @@ public abstract class PortletParametersImpl implements PortletParameters {
          names.add(name);
       }
       if (isTrace) {
-         LOGGER.debug("Parameter Names: " + names.toString());
+         LOGGER.info("Parameter Names: " + names.toString());
       }
       return names;
    }
@@ -128,7 +126,7 @@ public abstract class PortletParametersImpl implements PortletParameters {
       checkNull("name", name);
       String[] vals = (params.get(name) == null) ? null : params.get(name).clone();
       if (isTrace) {
-         LOGGER.debug("Name: " + name + ", Values: " + Arrays.toString(vals));
+         LOGGER.info("Name: " + name + ", Values: " + Arrays.toString(vals));
       }
       return vals;
    }
@@ -139,7 +137,7 @@ public abstract class PortletParametersImpl implements PortletParameters {
    public boolean isEmpty() {
       boolean e = params.isEmpty();
       if (isTrace) {
-         LOGGER.debug("Parameters is empty: " + e);
+         LOGGER.info("Parameters is empty: " + e);
       }
       return e;
    }
@@ -156,7 +154,7 @@ public abstract class PortletParametersImpl implements PortletParameters {
     */
    public MutablePortletParameters clone() {
       if (isTrace) {
-         LOGGER.debug("Window ID: " + windowId + ", ParameterType: " + type);
+         LOGGER.info("Window ID: " + windowId + ", ParameterType: " + type);
       }
 
       // create a mutable clone, breaking link to the underlying URL provider.

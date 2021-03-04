@@ -26,14 +26,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.portlet.annotations.RenderStateScoped;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Configuration for RenderStateScoped CDI beans.
@@ -43,8 +41,8 @@ import org.slf4j.LoggerFactory;
  */
 public class PortletStateScopedConfig  implements Serializable {
    private static final long serialVersionUID = -5333145344722804837L;
-   private final Logger LOG = LoggerFactory.getLogger(PortletStateScopedConfig.class);
-   private final boolean isTrace = LOG.isTraceEnabled();
+   private final Logger LOG = Logger.getLogger(PortletStateScopedConfig.class.getName());
+   private final boolean isTrace = LOG.isLoggable(Level.FINE);
    
    
    // Contains a sorted list of RenderStateScoped annotated class names. The sorted list
@@ -136,7 +134,7 @@ public class PortletStateScopedConfig  implements Serializable {
          txt.append("PortletStateScopedBeanHolder configuration.");
          txt.append(" Annotated Beans: ");
          txt.append(getConfigAsString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
    

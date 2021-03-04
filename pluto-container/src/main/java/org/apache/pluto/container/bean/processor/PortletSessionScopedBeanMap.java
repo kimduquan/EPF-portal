@@ -22,15 +22,13 @@ package org.apache.pluto.container.bean.processor;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -45,9 +43,9 @@ import org.slf4j.LoggerFactory;
 public class PortletSessionScopedBeanMap implements HttpSessionBindingListener, Serializable {
    private static final long serialVersionUID = -4770245090803443972L;
    
-   private static final Logger LOG = LoggerFactory.getLogger(PortletSessionScopedBeanMap.class);
-   private static final boolean isDebug = LOG.isDebugEnabled();
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletSessionScopedBeanMap.class.getName());
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
    
    // Used in the bean map to designate application scoped beans.
    private static final String WINDOW_ID_APPLICATION = "application";
@@ -105,7 +103,7 @@ public class PortletSessionScopedBeanMap implements HttpSessionBindingListener, 
          }
          txt.append(", window ID: ").append(id);
          txt.append(", added new map: ").append(addedMap);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
    
@@ -134,7 +132,7 @@ public class PortletSessionScopedBeanMap implements HttpSessionBindingListener, 
          txt.append("Window ID: ").append(id);
          txt.append(", retrieved map: ").append(gotMap);
          txt.append(", instance null: ").append(instance == null);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       
       return instance;
@@ -159,7 +157,7 @@ public class PortletSessionScopedBeanMap implements HttpSessionBindingListener, 
          if (bi == null) {
             txt.append(", instance is null.");
          }
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       if (bi != null) {
@@ -187,7 +185,7 @@ public class PortletSessionScopedBeanMap implements HttpSessionBindingListener, 
    @Override
    public void valueUnbound(HttpSessionBindingEvent evt) {
       if (isTrace) {
-         LOG.trace("PortletSessionBeanHolder unbound from session. ID=" + evt.getName());
+         LOG.fine("PortletSessionBeanHolder unbound from session. ID=" + evt.getName());
       }
       
       synchronized(beans) {
@@ -204,7 +202,7 @@ public class PortletSessionScopedBeanMap implements HttpSessionBindingListener, 
    public void removeByWindowId(String windowId) {
 
       if (isTrace) {
-         LOG.trace("Removing beans associated with windowId=" + windowId);
+         LOG.fine("Removing beans associated with windowId=" + windowId);
       }
 
       synchronized(beans) {

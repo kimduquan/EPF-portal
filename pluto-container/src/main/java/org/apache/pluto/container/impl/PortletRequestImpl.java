@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ccpp.Profile;
 import javax.portlet.CacheControl;
@@ -40,7 +42,6 @@ import javax.portlet.WindowState;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletInvokerService;
 import org.apache.pluto.container.PortletRequestContext;
@@ -51,8 +52,6 @@ import org.apache.pluto.container.om.portlet.PortletDefinition;
 import org.apache.pluto.container.om.portlet.SecurityRoleRef;
 import org.apache.pluto.container.om.portlet.Supports;
 import org.apache.pluto.container.util.ArgumentUtility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Abstract <code>javax.portlet.PortletRequest</code> implementation. This class also implements InternalPortletRequest.
@@ -62,9 +61,9 @@ public abstract class PortletRequestImpl implements PortletRequest {
    public static final String             ACCEPT_LANGUAGE   = "Accept-Language";
    public static final String             USER_AGENT        = "User-Agent";
 
-   private static final Logger            LOG               = LoggerFactory.getLogger(PortletRequestImpl.class);
+   private static final Logger            LOG               = Logger.getLogger(PortletRequestImpl.class.getName());
    @SuppressWarnings("unused")
-   private static boolean                 isDebug           = LOG.isDebugEnabled();
+   private static boolean                 isDebug           = LOG.isLoggable(Level.INFO);
 
    private static final List<String>      EMPTY_STRING_LIST = Collections.unmodifiableList(new ArrayList<String>(0));
 

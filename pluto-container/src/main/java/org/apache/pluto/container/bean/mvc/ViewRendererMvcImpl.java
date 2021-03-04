@@ -19,7 +19,8 @@ package org.apache.pluto.container.bean.mvc;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
@@ -33,9 +34,6 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.ws.rs.core.Configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * @author  Neil Griffin
@@ -43,7 +41,7 @@ import org.slf4j.LoggerFactory;
 @ApplicationScoped
 public class ViewRendererMvcImpl implements ViewRenderer {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ViewRendererMvcImpl.class);
+	private static final Logger LOG = Logger.getLogger(ViewRendererMvcImpl.class.getName());
 
 	@Inject
 	private BeanManager beanManager;
@@ -116,8 +114,8 @@ public class ViewRendererMvcImpl implements ViewRenderer {
 
 			for (ParamError paramError : allErrors) {
 
-				if (LOG.isWarnEnabled()) {
-					LOG.warn("BindingResult error not processed for " + paramError.getParamName() + ": " +
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning("BindingResult error not processed for " + paramError.getParamName() + ": " +
 						paramError.getMessage());
 				}
 			}

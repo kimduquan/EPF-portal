@@ -16,8 +16,8 @@
  */
 package org.apache.pluto.container.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.pluto.container.ContainerServices;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletContainerException;
@@ -35,7 +35,7 @@ import org.apache.pluto.container.util.ArgumentUtility;
 public class PortletContainerFactory {
 
     /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(PortletContainerFactory.class);
+    private static final Logger LOG = Logger.getLogger(PortletContainerFactory.class.getName());
 
 
     /** Singleton instance of the <code>PortletContainerFactory</code>. */
@@ -76,7 +76,7 @@ public class PortletContainerFactory {
         PortletContainer container = new PortletContainerImpl(
         		containerName, requiredServices);
 
-        if (LOG.isInfoEnabled()) {
+        if (LOG.isLoggable(Level.FINE)) {
             LOG.info("Portlet Container [" + containerName + "] created.");
         }
         return container;

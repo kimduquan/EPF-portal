@@ -24,13 +24,11 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.ProcessAnnotatedType;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class recognizes "interesting" classes and methods by their annotations and
@@ -40,9 +38,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public abstract class AnnotationRecognizer {
-   private static final Logger LOG = LoggerFactory.getLogger(AnnotationRecognizer.class);
-   private static final boolean isDebug = LOG.isDebugEnabled();
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(AnnotationRecognizer.class.getName());
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
    
 
    protected final Set<Class<? extends Annotation>> classAnnotations;
@@ -104,7 +102,7 @@ public abstract class AnnotationRecognizer {
                   StringBuilder txt = new StringBuilder(128);
                   txt.append("Found Annotation: ").append(anno.toString());
                   txt.append(", portlet name: ").append(getDisplayNames(anno));
-                  LOG.debug(txt.toString());
+                  LOG.info(txt.toString());
                }
                AnnotatedType<?> ret = handleClassAnnotation(anno, aType);
                if (ret != null) {
@@ -173,7 +171,7 @@ public abstract class AnnotationRecognizer {
                      txt.append(", No match found. Error string:\n");
                      txt.append(errtxt);
                   }
-                  LOG.trace(txt.toString());
+                  LOG.fine(txt.toString());
                }
 
                if (matchingDesc != null) {
@@ -193,7 +191,7 @@ public abstract class AnnotationRecognizer {
                   txt.append(", Class: ").append(typeName);
                   txt.append(", Method: ").append(meth.getName());
                   txt.append("\n").append(errtxt);
-                  LOG.debug(txt.toString());
+                  LOG.info(txt.toString());
                   
                   // Store the error for each portlet name in array 
                   for (String n : getDisplayNames(anno)) {

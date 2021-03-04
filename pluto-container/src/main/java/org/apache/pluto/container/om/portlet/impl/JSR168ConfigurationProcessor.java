@@ -21,11 +21,11 @@ package org.apache.pluto.container.om.portlet.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.Portlet;
 import javax.portlet.PreferencesValidator;
 import javax.xml.bind.JAXBElement;
-
 import org.apache.pluto.container.om.portlet.CustomPortletMode;
 import org.apache.pluto.container.om.portlet.CustomWindowState;
 import org.apache.pluto.container.om.portlet.Description;
@@ -62,8 +62,6 @@ import org.apache.pluto.container.om.portlet10.impl.SupportsType;
 import org.apache.pluto.container.om.portlet10.impl.UserAttributeType;
 import org.apache.pluto.container.om.portlet10.impl.UserDataConstraintType;
 import org.apache.pluto.container.om.portlet10.impl.ValueType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Processes configuration for JSR 168 portlet app.
@@ -74,10 +72,9 @@ import org.slf4j.LoggerFactory;
 public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
 
    /** Logger. */
-   private static final Logger          LOG     = LoggerFactory
-                                                      .getLogger(JSR168ConfigurationProcessor.class);
-   // private static final boolean         isDebug = LOG.isDebugEnabled();
-   private static final boolean         isTrace = LOG.isTraceEnabled();
+   private static final Logger          LOG     = Logger.getLogger(JSR168ConfigurationProcessor.class.getName());
+   // private static final boolean         isDebug = LOG.isLoggable(Level.INFO);
+   private static final boolean         isTrace = LOG.isLoggable(Level.FINE);
    
    public JSR168ConfigurationProcessor(PortletApplicationDefinition pad) {
       super(pad);
@@ -102,7 +99,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
 
       if ((app.getVersion() == null) || !app.getVersion().equals("1.0")) {
          String warning = "Bad version. Expected 1.0, was: " + app.getVersion();
-         LOG.warn(warning);
+         LOG.warning(warning);
          throw new IllegalArgumentException(warning);
       }
       pad.setVersion(app.getVersion());
@@ -114,7 +111,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          txt.append(app.getVersion());
          txt.append(", ID: ");
          txt.append(app.getId());
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
 
       handleCPM(app.getCustomPortletMode());
@@ -134,7 +131,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
 
          if (dispName.getValue() == null) {
             String warning = "Bad display name - no display name value; will be ignored. continuing ...";
-            LOG.warn(warning);
+            LOG.warning(warning);
             continue;
          }
 
@@ -155,7 +152,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
 
          if (desc.getValue() == null) {
             String warning = "Bad description - no description value; will be ignored. continuing ...";
-            LOG.warn(warning);
+            LOG.warning(warning);
             continue;
          }
 
@@ -176,7 +173,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          // validate data
          if ((uat.getName() == null) || (uat.getName().getValue() == null)) {
             String warning = "Bad user attribute will be ignored. Name was null. Continuing ...";
-            LOG.warn(warning);
+            LOG.warning(warning);
             continue;
          }
 
@@ -203,14 +200,14 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          if ((cpm.getPortletMode() == null)
                || (cpm.getPortletMode().getValue() == null)) {
             String warning = "Bad custom portlet mode. Mode was null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          } else {
             String val = cpm.getPortletMode().getValue();
             if (val.equalsIgnoreCase("view") || val.equalsIgnoreCase("edit")
                   || val.equalsIgnoreCase("help")) {
                String warning = "Bad custom portlet mode. Mode was: " + val;
-               LOG.warn(warning);
+               LOG.warning(warning);
                throw new IllegalArgumentException(warning);
             }
          }
@@ -238,14 +235,14 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          if ((cws.getWindowState() == null)
                || (cws.getWindowState().getValue() == null)) {
             String warning = "Bad custom portlet mode. Mode was null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          } else {
             String val = cws.getWindowState().getValue();
             if (val.equalsIgnoreCase("view") || val.equalsIgnoreCase("edit")
                   || val.equalsIgnoreCase("help")) {
                String warning = "Bad custom portlet mode. Mode was: " + val;
-               LOG.warn(warning);
+               LOG.warning(warning);
                throw new IllegalArgumentException(warning);
             }
          }
@@ -275,7 +272,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          if ((pct == null) || (pct.getPortletName() == null)
                || (pct.getPortletName().size() == 0)) {
             String warning = "Portlet collection is empty.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          } else {
             for (PortletNameType pnt : pct.getPortletName()) {
@@ -291,7 +288,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          if ((udc == null) || (udc.getTransportGuarantee() == null)
                || (udc.getTransportGuarantee().value() == null)) {
             String warning = "User data constraint contains null value.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -325,13 +322,13 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          MimeTypeType mtt = st.getMimeType();
          if (mtt == null || mtt.getValue() == null) {
             String warning = "Null Mime type, ignoring Supports block.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             continue;
          }
          List<PortletModeType> list = st.getPortletMode();
          if (list.size() == 0) {
             String warning = "No portlet modes found, ignoring Supports block.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             continue;
          }
 
@@ -359,7 +356,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          // validate data
          if ((parm.getName() == null) || (parm.getName().getValue() == null)) {
             String warning = "Bad init parameter. Parameter name was null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -386,7 +383,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          // validate data
          if ((item.getName() == null) || (item.getName().getValue() == null)) {
             String warning = "Bad portlet preference. Ppreference name was null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -415,7 +412,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          // validate data
          if ((item.getRoleName() == null) || (item.getRoleName().length() == 0)) {
             String warning = "Bad security role reference. Name was null.";
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
 
@@ -449,14 +446,14 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          String pn = portlet.getPortletName().getValue();
          if (!isValidIdentifier(pn)) {
             warning = "Portlet name not valid Java identifier: " + pn;
-            LOG.warn(warning);
+            LOG.warning(warning);
             // throw new IllegalArgumentException(warning);
          }
          
          String clsName = portlet.getPortletClass();
          warning = "Bad portlet class: " + clsName;
          if (!isValidIdentifier(clsName)) {
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning);
          }
          
@@ -469,7 +466,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
                throw new Exception("specified class is not a Portlet.");
             }
          } catch (Exception e) {
-            LOG.warn(warning);
+            LOG.warning(warning);
             throw new IllegalArgumentException(warning, e);
          }
 
@@ -503,7 +500,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
          if (pit != null) {
             if (pit.getTitle().getValue() == null) {
                warning = "Portlet info section does not contain title. Ingoring ...";
-               LOG.warn(warning);
+               LOG.warning(warning);
             } else {
                String title, st = null, kw = null; 
                title = pit.getTitle().getValue();
@@ -533,7 +530,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
             clsName = prefs.getPreferencesValidator();
             warning = "Bad portlet preferences validator class: " + clsName;
             if (!isValidIdentifier(clsName)) {
-               LOG.warn(warning);
+               LOG.warning(warning);
                throw new IllegalArgumentException(warning);
             }
             
@@ -546,7 +543,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
                   throw new Exception("specified class is not a PreferencesValidator.");
                }
             } catch (Exception e) {
-               LOG.warn(warning);
+               LOG.warning(warning);
                throw new IllegalArgumentException(warning, e);
             }
 

@@ -22,11 +22,9 @@ package org.apache.pluto.container.om.portlet.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
+import java.util.logging.Logger;
 import org.apache.pluto.container.om.portlet.LocaleText;
 import org.apache.pluto.container.om.portlet.PortletInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Portlet info
@@ -37,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class PortletInfoImpl implements PortletInfo {
    
    /** Logger. */
-   private static final Logger LOG = LoggerFactory.getLogger(PortletInfoImpl.class);
+   private static final Logger LOG = Logger.getLogger(PortletInfoImpl.class.getName());
    
    private final List<LocaleText> titles = new ArrayList<LocaleText>();
    private final List<LocaleText> keywords = new ArrayList<LocaleText>();
@@ -139,7 +137,7 @@ public class PortletInfoImpl implements PortletInfo {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Removed duplicate description for locale: ").append(title.getLocale().toString());
          txt.append(", description: ").append(title.getText());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       titles.add(title);
    }
@@ -199,7 +197,7 @@ public class PortletInfoImpl implements PortletInfo {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Removed duplicate description for locale: ").append(kw.getLocale().toString());
          txt.append(", description: ").append(kw.getText());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       keywords.add(kw);
    }
@@ -259,7 +257,7 @@ public class PortletInfoImpl implements PortletInfo {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Removed duplicate description for locale: ").append(st.getLocale().toString());
          txt.append(", description: ").append(st.getText());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       sTitles.add(st);
    }

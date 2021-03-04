@@ -21,9 +21,8 @@ import java.util.Hashtable;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * An internationalization / localization helper class which reduces the bother
@@ -43,7 +42,7 @@ import org.slf4j.LoggerFactory;
  */
 
 public class StringManager {
-    private static final Logger LOG =  LoggerFactory.getLogger(StringManager.class);
+    private static final Logger LOG =  Logger.getLogger(StringManager.class.getName());
 
     /**
      * The ResourceBundle for this StringManager.
@@ -64,8 +63,8 @@ public class StringManager {
      */
 
     private StringManager(String packageName) {
-        if(LOG.isDebugEnabled()) {
-            LOG.debug("String Manager Created for package: "+packageName);
+        if(LOG.isLoggable(Level.INFO)) {
+            LOG.info("String Manager Created for package: "+packageName);
         }
         this.packageName = packageName;
         String bundleName = packageName + ".LocalStrings";
@@ -88,8 +87,8 @@ public class StringManager {
                 cl = this.getClass().getClassLoader();
             }
 
-            if(LOG.isWarnEnabled()) {
-                LOG.warn("Can't find resource " + bundleName + " " + cl);
+            if(LOG.isLoggable(Level.WARNING)) {
+                LOG.warning("Can't find resource " + bundleName + " " + cl);
             }
         }
     }
@@ -126,7 +125,7 @@ public class StringManager {
             }
             str = "Cannot find message in the ResourceBundle associated with key '" + key + "' " +
                     "(package " + name + ")";
-            LOG.warn(str, mre);
+            LOG.log(Level.WARNING, str, mre);
         }
 
         return str;

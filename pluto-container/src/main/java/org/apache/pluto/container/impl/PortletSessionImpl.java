@@ -22,14 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletSession;
 import javax.portlet.PortletSessionUtil;
 import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletWindow;
 import org.apache.pluto.container.util.ArgumentUtility;
 
@@ -40,7 +38,7 @@ import org.apache.pluto.container.util.ArgumentUtility;
 public class PortletSessionImpl implements PortletSession {
 	
 	/** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(PortletSessionImpl.class);
+    private static final Logger LOG = Logger.getLogger(PortletSessionImpl.class.getName());
     
     /** The default scope (<code>PORTLET_SCOPE</code>) for storing objects. */
     protected static final int DEFAULT_SCOPE = PortletSession.PORTLET_SCOPE;
@@ -196,8 +194,8 @@ public class PortletSessionImpl implements PortletSession {
      */ 
     public void setMaxInactiveInterval(int interval) {
         httpSession.setMaxInactiveInterval(interval);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Session timeout set to: " + interval);
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Session timeout set to: " + interval);
         }
     }
     

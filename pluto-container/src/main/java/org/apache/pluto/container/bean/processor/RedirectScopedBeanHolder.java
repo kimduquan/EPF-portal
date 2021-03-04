@@ -18,14 +18,13 @@
 
 package org.apache.pluto.container.bean.processor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is a container for RedirectScoped CDI beans.
@@ -35,9 +34,8 @@ import java.io.Serializable;
  *
  */
 public class RedirectScopedBeanHolder implements Serializable {
-   private static final Logger  LOG              = LoggerFactory
-                                                       .getLogger(RedirectScopedBeanHolder.class);
-   private static final boolean isTrace          = LOG.isTraceEnabled();
+   private static final Logger  LOG              = Logger.getLogger(RedirectScopedBeanHolder.class.getName());
+   private static final boolean isTrace          = LOG.isLoggable(Level.FINE);
 
    private static final long    serialVersionUID = 3856727894564632122L;
    private static final String  ATTRIBNAME       = "redirectScopedBeanHolder";
@@ -91,7 +89,7 @@ public class RedirectScopedBeanHolder implements Serializable {
          txt.append(", PortletSession: ").append(ps.getId());
          txt.append(", WindowId: ").append(windowId);
          txt.append(", Added new BeanMap to session: ").append(createdMap);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 
@@ -111,7 +109,7 @@ public class RedirectScopedBeanHolder implements Serializable {
          StringBuilder txt = new StringBuilder(80);
          txt.append("Removed redirect scope bean holder.");
          txt.append(" ThreadId=").append(Thread.currentThread().getId());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 

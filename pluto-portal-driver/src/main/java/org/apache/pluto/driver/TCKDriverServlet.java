@@ -21,9 +21,9 @@ import java.text.DecimalFormat;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletContainer;
@@ -36,8 +36,18 @@ import org.apache.pluto.driver.services.portal.PageConfig;
  * @version 1.0
  * @since Dec 11, 2005
  */
+@WebServlet(
+		description = "Pluto TCK Driver Controller",
+		displayName = "Pluto TCK Driver",
+		name = "tckDriver"
+		)
 public class TCKDriverServlet extends PortalDriverServlet {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** Logger. */
     private static final Logger LOG = LoggerFactory.getLogger(TCKDriverServlet.class);
     

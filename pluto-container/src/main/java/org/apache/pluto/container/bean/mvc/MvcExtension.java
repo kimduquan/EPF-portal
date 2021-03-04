@@ -19,7 +19,8 @@ package org.apache.pluto.container.bean.mvc;
 import java.lang.annotation.Annotation;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Vetoed;
 import javax.enterprise.inject.spi.AnnotatedField;
@@ -42,9 +43,6 @@ import javax.ws.rs.MatrixParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * @author  Neil Griffin
@@ -52,7 +50,7 @@ import org.slf4j.LoggerFactory;
 @Vetoed
 public class MvcExtension implements Extension {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MvcExtension.class);
+	private static final Logger LOG = Logger.getLogger(MvcExtension.class.getName());
 
 	private static final Annotation BEAN_VALIDATION_INTERCEPTOR_BINDING = new BeanValidationInterceptorBinding() {
 
@@ -176,8 +174,8 @@ public class MvcExtension implements Extension {
 
 					modifiedFieldAnnotations = true;
 
-					if (LOG.isWarnEnabled()) {
-						LOG.warn("Removed unsupported @" + unsupportedAnnotationClass.getSimpleName() +
+					if (LOG.isLoggable(Level.WARNING)) {
+						LOG.warning("Removed unsupported @" + unsupportedAnnotationClass.getSimpleName() +
 							" annotation from " + annotatedField);
 					}
 				}

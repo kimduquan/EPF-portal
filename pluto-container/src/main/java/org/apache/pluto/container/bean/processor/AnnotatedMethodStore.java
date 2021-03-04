@@ -21,7 +21,6 @@ package org.apache.pluto.container.bean.processor;
 
 import static org.apache.pluto.container.bean.processor.MethodType.ACTION;
 import static org.apache.pluto.container.bean.processor.MethodType.EVENT;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,17 +30,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.portlet.annotations.ActionMethod;
 import javax.portlet.annotations.EventMethod;
 import javax.portlet.annotations.PortletQName;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Makes the configuration data & annotated portlet methods that are read during the
@@ -51,9 +47,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class AnnotatedMethodStore {
-   private static final Logger LOG = LoggerFactory.getLogger(AnnotatedMethodStore.class);
-   private static final boolean isDebug = LOG.isDebugEnabled();
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(AnnotatedMethodStore.class.getName());
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
    
 
    // Note that the maps do not need to be synchronized, as the writes are only performed
@@ -119,7 +115,7 @@ public class AnnotatedMethodStore {
             txt.append(" / Method 1: ").append(list.get(0).toString());
             txt.append(" / Method 2: ").append(am.toString());
             summary.addErrorString(mi.getName(), txt.toString());
-            LOG.warn("Disallowed duplicate entry: " + mi.toString());
+            LOG.warning("Disallowed duplicate entry: " + mi.toString());
             list = null;
          }
       } else {
@@ -185,7 +181,7 @@ public class AnnotatedMethodStore {
                   txt.append(", Annotation: @EventMethod");
                   txt.append(", Class: ").append(am.getJavaMethod().getDeclaringClass().getCanonicalName());
                   summary.addErrorString(mi.getName(), txt.toString());
-                  LOG.warn(txt.toString());
+                  LOG.warning(txt.toString());
                   return false;
                }
             }
@@ -196,7 +192,7 @@ public class AnnotatedMethodStore {
             txt.append(", Annotation: @EventMethod");
             txt.append(", Class: ").append(am.getJavaMethod().getDeclaringClass().getCanonicalName());
             summary.addErrorString(mi.getName(), txt.toString());
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
             return false;
          }
          
@@ -262,7 +258,7 @@ public class AnnotatedMethodStore {
          txt.append("Stored annotated method for: ").append(mi.toString());
          txt.append(", Processing event refs: ").append(procqns);
          txt.append(", Publishing event refs: ").append(procqns);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       return true;
    }
@@ -297,7 +293,7 @@ public class AnnotatedMethodStore {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Retrieved annotated method for: ").append(mi.toString());
          txt.append(", Method: ").append(pm == null ? "null" : pm.toString());
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
       return pm;
    }
@@ -482,7 +478,7 @@ public class AnnotatedMethodStore {
                txt.append("Fixing up Method identifier with default namespace: ").append(ns);
                txt.append(", old MI: ").append(mi);
                txt.append(", new MI: ").append(newmi);
-               LOG.debug(txt.toString());
+               LOG.info(txt.toString());
             }
          }
          
@@ -501,7 +497,7 @@ public class AnnotatedMethodStore {
                      txt.append("Fixed up processing event reference for portlet: ").append(pn);
                      txt.append(", old QN: ").append(oldqn);
                      txt.append(", new QN: ").append(newqn);
-                     LOG.debug(txt.toString());
+                     LOG.info(txt.toString());
                   }
                }
             }
@@ -522,7 +518,7 @@ public class AnnotatedMethodStore {
                      txt.append("Fixed up publishing event reference for portlet: ").append(pn);
                      txt.append(", old QN: ").append(oldqn);
                      txt.append(", new QN: ").append(newqn);
-                     LOG.debug(txt.toString());
+                     LOG.info(txt.toString());
                   }
                }
             }

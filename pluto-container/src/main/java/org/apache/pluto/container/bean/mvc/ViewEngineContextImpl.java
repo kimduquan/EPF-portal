@@ -19,7 +19,8 @@ package org.apache.pluto.container.bean.mvc;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Locale;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mvc.Models;
 import javax.mvc.engine.ViewEngineContext;
 import javax.portlet.MimeResponse;
@@ -30,16 +31,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * @author  Neil Griffin
  */
 public class ViewEngineContextImpl implements ViewEngineContext {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ViewEngineContextImpl.class);
+	private static final Logger LOG = Logger.getLogger(ViewEngineContextImpl.class.getName());
 
 	private Configuration configuration;
 	private Locale locale;
@@ -107,7 +105,7 @@ public class ViewEngineContextImpl implements ViewEngineContext {
 			return mimeResponse.getPortletOutputStream();
 		}
 		catch (IOException e) {
-			LOG.error(e.getMessage(), e);
+			LOG.log(Level.SEVERE ,e.getMessage(), e);
 
 			return null;
 		}

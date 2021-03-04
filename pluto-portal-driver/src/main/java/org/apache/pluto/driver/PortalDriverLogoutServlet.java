@@ -17,8 +17,8 @@
 package org.apache.pluto.driver;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +29,18 @@ import javax.servlet.http.HttpSession;
  *
  *
  */
+@WebServlet(
+		description = "Pluto Portal Driver Logout",
+		displayName = "Pluto Portal Driver Logout",
+		name = "plutoPortalDriverLogout",
+		asyncSupported = true
+		)
 public class PortalDriverLogoutServlet extends HttpServlet {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Processes logout by invalidating the session, creating a new session

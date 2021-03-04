@@ -23,7 +23,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.Annotated;
@@ -41,9 +42,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * @author  Neil Griffin
@@ -51,7 +49,7 @@ import org.slf4j.LoggerFactory;
 @Dependent
 public class PortletParamProducer {
 
-	private static final Logger LOG = LoggerFactory.getLogger(PortletParamProducer.class);
+	private static final Logger LOG = Logger.getLogger(PortletParamProducer.class.getName());
 
 	@Inject
 	private MutableBindingResult mutableBindingResult;
@@ -91,8 +89,8 @@ public class PortletParamProducer {
 			}
 		}
 
-		if (LOG.isWarnEnabled()) {
-			LOG.warn("Unable to find a ParamConverterProvider for type Boolean");
+		if (LOG.isLoggable(Level.WARNING)) {
+			LOG.warning("Unable to find a ParamConverterProvider for type Boolean");
 		}
 
 		return null;
@@ -128,8 +126,8 @@ public class PortletParamProducer {
 			}
 		}
 
-		if (LOG.isWarnEnabled()) {
-			LOG.warn("Unable to find a ParamConverterProvider for type Date");
+		if (LOG.isLoggable(Level.WARNING)) {
+			LOG.warning("Unable to find a ParamConverterProvider for type Date");
 		}
 
 		return null;
@@ -165,8 +163,8 @@ public class PortletParamProducer {
 			}
 		}
 
-		if (LOG.isWarnEnabled()) {
-			LOG.warn("Unable to find a ParamConverterProvider for type Double");
+		if (LOG.isLoggable(Level.WARNING)) {
+			LOG.warning("Unable to find a ParamConverterProvider for type Double");
 		}
 
 		return null;
@@ -202,8 +200,8 @@ public class PortletParamProducer {
 			}
 		}
 
-		if (LOG.isWarnEnabled()) {
-			LOG.warn("Unable to find a ParamConverterProvider for type Float");
+		if (LOG.isLoggable(Level.WARNING)) {
+			LOG.warning("Unable to find a ParamConverterProvider for type Float");
 		}
 
 		return null;
@@ -240,8 +238,8 @@ public class PortletParamProducer {
 			}
 		}
 
-		if (LOG.isWarnEnabled()) {
-			LOG.warn("Unable to find a ParamConverterProvider for type Integer");
+		if (LOG.isLoggable(Level.WARNING)) {
+			LOG.warning("Unable to find a ParamConverterProvider for type Integer");
 		}
 
 		return null;
@@ -277,8 +275,8 @@ public class PortletParamProducer {
 			}
 		}
 
-		if (LOG.isWarnEnabled()) {
-			LOG.warn("Unable to find a ParamConverterProvider for type Long");
+		if (LOG.isLoggable(Level.WARNING)) {
+			LOG.warning("Unable to find a ParamConverterProvider for type Long");
 		}
 
 		return Long.valueOf(value);
@@ -312,8 +310,8 @@ public class PortletParamProducer {
 
 					if (cookieValue == null) {
 
-						if (LOG.isDebugEnabled()) {
-							LOG.debug("Injecting the default value=" + defaultValue + " into a field annotated " +
+						if (LOG.isLoggable(Level.INFO)) {
+							LOG.info("Injecting the default value=" + defaultValue + " into a field annotated " +
 								"with @CookieParam(\"" + cookieParam.value() +
 								"\") because the cookie does not have a " + "value.");
 						}
@@ -325,8 +323,8 @@ public class PortletParamProducer {
 				}
 			}
 
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Injecting the default value=" + defaultValue +
+			if (LOG.isLoggable(Level.INFO)) {
+				LOG.info("Injecting the default value=" + defaultValue +
 					" into a field annotated with @CookieParam(\"" + cookieParam.value() +
 					"\") because there is no cookie " + "with that name.");
 			}
@@ -353,8 +351,8 @@ public class PortletParamProducer {
 
 				if (parameterValue == null) {
 
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Injecting the default value=" + defaultValue +
+					if (LOG.isLoggable(Level.INFO)) {
+						LOG.info("Injecting the default value=" + defaultValue +
 							" into a field annotated with @FormParam(\"" + formParam.value() +
 							"\") because the request " + "parameter does not have a value.");
 					}
@@ -365,14 +363,14 @@ public class PortletParamProducer {
 				return parameterValue;
 			}
 
-			if (LOG.isDebugEnabled()) {
+			if (LOG.isLoggable(Level.INFO)) {
 
 				if (lifecyclePhase.equals(PortletRequest.RENDER_PHASE)) {
-					LOG.debug("Injection into a field annotated with " + "@FormParam(\"" + formParam.value() +
+					LOG.info("Injection into a field annotated with " + "@FormParam(\"" + formParam.value() +
 						"\") is " + "invalid during the RENDER_PHASE.");
 				}
 				else {
-					LOG.debug("Injection into a field annotated with " + "@FormParam(\"" + formParam.value() +
+					LOG.info("Injection into a field annotated with " + "@FormParam(\"" + formParam.value() +
 						"\") is " + "invalid during the " + lifecyclePhase + " (HTTP " + httpMethod + ") request.");
 				}
 			}
@@ -393,8 +391,8 @@ public class PortletParamProducer {
 
 					if (headerValue == null) {
 
-						if (LOG.isDebugEnabled()) {
-							LOG.debug("Injecting the default value=" + defaultValue + " into a field annotated " +
+						if (LOG.isLoggable(Level.INFO)) {
+							LOG.info("Injecting the default value=" + defaultValue + " into a field annotated " +
 								"with @HeaderParam(\"" + headerParam.value() +
 								"\") because the header does not have a " + "value.");
 						}
@@ -406,8 +404,8 @@ public class PortletParamProducer {
 				}
 			}
 
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Injecting the default value=" + defaultValue +
+			if (LOG.isLoggable(Level.INFO)) {
+				LOG.info("Injecting the default value=" + defaultValue +
 					" into a field annotated with @HeaderParam(\"" + headerParam.value() +
 					"\") because there is no header with that name.");
 			}
@@ -426,8 +424,8 @@ public class PortletParamProducer {
 
 			if (parameterValue == null) {
 
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Injecting the default value=" + defaultValue +
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info("Injecting the default value=" + defaultValue +
 						" into a field annotated with @QueryParam(\"" + queryParam.value() +
 						"\") because the request parameter does not have " + "a value.");
 				}
@@ -444,7 +442,7 @@ public class PortletParamProducer {
 	private void _addBindingError(Annotation[] fieldAnnotations, String message, String value) {
 
 		if (mutableBindingResult == null) {
-			LOG.error("Unable to add binding error");
+			LOG.severe("Unable to add binding error");
 		}
 		else {
 			mutableBindingResult.addBindingError(new BindingErrorImpl(_getParamName(fieldAnnotations), message, value));
