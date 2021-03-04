@@ -23,15 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletSecurityException;
 import javax.portlet.ResourceURL;
 import javax.portlet.WindowState;
-
 import org.apache.pluto.container.PortletRequestContext;
 import org.apache.pluto.container.PortletURLProvider;
 import org.apache.pluto.container.PortletWindow;
@@ -46,9 +43,9 @@ import org.apache.pluto.driver.url.PortletParameterFactory;
  *
  */
 public class PortletURLProviderImpl implements PortletURLProvider {
-   private static final Logger   LOGGER     = LoggerFactory.getLogger(PortletURLProviderImpl.class);
-   private static final boolean  isDebug    = LOGGER.isDebugEnabled();
-   private static final boolean  isTrace    = LOGGER.isTraceEnabled();
+   private static final Logger   LOGGER     = Logger.getLogger(PortletURLProviderImpl.class.getName());
+   private static final boolean  isDebug    = LOGGER.isLoggable(Level.INFO);
+   private static final boolean  isTrace    = LOGGER.isLoggable(Level.FINE);
 
    private final PortalURL                     url;
    private final PortletParameterFactory     paramFactory;
@@ -60,7 +57,7 @@ public class PortletURLProviderImpl implements PortletURLProvider {
    // called to force class loading in Container thread
    protected static final void load() {
       if (isDebug) {
-         LOGGER.debug("Loaded.");
+         LOGGER.info("Loaded.");
       }
    };
    
@@ -104,7 +101,7 @@ public class PortletURLProviderImpl implements PortletURLProvider {
          txt.append(", URL type=").append(url.getType());
          txt.append(", target=").append(window);
          txt.append(", URL target=").append(url.getTargetWindow());
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
 
       if (isTrace) {
@@ -126,7 +123,7 @@ public class PortletURLProviderImpl implements PortletURLProvider {
             txt.append(", isRemoved: ").append(p.isRemoved());
             txt.append(", Values: ").append(Arrays.toString(p.getValues()));
          }
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
 
       this.url.setTargetWindow(window);
@@ -150,7 +147,7 @@ public class PortletURLProviderImpl implements PortletURLProvider {
       if (isTrace) {
          StringBuilder txt = new StringBuilder("Constructed PortalURLProviderImpl, set type. ");
          txt.append("new URL type=").append(this.url.getType());
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
 
    }
@@ -174,7 +171,7 @@ public class PortletURLProviderImpl implements PortletURLProvider {
          txt.append(", URL type=").append(url.getType());
          txt.append(", window=").append(window);
          txt.append(", URL target=").append(url.getTargetWindow());
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
    }
 
@@ -185,7 +182,7 @@ public class PortletURLProviderImpl implements PortletURLProvider {
          txt.append("type=").append(type);
          txt.append(", URL type=").append(url.getType());
          txt.append(", target=").append(url.getTargetWindow());
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       
       if (isTrace) {
@@ -207,7 +204,7 @@ public class PortletURLProviderImpl implements PortletURLProvider {
             txt.append(", isRemoved: ").append(p.isRemoved());
             txt.append(", Values: ").append(Arrays.toString(p.getValues()));
          }
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       return url;
    }

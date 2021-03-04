@@ -16,8 +16,6 @@
  */
 package org.apache.pluto.driver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletContainerException;
 import org.apache.pluto.driver.core.PortalRequestContext;
@@ -25,7 +23,6 @@ import org.apache.pluto.driver.core.PortletWindowImpl;
 import org.apache.pluto.driver.services.portal.PortletWindowConfig;
 import org.apache.pluto.driver.url.PortalURL;
 import org.apache.pluto.driver.url.PortalURL.URLType;
-
 import javax.portlet.PortletException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,8 +33,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The controller filter used to drive static portlet pages (see
@@ -52,7 +50,7 @@ public class PortalDriverFilter implements Filter {
     /**
      * Internal Logger.
      */
-    private static final Logger LOG = LoggerFactory.getLogger(PortalDriverFilter.class);
+    private static final Logger LOG = Logger.getLogger(PortalDriverFilter.class.getName());
 
     /**
      * The Portal Driver sServlet Context
@@ -163,8 +161,8 @@ public class PortalDriverFilter implements Filter {
         if (actionWindowConfig != null) {
             PortletWindowImpl portletWindow = new PortletWindowImpl(container,
                 actionWindowConfig, portalURL);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Processing action request for window: "
+            if (LOG.isLoggable(Level.INFO)) {
+                LOG.info("Processing action request for window: "
                     + portletWindow.getId().getStringId());
             }
             try {
@@ -174,16 +172,16 @@ public class PortalDriverFilter implements Filter {
             } catch (PortletException ex) {
                 throw new ServletException(ex);
             }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Action request processed.\n\n");
+            if (LOG.isLoggable(Level.INFO)) {
+                LOG.info("Action request processed.\n\n");
             }
             
             actionRequestProcessed = true;
         }
         
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Render Path: " + portalURL.getRenderPath());
-            LOG.debug("Servlet Path: " + portalURL.getServletPath());        	
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Render Path: " + portalURL.getRenderPath());
+            LOG.info("Servlet Path: " + portalURL.getServletPath());        	
         }
 
         return actionRequestProcessed;

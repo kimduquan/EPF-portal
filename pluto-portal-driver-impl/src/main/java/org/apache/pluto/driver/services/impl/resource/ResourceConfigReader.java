@@ -18,10 +18,9 @@ package org.apache.pluto.driver.services.impl.resource;
 
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.digester.Digester;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.driver.services.portal.PageConfig;
 import org.apache.pluto.driver.services.portal.RenderConfig;
 import org.xml.sax.SAXException;
@@ -32,8 +31,8 @@ import org.xml.sax.SAXException;
  */
 public class ResourceConfigReader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(
-        ResourceConfigReader.class
+    private static final Logger LOG = Logger.getLogger(
+        ResourceConfigReader.class.getName()
     );
 
     public static final String CONFIG_FILE =
@@ -66,8 +65,8 @@ public class ResourceConfigReader {
 // Digester Setup
 
     private void init() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Setting up digester...");
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Setting up digester...");
         }
         digester.addObjectCreate(
             "pluto-portal-driver",

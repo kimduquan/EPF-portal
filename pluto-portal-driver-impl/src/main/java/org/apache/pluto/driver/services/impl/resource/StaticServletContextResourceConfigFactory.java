@@ -22,7 +22,6 @@ package org.apache.pluto.driver.services.impl.resource;
 
 import org.apache.pluto.driver.config.DriverConfigurationException;
 import org.apache.pluto.driver.PortalStartupListener;
-
 import javax.servlet.ServletContext;
 import java.io.InputStream;
 

@@ -18,19 +18,17 @@ package org.apache.pluto.driver.services.container;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.pluto.container.PortletActionResponseContext;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletRequestContext;
 import org.apache.pluto.container.PortletWindow;
 import org.apache.pluto.driver.core.PortalRequestContext;
 import org.apache.pluto.driver.url.PortalURL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @version $Id$
@@ -39,8 +37,8 @@ import org.slf4j.LoggerFactory;
 public class PortletActionResponseContextImpl extends PortletStateAwareResponseContextImpl implements PortletActionResponseContext {
 
    /** Logger. */
-   private static final Logger  LOG     = LoggerFactory.getLogger(PortletActionResponseContextImpl.class);
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletActionResponseContextImpl.class.getName());
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
 
    private boolean              redirect;
    private String               redirectLocation;
@@ -86,7 +84,7 @@ public class PortletActionResponseContextImpl extends PortletStateAwareResponseC
                      txt.append(", paramName: ").append(renderURLParamName);
                      txt.append("\n   Original redirect location: ").append(redirectLocation);
                      txt.append("\n   Complete URL: ").append(urlBuilder.toString());
-                     LOG.debug(txt.toString());
+                     LOG.info(txt.toString());
                   }
                   
                   return urlBuilder.toString();

@@ -22,15 +22,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.portlet.PortletMode;
 import javax.portlet.ResourceURL;
 import javax.portlet.WindowState;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.driver.AttributeKeys;
 import org.apache.pluto.driver.config.DriverConfiguration;
 import org.apache.pluto.driver.services.portal.PortletWindowConfig;
@@ -48,9 +47,9 @@ import org.apache.pluto.driver.url.PortalURLPublicParameter;
 public class PortalURLParserImpl implements PortalURLParser {
 
    /** Logger. */
-   private static final Logger LOG = LoggerFactory.getLogger(PortalURLParserImpl.class);
-   private static final boolean isDebug = LOG.isDebugEnabled();
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(PortalURLParserImpl.class.getName());
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
 
    /** The singleton parser instance. */
    private static final PortalURLParser PARSER = new PortalURLParserImpl();
@@ -126,7 +125,7 @@ public class PortalURLParserImpl implements PortalURLParser {
       String servletName = request.getServletPath();
 
       if (isDebug) {
-         LOG.debug("Parsing. Context Path: " + contextPath + ", Servlet Name: " + servletName + ", Request URI: " + reqURI);
+         LOG.info("Parsing. Context Path: " + contextPath + ", Servlet Name: " + servletName + ", Request URI: " + reqURI);
       }
 
 
@@ -143,7 +142,7 @@ public class PortalURLParserImpl implements PortalURLParser {
             servletName = servletName.substring(0, idx);
             portalURL = new RelativePortalURLImpl(urlBase, contextPath, servletName, this, request);
             if (isDebug) {
-               LOG.debug("Constructed new URL due to JSP processing. pathInfo: " + pathInfo);
+               LOG.info("Constructed new URL due to JSP processing. pathInfo: " + pathInfo);
             }
          }
       }
@@ -156,7 +155,7 @@ public class PortalURLParserImpl implements PortalURLParser {
       pathInfo = reqURI.substring(prefix.length(), qi);
 
       if (isTrace) {
-         LOG.debug("Parsing request pathInfo: " + pathInfo);
+         LOG.info("Parsing request pathInfo: " + pathInfo);
       }
 
       // Need to set the render path (= page) and PRP mapper before the rest of the URL is parsed
@@ -178,7 +177,7 @@ public class PortalURLParserImpl implements PortalURLParser {
 
       portalURL.setRenderPath(renderPath.toString());
       if (isTrace) {
-         LOG.debug("Parse: renderPath: " + renderPath.toString() + ",  pathInfo: " + pathInfo);
+         LOG.info("Parse: renderPath: " + renderPath.toString() + ",  pathInfo: " + pathInfo);
       }
 
       // Set up public render parameter mapper & portlet ID list
@@ -208,11 +207,11 @@ public class PortalURLParserImpl implements PortalURLParser {
                vstr.append(pid).append(" = ").append(pv).append(", ");
             }
          } catch (Exception e) {
-            LOG.error("Portlet application definition could not be retrieved for " + appName);
+            LOG.severe("Portlet application definition could not be retrieved for " + appName);
          }
       }
       if (isTrace) {
-         LOG.debug(vstr.toString());
+         LOG.info(vstr.toString());
       }
 
       // Tokenize the rest and process the tokens
@@ -244,7 +243,7 @@ public class PortalURLParserImpl implements PortalURLParser {
                      pid = portletIds.get(index);
                   }
                } catch (Exception e) {
-                  LOG.error("error parsing URL pid reference token. Token: " + vals[0] + ", exception: " + e.toString());
+                  LOG.severe("error parsing URL pid reference token. Token: " + vals[0] + ", exception: " + e.toString());
                }
             }
 
@@ -330,7 +329,7 @@ public class PortalURLParserImpl implements PortalURLParser {
             String values = vals[1];
             if (type.equals(PUBLIC_RENDER_PARAM)) {
                if (vals.length != 3) {
-                  LOG.warn("Bad PRP Token: " + val);  
+                  LOG.warning("Bad PRP Token: " + val);  
                } else {
                   values = vals[2];
                }
@@ -354,7 +353,7 @@ public class PortalURLParserImpl implements PortalURLParser {
             }
             
             if (pVals.length == 0 || pVals[0] == null) {
-               LOG.warn("Bad parameter token: " + values);
+               LOG.warning("Bad parameter token: " + values);
             } else {
                paramName = pVals[0];
                if (isEmptyArray) {
@@ -368,7 +367,7 @@ public class PortalURLParserImpl implements PortalURLParser {
                dbgstr.append(", paramName=").append(paramName);
                dbgstr.append(", Values length=").append(paramValues.length);
                dbgstr.append(", paramValues=").append(Arrays.toString(paramValues));
-               LOG.debug(dbgstr.toString());
+               LOG.info(dbgstr.toString());
             }
 
             // Portal URL parameter: portalURL.addParameter().
@@ -400,7 +399,7 @@ public class PortalURLParserImpl implements PortalURLParser {
                } else {
                   StringBuilder sb = new StringBuilder("Could not find public render parameter group for portlet ID=");
                   sb.append(pid).append(", parameter name=").append(paramName);
-                  LOG.warn(sb.toString());
+                  LOG.warning(sb.toString());
                }
                continue;
             }
@@ -414,7 +413,7 @@ public class PortalURLParserImpl implements PortalURLParser {
       }
       
       if (isTrace) {
-         LOG.debug("Found " + portletIds.size() + " IDs: " + Arrays.toString(portletIds.toArray()));
+         LOG.info("Found " + portletIds.size() + " IDs: " + Arrays.toString(portletIds.toArray()));
       }
 
       // Return the portal URL.
@@ -453,7 +452,7 @@ public class PortalURLParserImpl implements PortalURLParser {
          try {
             buffer.append(urlEncode(pid));
          } catch(Exception e) {
-            LOG.warn("Could not encode pid=" + pid);
+            LOG.warning("Could not encode pid=" + pid);
          }
          buffer.append(DELIM).append(String.valueOf(pids.indexOf(pid)));
       }
@@ -468,7 +467,7 @@ public class PortalURLParserImpl implements PortalURLParser {
                .append(targetWindow)
                .append(", Portlet IDs in map: ")
                .append(Arrays.toString(pids.toArray()));
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
          } else {
             buffer.append(TOKEN_DELIM);
             buffer.append(PREFIX).append(RESOURCE).append(String.valueOf(index));
@@ -484,7 +483,7 @@ public class PortalURLParserImpl implements PortalURLParser {
                .append(targetWindow)
                .append(", Portlet IDs in map: ")
                .append(Arrays.toString(pids.toArray()));
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
          } else {
             buffer.append(TOKEN_DELIM);
             buffer.append(PREFIX).append(RENDER).append(String.valueOf(index));
@@ -500,7 +499,7 @@ public class PortalURLParserImpl implements PortalURLParser {
                .append(targetWindow)
                .append(", Portlet IDs in map: ")
                .append(Arrays.toString(pids.toArray()));
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
          } else {
             buffer.append(TOKEN_DELIM);
             buffer.append(PREFIX).append(ACTION).append(String.valueOf(index));
@@ -555,7 +554,7 @@ public class PortalURLParserImpl implements PortalURLParser {
             StringBuilder txt = new StringBuilder("Window not found in portlet ID list. PID = ");
             txt.append(pid).append(", PM = ").append(pm.toString())
                .append(", Portlet IDs in map: ").append(Arrays.toString(pids.toArray()));
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
          } else {
             buffer.append(TOKEN_DELIM).append(PREFIX).append(PORTLET_MODE)
             .append(String.valueOf(index)).append(DELIM).append(urlEncode(pm.toString()));
@@ -576,7 +575,7 @@ public class PortalURLParserImpl implements PortalURLParser {
             StringBuilder txt = new StringBuilder("Window not found in portlet ID list. PID = ");
             txt.append(pid).append(", WS = ").append(ws.toString())
                .append(", Portlet IDs in map: ").append(Arrays.toString(pids.toArray()));
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
          } else {
             buffer.append(TOKEN_DELIM).append(PREFIX).append(WINDOW_STATE)
             .append(String.valueOf(index)).append(DELIM).append(urlEncode(ws.toString()));
@@ -605,7 +604,7 @@ public class PortalURLParserImpl implements PortalURLParser {
 
          int index = pids.indexOf(param.getWindowId());
          if (index < 0) {
-            LOG.warn("Window not found in portlet ID list. PID = " + param.getWindowId() + ", Param name = " + param.getName());
+            LOG.warning("Window not found in portlet ID list. PID = " + param.getWindowId() + ", Param name = " + param.getName());
             continue;
          }
 
@@ -658,7 +657,7 @@ public class PortalURLParserImpl implements PortalURLParser {
                   .append(urlEncode(prp.getName())).append(VALUE_DELIM)
                   .append(valstr);
                } else {
-                  LOG.warn("window ID not on page for public render parameter: " + prp.toString());
+                  LOG.warning("window ID not on page for public render parameter: " + prp.toString());
                }
             }
          }
@@ -669,7 +668,7 @@ public class PortalURLParserImpl implements PortalURLParser {
          String frag = portalURL.getFragmentIdentifier();
          if (frag != null) {
             if (isTrace) {
-               LOG.debug("Adding fragment identifier: " + frag);
+               LOG.info("Adding fragment identifier: " + frag);
             }
             buffer.append('#').append(frag);
          }
@@ -695,7 +694,7 @@ public class PortalURLParserImpl implements PortalURLParser {
             }
             out = URLEncoder.encode(out, "UTF-8");
          } catch(Exception e) {
-            LOG.warn("Error URL encoding string: " + str);
+            LOG.warning("Error URL encoding string: " + str);
          }
       }
       return out;
@@ -715,7 +714,7 @@ public class PortalURLParserImpl implements PortalURLParser {
             }
             out = URLDecoder.decode(out, "UTF-8");
          } catch(Exception e) {
-            LOG.warn("Error URL decoding string: " + str);
+            LOG.warning("Error URL decoding string: " + str);
          }
       }
       return out;

@@ -25,7 +25,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.Event;
 import javax.portlet.PortletException;
 import javax.servlet.ServletContext;
@@ -40,7 +41,6 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
 import org.apache.pluto.container.EventCoordinationService;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletContainerException;
@@ -58,13 +58,10 @@ import org.apache.pluto.driver.core.PortletWindowImpl;
 import org.apache.pluto.driver.services.portal.PageConfig;
 import org.apache.pluto.driver.services.portal.PortletWindowConfig;
 import org.apache.pluto.driver.url.PortalURL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EventCoordinationServiceImpl implements EventCoordinationService {
    /** Logger. */
-   private static final Logger          LOG           = LoggerFactory
-                                                            .getLogger(EventCoordinationServiceImpl.class);
+   private static final Logger LOG = Logger.getLogger(EventCoordinationServiceImpl.class.getName());
 
    /** PortletRegistryService used to obtain PortletApplicationConfig objects */
    private final PortletRegistryService portletRegistry;
@@ -211,11 +208,11 @@ public class EventCoordinationServiceImpl implements EventCoordinationService {
          }
          container.doEvent(portletWindow, request, response, event);
       } catch (PortletException e) {
-         LOG.warn(e.getMessage(), e);
+         LOG.log(Level.WARNING, e.getMessage(), e);
       } catch (IOException e) {
-         LOG.warn(e.getMessage(), e);
+    	  LOG.log(Level.WARNING, e.getMessage(), e);
       } catch (PortletContainerException e) {
-         LOG.warn(e.getMessage(), e);
+    	  LOG.log(Level.WARNING, e.getMessage(), e);
       }
    }
 
@@ -309,7 +306,7 @@ public class EventCoordinationServiceImpl implements EventCoordinationService {
                }
             }
          } catch (PortletContainerException e) {
-            LOG.warn(e.getMessage(), e);
+        	 LOG.log(Level.WARNING, e.getMessage(), e);
          }
       }
 

@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.pluto.util.UtilityException;
 import org.apache.pluto.util.install.InstallationConfig;

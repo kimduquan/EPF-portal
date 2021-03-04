@@ -19,10 +19,10 @@ package org.apache.pluto.driver.services.impl.resource;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletMode;
-
 import org.apache.pluto.container.PortletContainerException;
 import org.apache.pluto.container.driver.PortletContextService;
 import org.apache.pluto.container.driver.PortletRegistryService;
@@ -32,8 +32,6 @@ import org.apache.pluto.container.om.portlet.Supports;
 import org.apache.pluto.driver.services.portal.PortletWindowConfig;
 import org.apache.pluto.driver.services.portal.PropertyConfigService;
 import org.apache.pluto.driver.services.portal.SupportedModesService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Allows clients to determine if a particular PortletMode is supported by the portal, a particular portlet, or both.
@@ -49,12 +47,12 @@ public class SupportedModesServiceImpl implements SupportedModesService {
    /**
     * Logger
     */
-   private static final Logger          LOG                           = LoggerFactory.getLogger(SupportedModesServiceImpl.class);
+   private static final Logger LOG = Logger.getLogger(SupportedModesServiceImpl.class.getName());
 
    /**
     * PortletMode objects supported by the portal
     */
-   private Set<PortletMode>             supportedPortletModesByPortal = new HashSet<PortletMode>();
+   private Set<PortletMode> supportedPortletModesByPortal = new HashSet<PortletMode>();
 
    /**
     * PropertyConfig Service used to obtain supported portal modes
@@ -84,14 +82,14 @@ public class SupportedModesServiceImpl implements SupportedModesService {
    // SupportedModesService Implementation -----------------
 
    public boolean isPortletModeSupported(String portletId, String mode) {
-      if (LOG.isDebugEnabled()) {
+      if (LOG.isLoggable(Level.INFO)) {
          StringBuilder txt = new StringBuilder();
          txt.append("Determining support for PM: ").append(mode);
          txt.append(", portletID: ").append(portletId);
          txt.append(", by portal: ").append(isPortletModeSupportedByPortal(mode));
          txt.append(", by portlet: ").append(isPortletModeSupportedByPortlet(portletId, mode));
          txt.append(", is portlet managed: ").append(isPortletManagedMode(portletId, mode));
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       return (isPortletModeSupportedByPortal(mode) && isPortletModeSupportedByPortlet(portletId, mode) || isPortletManagedMode(portletId, mode));
    }
@@ -113,7 +111,7 @@ public class SupportedModesServiceImpl implements SupportedModesService {
 
       try {
          if (portletRegistry == null) {
-            LOG.error("Optional Portlet Registry Service not found.");
+            LOG.severe("Optional Portlet Registry Service not found.");
             throw new PortletContainerException("Optional Portlet Registry Service not found.");
          }
          PortletApplicationDefinition ctx = portletRegistry.getPortletApplication(applicationName);
@@ -129,7 +127,7 @@ public class SupportedModesServiceImpl implements SupportedModesService {
          }
 
       } catch (PortletContainerException e) {
-         LOG.error("Error determining mode support.", e);
+         LOG.log(Level.SEVERE, "Error determining mode support.", e);
       }
       LOG.info("Portlet mode '" + mode + "' not found for portletId: '" + portletId + "'");
       return false;
@@ -141,14 +139,14 @@ public class SupportedModesServiceImpl implements SupportedModesService {
    private void loadPortalModes() {
       // Add the PortletModes supported by the portal to the
       // supportedPortletModesByPortal set.
-      LOG.debug("Loading supported portal modes...");
+      LOG.info("Loading supported portal modes...");
       Iterator<String> modes = propertyService.getSupportedPortletModes().iterator();
       while (modes.hasNext()) {
          String mode = (String) modes.next();
-         LOG.debug("Loading mode [" + mode + "]");
+         LOG.info("Loading mode [" + mode + "]");
          supportedPortletModesByPortal.add(new PortletMode(mode));
       }
-      LOG.debug("Loaded [" + supportedPortletModesByPortal.size() + "] supported portal modes");
+      LOG.info("Loaded [" + supportedPortletModesByPortal.size() + "] supported portal modes");
 
    }
 
@@ -170,7 +168,7 @@ public class SupportedModesServiceImpl implements SupportedModesService {
             }
          }
       } catch (PortletContainerException e) {
-         LOG.error("Error determining portlet managed mode support, so we assume that it is false.", e);
+         LOG.log(Level.SEVERE ,"Error determining portlet managed mode support, so we assume that it is false.", e);
       }
 
       return false;
@@ -192,7 +190,7 @@ public class SupportedModesServiceImpl implements SupportedModesService {
       String portletName = PortletWindowConfig.parsePortletName(portletId);
 
       if (portletRegistry == null) {
-         LOG.error("Optional Portlet Registry Service not found.");
+         LOG.severe("Optional Portlet Registry Service not found.");
          throw new PortletContainerException("Optional Portlet Registry Service not found.");
       }
       PortletApplicationDefinition portletApp = portletRegistry.getPortletApplication(applicationName);

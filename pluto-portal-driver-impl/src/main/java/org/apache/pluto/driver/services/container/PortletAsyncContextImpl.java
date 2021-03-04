@@ -19,6 +19,8 @@
 package org.apache.pluto.driver.services.container;
 
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
@@ -36,7 +38,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.pluto.container.PortletAsyncManager;
 import org.apache.pluto.container.PortletResourceRequestContext;
 import org.apache.pluto.container.bean.processor.PortletArtifactProducer;
@@ -45,8 +46,6 @@ import org.apache.pluto.container.bean.processor.PortletSessionBeanHolder;
 import org.apache.pluto.container.bean.processor.PortletStateScopedBeanHolder;
 import org.apache.pluto.container.bean.processor.RedirectScopedBeanHolder;
 import org.apache.pluto.container.impl.HttpServletPortletRequestWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Wrapper class for the AsyncContext obtained from the servlet container. Provides a couple of work-arounds for Tomcat
@@ -56,8 +55,8 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class PortletAsyncContextImpl implements PortletAsyncManager, AsyncContext, PortletAsyncContext {
-   private static final Logger                 LOG                = LoggerFactory.getLogger(PortletAsyncContextImpl.class);
-   private static final boolean                isTrace            = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletAsyncContextImpl.class.getName());
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
 
    private AsyncContext                        actx;
 
@@ -140,7 +139,7 @@ public class PortletAsyncContextImpl implements PortletAsyncManager, AsyncContex
          txt.append(" complete: ").append(complete);
          txt.append(", isListener: ").append(isListener);
          txt.append(", doRegister: ").append(doDeregister);
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
    }
 
@@ -164,7 +163,7 @@ public class PortletAsyncContextImpl implements PortletAsyncManager, AsyncContex
          txt.append(" complete: ").append(complete);
          txt.append(", isListener: ").append(isListener);
          txt.append(", doRegister: ").append(doDeregister);
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
    }
 
@@ -182,7 +181,7 @@ public class PortletAsyncContextImpl implements PortletAsyncManager, AsyncContex
          if (isTrace) {
             StringBuilder txt = new StringBuilder();
             txt.append("Executing Portlet Runnable: " + pendingRunner.getClass().getCanonicalName());
-            LOG.trace(txt.toString());
+            LOG.fine(txt.toString());
          }
 
          runner.init(this, pendingRunner);
@@ -453,7 +452,7 @@ public class PortletAsyncContextImpl implements PortletAsyncManager, AsyncContex
          txt.append("Creating listener.");
          txt.append(" Bean manager: ").append(beanmgr);
          txt.append(", listener class: ").append(cls.getCanonicalName());
-         LOG.trace(txt.toString());
+         LOG.info(txt.toString());
       }
 
       Object lis = null;
@@ -463,12 +462,12 @@ public class PortletAsyncContextImpl implements PortletAsyncManager, AsyncContex
          if (bean != null) {
             lis = beanmgr.getReference(bean, bean.getBeanClass(), beanmgr.createCreationalContext(bean));
          } else {
-            LOG.warn("Could not get bean reference for: " + cls.getCanonicalName());
+            LOG.warning("Could not get bean reference for: " + cls.getCanonicalName());
          }
       }
 
       if (lis == null) {
-         LOG.trace("Instantiating class directly: " + cls.getCanonicalName());
+         LOG.fine("Instantiating class directly: " + cls.getCanonicalName());
          lis = cls.newInstance();
       }
 

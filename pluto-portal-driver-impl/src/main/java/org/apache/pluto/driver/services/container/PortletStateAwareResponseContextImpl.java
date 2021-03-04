@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.Event;
 import javax.portlet.MutableRenderParameters;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.pluto.container.EventProvider;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletRequestContext;
@@ -38,8 +38,6 @@ import org.apache.pluto.container.driver.PlutoServices;
 import org.apache.pluto.container.impl.MutableRenderParametersImpl;
 import org.apache.pluto.driver.core.PortalRequestContext;
 import org.apache.pluto.driver.url.PortalURL;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @version $Id$
@@ -47,8 +45,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class PortletStateAwareResponseContextImpl extends PortletResponseContextImpl implements
       PortletStateAwareResponseContext {
-   private final Logger           LOGGER  = LoggerFactory.getLogger(PortletStateAwareResponseContextImpl.class);
-   private final boolean          isDebug = LOGGER.isDebugEnabled();
+   private final Logger           LOGGER  = Logger.getLogger(PortletStateAwareResponseContextImpl.class.getName());
+   private final boolean          isDebug = LOGGER.isLoggable(Level.INFO);
 
    private List<Event>            events;
    private PortletURLProviderImpl portletURLProvider;
@@ -63,7 +61,7 @@ public abstract class PortletStateAwareResponseContextImpl extends PortletRespon
             .getPortletRegistryService());
 
       if (isDebug) {
-         LOGGER.debug("Initialized.");
+         LOGGER.info("Initialized.");
       }
    }
 
@@ -77,20 +75,20 @@ public abstract class PortletStateAwareResponseContextImpl extends PortletRespon
          super.close();
 
          if (isDebug) {
-            LOGGER.debug("Applying the changes.");
+            LOGGER.info("Applying the changes.");
          }
 
          PortalURL url = portletURLProvider.apply();
 
          if (isDebug) {
-            LOGGER.debug("Merging.");
+            LOGGER.info("Merging.");
          }
 
          PortalRequestContext.getContext(getServletRequest()).mergePortalURL(url,
                getPortletWindow().getId().getStringId());
 
          if (isDebug) {
-            LOGGER.debug("exiting.");
+            LOGGER.info("exiting.");
          }
       }
    }

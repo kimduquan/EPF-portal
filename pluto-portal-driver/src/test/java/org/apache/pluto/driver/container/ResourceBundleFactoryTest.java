@@ -19,15 +19,13 @@ package org.apache.pluto.driver.container;
 import java.util.ListResourceBundle;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import junit.framework.Assert;
-
 import org.apache.pluto.container.om.portlet.PortletDefinition;
 import org.apache.pluto.container.om.portlet.PortletInfo;
 import org.apache.pluto.container.om.portlet.impl.PortletDefinitionImpl;
 import org.apache.pluto.container.om.portlet.impl.PortletInfoImpl;
 import org.apache.pluto.container.om.portlet20.impl.PortletType;
 import org.apache.pluto.driver.container.ResourceBundleFactory;
+import org.junit.Assert;
 
 /**
  * Unit test for the resource bundle factory.

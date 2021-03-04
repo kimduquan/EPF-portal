@@ -18,7 +18,6 @@ package org.apache.pluto.driver.url.impl;
 
 import static org.apache.pluto.driver.url.PortalURLParameter.PARAM_TYPE_PUBLIC;
 import static org.apache.pluto.driver.url.PortalURLParameter.PARAM_TYPE_RESOURCE;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,12 +26,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.pluto.container.PortletRequestContext;
 import org.apache.pluto.driver.AttributeKeys;
 import org.apache.pluto.driver.config.DriverConfiguration;
@@ -43,8 +42,6 @@ import org.apache.pluto.driver.url.PortalURLParameter;
 import org.apache.pluto.driver.url.PortalURLParser;
 import org.apache.pluto.driver.url.PortalURLPublicParameter;
 import org.apache.pluto.driver.url.PortletParameterFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.web.csrf.CsrfToken;
 
 /**
@@ -54,9 +51,9 @@ import org.springframework.security.web.csrf.CsrfToken;
  */
 public class RelativePortalURLImpl implements PortalURL {
 
-   private static final Logger   LOG      = LoggerFactory.getLogger(RelativePortalURLImpl.class);
-   private static final boolean  isDebug  = LOG.isDebugEnabled();
-   private static final boolean  isTrace  = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(RelativePortalURLImpl.class.getName());
+   private static final boolean  isDebug  = LOG.isLoggable(Level.INFO);
+   private static final boolean  isTrace  = LOG.isLoggable(Level.FINE);
 
    private String                      urlBase;
    private String                      servletPath;
@@ -132,7 +129,7 @@ public class RelativePortalURLImpl implements PortalURL {
       this.csrfParameterName = csrfToken.getParameterName();
       this.csrfParameterValue = csrfToken.getToken();
       if (isDebug) {
-         LOG.debug("Constructed URL, clone ID: " + cloneId);
+         LOG.info("Constructed URL, clone ID: " + cloneId);
       }
    }
 
@@ -155,7 +152,7 @@ public class RelativePortalURLImpl implements PortalURL {
          reqParamsProcessed = true;
          
          if (isTrace) {
-            LOG.debug("Processing servlet request parameters.");
+            LOG.info("Processing servlet request parameters.");
          }
 
          try {
@@ -195,7 +192,7 @@ public class RelativePortalURLImpl implements PortalURL {
                         txt.append(parm).append(", Values: ")
                            .append(Arrays.toString(parms.get(parm)));
                         txt.append(", Clone ID: " + cloneId);
-                        LOG.debug(txt.toString());
+                        LOG.info(txt.toString());
                      }
                      continue;
                   }
@@ -214,7 +211,7 @@ public class RelativePortalURLImpl implements PortalURL {
                   txt.append(parm).append(", Values: ").append(Arrays.toString(parms.get(parm)));
                   txt.append(", Type: ").append(ptype);
                   txt.append(", Clone ID: " + cloneId);
-                  LOG.debug(txt.toString());
+                  LOG.info(txt.toString());
                }
             }
          }
@@ -334,7 +331,7 @@ public class RelativePortalURLImpl implements PortalURL {
          txt.append("Clone ID: ").append(cloneId)
             .append(", absolute: ").append(absolute)
             .append(", URL: ").append(result);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       return result;
    }
@@ -403,7 +400,7 @@ public class RelativePortalURLImpl implements PortalURL {
          txt.append("Created clone ID= ").append(portalURL.cloneId);
          txt.append(" from URL with clone ID= ").append(this.cloneId);
          txt.append(". ThreadId=").append(tid);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       return portalURL;
    }
@@ -411,7 +408,7 @@ public class RelativePortalURLImpl implements PortalURL {
    public PageConfig getPageConfig(ServletContext servletContext) {
       String requestedPageId = getRenderPath();
       if (isTrace) {
-         LOG.debug("Requested Page: " + requestedPageId);
+         LOG.info("Requested Page: " + requestedPageId);
       }
 
       DriverConfiguration dc = ((DriverConfiguration) servletContext
@@ -428,7 +425,7 @@ public class RelativePortalURLImpl implements PortalURL {
    public void setPortletIds(Collection<String> portletIds) {
       this.portletIds.addAll(portletIds);
       if (isTrace) {
-         LOG.debug("Stored " + this.portletIds.size() + " IDs: "
+         LOG.info("Stored " + this.portletIds.size() + " IDs: "
                + Arrays.toString(this.portletIds.toArray()));
       }
    }
@@ -490,7 +487,7 @@ public class RelativePortalURLImpl implements PortalURL {
          for (PortalURLParameter pup : promotes) {
             txt.append("\n   ").append(pup.toString());
          }
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       this.type = type;
    }
@@ -507,7 +504,7 @@ public class RelativePortalURLImpl implements PortalURL {
          txt.append("type= ").append(this.type);
          txt.append(", clone ID= ").append(cloneId);
          txt.append(". ThreadId=").append(tid);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       return type;
    }
@@ -562,14 +559,14 @@ public class RelativePortalURLImpl implements PortalURL {
             for (PortalURLParameter pup : rem) {
                txt.append("\n   ").append(pup.toString());
             }
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
       }
       if (isTrace) {
          StringBuilder txt = new StringBuilder("Removing ");
          txt.append(removed).append(" elements. Window ID: ").append(window);
          txt.append(", Parameter type: ").append(paramType);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 
@@ -585,7 +582,7 @@ public class RelativePortalURLImpl implements PortalURL {
          txt.append(", Values: " + vals);
          txt.append(", Type: " + param.getType());
          txt.append(", Clone ID: " + cloneId);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       
       // If present, remove old value before adding new
@@ -607,7 +604,7 @@ public class RelativePortalURLImpl implements PortalURL {
          txt.append(", Values: " + vals);
          txt.append(", Type: " + param.getType());
          txt.append(", Clone ID: " + cloneId);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       
       // If present, remove old value before adding new
@@ -640,7 +637,7 @@ public class RelativePortalURLImpl implements PortalURL {
          if (!parameters.contains(param)) {
             txt.append(", Not in parameter set!");
          }
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       parameters.remove(param);
    }

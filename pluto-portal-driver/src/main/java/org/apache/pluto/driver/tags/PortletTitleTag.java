@@ -22,20 +22,18 @@ import java.io.StringWriter;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.pluto.container.PortletWindow;
 import org.apache.pluto.driver.AttributeKeys;
 import org.apache.pluto.driver.config.DriverConfiguration;
 import org.apache.pluto.driver.services.portal.PortletWindowConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The portlet title tag is used to print the dynamic portlet title to the page.
@@ -48,7 +46,7 @@ import org.slf4j.LoggerFactory;
 public class PortletTitleTag extends TagSupport {
    private static final long   serialVersionUID = 3120612251049604115L;
 
-   private static final Logger LOG              = LoggerFactory.getLogger(PortletTitleTag.class);
+   private static final Logger LOG = Logger.getLogger(PortletTitleTag.class.getName());
 
    // TagSupport Impl ---------------------------------------------------------
 
@@ -96,7 +94,7 @@ public class PortletTitleTag extends TagSupport {
                ResourceBundle bundle = config.getResourceBundle(defaultLocale);
                title = bundle.getString("javax.portlet.title");
             } catch (Throwable th) {
-               if (LOG.isDebugEnabled()) {
+               if (LOG.isLoggable(Level.INFO)) {
                   StringBuilder txt = new StringBuilder(128);
                   txt.append("Could not obtain title for: " + windowConfig.getPortletName() + "\n");
                   StringWriter sw = new StringWriter();
@@ -104,7 +102,7 @@ public class PortletTitleTag extends TagSupport {
                   th.printStackTrace(pw);
                   pw.flush();
                   txt.append(sw.toString());
-                  LOG.warn(txt.toString());
+                  LOG.warning(txt.toString());
                }
             }
 

@@ -17,11 +17,8 @@
 package org.apache.pluto.util.assemble;
 
 import java.io.File;
-
+import java.util.logging.Logger;
 import junit.framework.TestCase;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Common base test class that should be used by assembler implementations that
@@ -31,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class ArchiveBasedAssemblyTest extends TestCase {
 
-    private static final Logger LOG = LoggerFactory.getLogger( ArchiveBasedAssemblyTest.class );
+    private static final Logger LOG = Logger.getLogger( ArchiveBasedAssemblyTest.class.getName() );
     
     protected void setUp() throws Exception {
         super.setUp();
@@ -61,7 +58,7 @@ public abstract class ArchiveBasedAssemblyTest extends TestCase {
         
         AssemblerConfig config = prepareConfig( fileToAssemble, destFile );
         
-        LOG.debug( "Assembling [" + fileToAssemble.getAbsolutePath() + 
+        LOG.info( "Assembling [" + fileToAssemble.getAbsolutePath() + 
                 "] to file [" + destFile.getAbsolutePath() + "]" );
         
         underTest.assemble( config );
@@ -89,7 +86,7 @@ public abstract class ArchiveBasedAssemblyTest extends TestCase {
         
         AssemblerConfig config = prepareConfig( fileToAssemble, destDir );
         
-        LOG.debug( "Assembling [" + fileToAssemble.getAbsolutePath() + 
+        LOG.info( "Assembling [" + fileToAssemble.getAbsolutePath() + 
                 "] to directory [" + destDir.getAbsolutePath() + "]" );
         
         underTest.assemble( config );
@@ -116,7 +113,7 @@ public abstract class ArchiveBasedAssemblyTest extends TestCase {
         
         AssemblerConfig config = prepareConfig( fileToAssemble, destFile );
         
-        LOG.debug( "Assembling [" + fileToAssemble.getAbsolutePath() + "] to file [" + destFile.getAbsolutePath() + "]" );
+        LOG.info( "Assembling [" + fileToAssemble.getAbsolutePath() + "] to file [" + destFile.getAbsolutePath() + "]" );
         
         underTest.assemble( config );
         
@@ -141,7 +138,7 @@ public abstract class ArchiveBasedAssemblyTest extends TestCase {
         
         AssemblerConfig config = prepareConfig( fileToAssemble, destFile );
         
-        LOG.debug( "Assembling [" + fileToAssemble.getAbsolutePath() + "] to file [" + destFile.getAbsolutePath() + "]" );
+        LOG.info( "Assembling [" + fileToAssemble.getAbsolutePath() + "] to file [" + destFile.getAbsolutePath() + "]" );
         
         underTest.assemble( config );
         

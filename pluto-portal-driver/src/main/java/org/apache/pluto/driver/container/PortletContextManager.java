@@ -24,12 +24,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletContainerException;
 import org.apache.pluto.container.PortletWindow;
 import org.apache.pluto.container.RequestDispatcherService;
@@ -56,8 +54,8 @@ public class PortletContextManager implements PortletRegistryService, PortletCon
 	/**
      * Logger Instance
      */
-    private static final Logger LOG = LoggerFactory.getLogger(PortletContextManager.class);
-    private static final boolean isDebug = LOG.isDebugEnabled();
+    private static final Logger LOG = Logger.getLogger(PortletContextManager.class.getName());
+    private static final boolean isDebug = LOG.isLoggable(Level.INFO);
    
 
     /**
@@ -131,7 +129,7 @@ public class PortletContextManager implements PortletRegistryService, PortletCon
                   txt.append(sep).append(pd.getPortletName());
                   sep = ", ";
                }
-               LOG.debug(txt.toString());
+               LOG.info(txt.toString());
             }
 
             DriverPortletContext portletContext = new DriverPortletContextImpl(servletContext, portletApp, rdService);
@@ -140,7 +138,7 @@ public class PortletContextManager implements PortletRegistryService, PortletCon
 
             fireRegistered(portletContext);
 
-            if (LOG.isInfoEnabled()) {
+            if (LOG.isLoggable(Level.INFO)) {
                 LOG.info("Registered portlet application for context '" + contextPath + "'");
 
                 LOG.info("Registering "+portletApp.getPortlets().size()+" portlets for context /"+portletContext.getApplicationName());
@@ -158,7 +156,7 @@ public class PortletContextManager implements PortletRegistryService, PortletCon
                 );
             }
         } else {
-             if (LOG.isInfoEnabled()) {
+             if (LOG.isLoggable(Level.INFO)) {
                 LOG.info("Portlet application for context '" + contextPath + "' already registered.");
             }
         }
@@ -219,7 +217,7 @@ public class PortletContextManager implements PortletRegistryService, PortletCon
             return ipc;
         }
         String msg = "Unable to locate portlet config [applicationName="+applicationName+"]/["+portletName+"].";
-        LOG.warn(msg);
+        LOG.warning(msg);
         throw new PortletContainerException(msg);
     }
 
@@ -232,7 +230,7 @@ public class PortletContextManager implements PortletRegistryService, PortletCon
             return ipc.getPortletDefinition();
         }
         String msg = "Unable to retrieve portlet: '"+applicationName+"/"+portletName+"'";
-        LOG.warn(msg);
+        LOG.warning(msg);
         throw new PortletContainerException(msg);
     }
 
@@ -245,7 +243,7 @@ public class PortletContextManager implements PortletRegistryService, PortletCon
             return ipc.getPortletApplicationDefinition();
         }
         String msg = "Unable to retrieve portlet application: '"+applicationName+"'";
-        LOG.warn(msg);
+        LOG.warning(msg);
         throw new PortletContainerException(msg);
     }
 
@@ -338,7 +336,7 @@ public class PortletContextManager implements PortletRegistryService, PortletCon
             contextPathGetter = ServletContext.class.getMethod("getContextPath", (Class[])null);
         }
         catch (NoSuchMethodException e) {
-            LOG.warn("Servlet 2.4 or below detected.  Unable to find getContextPath on ServletContext.");
+            LOG.warning("Servlet 2.4 or below detected.  Unable to find getContextPath on ServletContext.");
         }
     }
 
@@ -348,7 +346,7 @@ public class PortletContextManager implements PortletRegistryService, PortletCon
             try {
                 contextPath = (String) contextPathGetter.invoke(context, (Object[])null);
             } catch (Exception e) {
-                LOG.warn("Unable to directly retrieve context path from ServletContext. Computing. . . ");
+                LOG.warning("Unable to directly retrieve context path from ServletContext. Computing. . . ");
             }
         }
 
@@ -372,10 +370,10 @@ public class PortletContextManager implements PortletRegistryService, PortletCon
                 try {
                     APP_ID_RESOLVERS.add((ApplicationIdResolver)c.newInstance());
                 } catch (Exception e) {
-                    LOG.warn("Unable to instantiate ApplicationIdResolver for class " + c.getName());
+                    LOG.warning("Unable to instantiate ApplicationIdResolver for class " + c.getName());
                 }
             }
-            if (LOG.isInfoEnabled()) {
+            if (LOG.isLoggable(Level.INFO)) {
                 LOG.info("Found " + APP_ID_RESOLVERS.size() + " application id resolvers.");
             }
         }
@@ -393,8 +391,8 @@ public class PortletContextManager implements PortletRegistryService, PortletCon
             }
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Resolved application id '" + path + "' with authority " + authority);
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Resolved application id '" + path + "' with authority " + authority);
         }
         return path;
     }

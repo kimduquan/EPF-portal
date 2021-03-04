@@ -21,14 +21,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  */
 public class RenderConfig {
-   private static final Logger     LOG                = LoggerFactory.getLogger(RenderConfig.class);
+   private static final Logger LOG = Logger.getLogger(RenderConfig.class.getName());
 
    private Map<String, PageConfig> pages;
    private String                  defaultPageId;
@@ -72,8 +71,8 @@ public class RenderConfig {
 
    public PageConfig getPageConfig(String pageId) {
       if (pageId == null || "".equals(pageId)) {
-         if (LOG.isDebugEnabled()) {
-            LOG.debug("Requested page is null.  Returning default: " + defaultPageId);
+         if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Requested page is null.  Returning default: " + defaultPageId);
          }
          pageId = defaultPageId;
       }
@@ -92,13 +91,13 @@ public class RenderConfig {
       }
 
       if (retval == null) {
-         LOG.warn("Couldn't find a PageConfig for page ID: [" + pageId + "]");
+         LOG.warning("Couldn't find a PageConfig for page ID: [" + pageId + "]");
          if ((retval = (PageConfig) pages.get(defaultPageId)) != null) {
-            if (LOG.isDebugEnabled()) {
-               LOG.debug("Returning default page ID: [" + defaultPageId + "]");
+            if (LOG.isLoggable(Level.INFO)) {
+               LOG.info("Returning default page ID: [" + defaultPageId + "]");
             }
          } else {
-            LOG.error("Could not find default page Id for render config!");
+            LOG.severe("Could not find default page Id for render config!");
          }
       }
       return retval;

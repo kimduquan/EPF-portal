@@ -25,12 +25,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.namespace.QName;
-
 import org.apache.pluto.driver.url.PortalURLPublicParameter;
 import org.apache.pluto.container.driver.PortletRegistryService;
 import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
@@ -47,8 +44,8 @@ import org.apache.pluto.container.om.portlet.PublicRenderParameter;
  * @since  16/01/2015
  */
 public class PublicRenderParameterQNameMapper implements PublicRenderParameterMapper {
-   private final Logger LOGGER = LoggerFactory.getLogger(PublicRenderParameterQNameMapper.class);
-   private final boolean isTrace = LOGGER.isTraceEnabled();
+   private final Logger LOGGER = Logger.getLogger(PublicRenderParameterQNameMapper.class.getName());
+   private final boolean isTrace = LOGGER.isLoggable(Level.FINE);
  
    // Set of all public render parameters on the page
    private final ArrayList<PortalURLPublicParameter> prpList = new ArrayList<PortalURLPublicParameter>();
@@ -62,7 +59,7 @@ public class PublicRenderParameterQNameMapper implements PublicRenderParameterMa
    public PublicRenderParameterQNameMapper(PageConfig paco, PortletRegistryService pore) {
       
       Collection<String> pids = paco.getPortletIds();
-      LOGGER.debug("Setting up the PRP mapper. There are " + pids.size() + " portlets to process.");
+      LOGGER.info("Setting up the PRP mapper. There are " + pids.size() + " portlets to process.");
 
       StringBuilder dbgstr = new StringBuilder(1024);
       for (String pid : pids) {
@@ -100,7 +97,7 @@ public class PublicRenderParameterQNameMapper implements PublicRenderParameterMa
                      }
                   }
                   if (qn == null) {
-                     LOGGER.error("Problem with PRP definition: Both QName could not be obtained.");
+                     LOGGER.severe("Problem with PRP definition: Both QName could not be obtained.");
                   } else {
                      PortalURLPublicParameter pupp = new PortalURLPublicParameter(pid, prpId, qn);
                      
@@ -127,9 +124,9 @@ public class PublicRenderParameterQNameMapper implements PublicRenderParameterMa
             
          } catch (Exception e) {
             if (pad == null) {
-               LOGGER.error("Could not get portlet app for: " + cxtpa);
+               LOGGER.severe("Could not get portlet app for: " + cxtpa);
             } else {
-               LOGGER.error("Could not get portlet definition for: " + portletName);
+               LOGGER.severe("Could not get portlet definition for: " + portletName);
             }
          }
       }
@@ -141,7 +138,7 @@ public class PublicRenderParameterQNameMapper implements PublicRenderParameterMa
             dbgstr.append(prefix + lp.size());
             prefix = ", ";
          }
-         LOGGER.trace(dbgstr.toString());
+         LOGGER.fine(dbgstr.toString());
       }
    }
    
@@ -162,7 +159,7 @@ public class PublicRenderParameterQNameMapper implements PublicRenderParameterMa
          oprps.add(p);
       }
       if (isTrace) {
-         LOGGER.trace("For index: " + index + ", QName = " + qn + ", group size = "
+         LOGGER.fine("For index: " + index + ", QName = " + qn + ", group size = "
                 + oprps.size());
       }
       return oprps;
@@ -176,7 +173,7 @@ public class PublicRenderParameterQNameMapper implements PublicRenderParameterMa
       int ind =  qnList.indexOf(prp.getQName());
       if (ind < 0) {
          if (isTrace) {
-            LOGGER.trace("PRP Qname " + prp.getQName() + " not found in " + qnList.toString());
+            LOGGER.fine("PRP Qname " + prp.getQName() + " not found in " + qnList.toString());
          }
       }
       return ind;
@@ -187,7 +184,7 @@ public class PublicRenderParameterQNameMapper implements PublicRenderParameterMa
       int ind = prpList.indexOf(tmpPRP);
       if (ind < 0) {
          if (isTrace) {
-            LOGGER.trace("Public render parameter with window ID = " + windowId + ", ID = " + identifier + " could not be found.");
+            LOGGER.fine("Public render parameter with window ID = " + windowId + ", ID = " + identifier + " could not be found.");
          }
       } else {
          QName qn = prpList.get(ind).getQName();
@@ -287,7 +284,7 @@ public class PublicRenderParameterQNameMapper implements PublicRenderParameterMa
          }
       }
       if (isTrace) {
-         LOGGER.trace("For window " + wid + " there are " + prps.size() + " parameters. " + dbgstr.toString());
+         LOGGER.fine("For window " + wid + " there are " + prps.size() + " parameters. " + dbgstr.toString());
       }
       return prps;
    }

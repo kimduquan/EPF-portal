@@ -21,9 +21,8 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * TODO JavaDoc
@@ -33,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TomcatCrossContextGenerator {
 	private static final String PLUTO_TEMP_DIR = "PlutoDomain";
-	private static Logger LOG = LoggerFactory.getLogger(TomcatCrossContextGenerator.class);
+	private static Logger LOG = Logger.getLogger(TomcatCrossContextGenerator.class.getName());
 
     public static void main(String[] args) throws IOException {
 
@@ -68,7 +67,7 @@ public class TomcatCrossContextGenerator {
 			        .append("docBase=\"../").append(PLUTO_TEMP_DIR).append("/").append(fileName).append("\" ")
 			        .append("crossContext=\"true\">").append("</Context>");
 			File confFile = new File(confDir, contextName+".xml");
-			if (LOG.isInfoEnabled()) {
+			if (LOG.isLoggable(Level.FINE)) {
 				LOG.info("Writing file: "+ confFile.getAbsolutePath());
 			}
 			out = new PrintWriter(new FileWriter(confFile));

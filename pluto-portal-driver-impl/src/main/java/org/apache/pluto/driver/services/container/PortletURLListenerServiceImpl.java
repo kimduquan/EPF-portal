@@ -18,11 +18,8 @@ package org.apache.pluto.driver.services.container;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.logging.Logger;
 import javax.portlet.PortletURLGenerationListener;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletURLListenerService;
 import org.apache.pluto.container.om.portlet.Listener;
 import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
@@ -30,7 +27,7 @@ import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
 public class PortletURLListenerServiceImpl implements PortletURLListenerService
 {
 	/** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(PortletURLListenerServiceImpl.class);
+    private static final Logger LOG = Logger.getLogger(PortletURLListenerServiceImpl.class.getName());
 
     public List<PortletURLGenerationListener> getPortletURLGenerationListeners(PortletApplicationDefinition app)
     {
@@ -49,13 +46,13 @@ public class PortletURLListenerServiceImpl implements PortletURLListenerService
                     }
                 } catch (ClassNotFoundException e) {
                     String message = "The class isn't found.";
-                    LOG.error(message);
+                    LOG.severe(message);
                 } catch (InstantiationException e) {
                     String message = "The instantiation fail.";
-                    LOG.error(message);
+                    LOG.severe(message);
                 } catch (IllegalAccessException e) {
                     String message = "IllegalAccessException";
-                    LOG.error(message);
+                    LOG.severe(message);
                 }
             }
         }

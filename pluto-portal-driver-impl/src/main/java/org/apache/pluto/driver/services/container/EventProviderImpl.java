@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.portlet.Event;
 import javax.xml.bind.JAXBContext;
@@ -32,9 +34,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import javax.xml.stream.FactoryConfigurationError;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.EventProvider;
 import org.apache.pluto.container.PortletContainerException;
 import org.apache.pluto.container.PortletWindow;
@@ -49,7 +48,7 @@ import org.apache.pluto.driver.services.portal.PortletWindowConfig;
  */
 public class EventProviderImpl implements EventProvider {
    /** Logger. */
-   private static final Logger    LOG = LoggerFactory.getLogger(EventProviderImpl.class);
+   private static final Logger LOG = Logger.getLogger(EventProviderImpl.class.getName());
    private PortletWindow          portletWindow;
    private PortletRegistryService portletRegistry;
 
@@ -57,10 +56,10 @@ public class EventProviderImpl implements EventProvider {
       this.portletWindow = portletWindow;
       this.portletRegistry = portletRegistry;
       
-      if (LOG.isTraceEnabled()) {
+      if (LOG.isLoggable(Level.FINE)) {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Portlet window: ").append(portletWindow.getId().getStringId());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
    }
@@ -68,11 +67,11 @@ public class EventProviderImpl implements EventProvider {
    @SuppressWarnings("unchecked")
    public Event createEvent(QName qname, Serializable value) throws IllegalArgumentException {
       
-      if (LOG.isDebugEnabled()) {
+      if (LOG.isLoggable(Level.INFO)) {
          StringBuilder txt = new StringBuilder(128);
          txt.append("QName: ").append(qname.toString());
          txt.append(", value class: ").append((value == null) ? "null": value.getClass().getCanonicalName());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       
       if (isDeclaredAsPublishingEvent(qname)) {
@@ -86,7 +85,7 @@ public class EventProviderImpl implements EventProvider {
             } else {
                
                boolean debug = false;
-               if (LOG.isDebugEnabled() && (value instanceof HashMap)) {
+               if (LOG.isLoggable(Level.INFO) && (value instanceof HashMap)) {
                   debug = true;
                   StringBuilder txt = new StringBuilder(128);
                   txt.append("Event payload params:");
@@ -95,7 +94,7 @@ public class EventProviderImpl implements EventProvider {
                      txt.append("\nname: ").append(name);
                      txt.append(", vals: ").append(Arrays.toString(pmap.get(name)));
                   }
-                  LOG.debug(txt.toString());
+                  LOG.info(txt.toString());
                }
                
                ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -113,16 +112,16 @@ public class EventProviderImpl implements EventProvider {
                }
                
                if (debug) {
-                  LOG.debug("Resulting marshalled HashMap: \n" + out.toString());
+                  LOG.info("Resulting marshalled HashMap: \n" + out.toString());
                }
                
                return new EventImpl(qname, out.toString());
             }
          } catch (JAXBException e) {
             // maybe there is no valid jaxb binding
-            LOG.error("Event handling failed", e);
+            LOG.log(Level.WARNING ,"Event handling failed", e);
          } catch (FactoryConfigurationError e) {
-            LOG.warn(e.getMessage(), e);
+        	 LOG.log(Level.WARNING ,e.getMessage(), e);
          }
       }
       return null;
@@ -171,7 +170,7 @@ public class EventProviderImpl implements EventProvider {
                      txt.append("Error processing payload. ");
                      txt.append(" Specified class ").append(value.getClass().getCanonicalName());
                      txt.append(" is not a ").append(declaredPayload.getCanonicalName());
-                     LOG.warn(txt.toString());
+                     LOG.warning(txt.toString());
                      return false;
                   }
                } catch (Exception e) {
@@ -183,7 +182,7 @@ public class EventProviderImpl implements EventProvider {
                   e.printStackTrace(pw);
                   pw.flush();
                   txt.append("\n").append(sw.toString());
-                  LOG.warn(txt.toString());
+                  LOG.warning(txt.toString());
                   return false;
                }
                return true;

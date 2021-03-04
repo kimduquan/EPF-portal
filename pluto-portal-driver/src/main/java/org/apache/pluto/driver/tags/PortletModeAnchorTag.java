@@ -17,7 +17,8 @@
 package org.apache.pluto.driver.tags;
 
 import java.io.IOException;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletMode;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -25,9 +26,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.driver.AttributeKeys;
 import org.apache.pluto.driver.config.DriverConfiguration;
 import org.apache.pluto.driver.core.PortalRequestContext;
@@ -45,7 +43,7 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 public class PortletModeAnchorTag extends BodyTagSupport {
     
     /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(PortletModeAnchorTag.class);
+    private static final Logger LOG = Logger.getLogger(PortletModeAnchorTag.class.getName());
         
     
     // Private Member Variables ------------------------------------------------
@@ -141,8 +139,8 @@ public class PortletModeAnchorTag extends BodyTagSupport {
     private void evaluatePortletId() throws JspException {
         Object obj = ExpressionEvaluatorManager.evaluate(
                 "portletId", portletId, String.class, this, pageContext);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Evaluated portletId to: " + obj);
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Evaluated portletId to: " + obj);
         }
         evaluatedPortletId = (String) obj;
     }
@@ -166,7 +164,7 @@ public class PortletModeAnchorTag extends BodyTagSupport {
 //        return config.isPortletModeSupported(getEvaluatedPortletId(), mode);       
 //    }
     private boolean isPortletModeAllowed(DriverConfiguration config, String mode) {
-        LOG.debug("Testing if PortletWindowConfig [" + getEvaluatedPortletId() + "] supports mode [" + mode + "]");
+        LOG.info("Testing if PortletWindowConfig [" + getEvaluatedPortletId() + "] supports mode [" + mode + "]");
         return config.isPortletModeSupported(getEvaluatedPortletId(), mode);
     }
 

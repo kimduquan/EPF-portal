@@ -19,9 +19,9 @@
 
 package org.apache.pluto.driver.services.container;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.pluto.container.PortletAsyncManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Runner that is launched in thread on behalf of the portlet application runnable 
@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class PortletAsyncContextualRunner implements Runnable {
-   private static final Logger LOG = LoggerFactory.getLogger(PortletAsyncContextualRunner.class);
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletAsyncContextualRunner.class.getName());
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
    
 
    private PortletAsyncManager pactx;
@@ -49,7 +49,7 @@ public class PortletAsyncContextualRunner implements Runnable {
    @Override
    public void run() {
       if (isTrace) {
-         LOG.trace("Initializing contextual environment and launching runner in thread: " + Thread.currentThread().getId());
+         LOG.fine("Initializing contextual environment and launching runner in thread: " + Thread.currentThread().getId());
       }
 
       try {
@@ -60,7 +60,7 @@ public class PortletAsyncContextualRunner implements Runnable {
          txt.append("Exception running thread: ").append(e.toString());
       } finally {
          if (isTrace) {
-            LOG.trace("Shutting down contextual environment for thread: " + Thread.currentThread().getId());
+            LOG.fine("Shutting down contextual environment for thread: " + Thread.currentThread().getId());
          }
          pactx.deregisterContext(false);
       }

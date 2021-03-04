@@ -26,15 +26,13 @@ import org.apache.pluto.driver.config.DriverConfigurationException;
 import org.apache.pluto.driver.services.portal.PortletWindowConfig;
 import org.apache.pluto.driver.services.portal.PropertyConfigService;
 import org.apache.pluto.driver.services.portal.SupportedWindowStateService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.portlet.WindowState;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SupportedWindowStateServiceImpl implements
       SupportedWindowStateService {
@@ -42,8 +40,7 @@ public class SupportedWindowStateServiceImpl implements
    /**
     * Logger *
     */
-   private static final Logger             LOG                         = LoggerFactory
-                                                                             .getLogger(SupportedWindowStateServiceImpl.class);
+   private static final Logger LOG = Logger.getLogger(SupportedWindowStateServiceImpl.class.getName());
 
    /**
     * PropertyConfigService is injected by Spring. We use it to obtain the
@@ -67,8 +64,7 @@ public class SupportedWindowStateServiceImpl implements
     * from PropertyConfigService). It is protected only so that the unit tests
     * have access to the field.
     */
-   protected Set<String>                   portalSupportedWindowStates = new HashSet<String>(
-                                                                             3);
+   protected Set<String> portalSupportedWindowStates = new HashSet<String>(3);
 
    /**
     * Window States that are specified in PLT.9
@@ -87,10 +83,10 @@ public class SupportedWindowStateServiceImpl implements
          PortletRegistryService portletRegistry) {
       this.propertyService = propertyService;
       this.portletRegistry = portletRegistry;
-      LOG.debug("Initializing SupportedWindowStateService... ");
+      LOG.info("Initializing SupportedWindowStateService... ");
 
       portalSupportedWindowStates = propertyService.getSupportedWindowStates();
-      if (LOG.isDebugEnabled()) {
+      if (LOG.isLoggable(Level.INFO)) {
          StringBuffer msg = new StringBuffer();
 
          if (portalSupportedWindowStates != null) {
@@ -103,16 +99,16 @@ public class SupportedWindowStateServiceImpl implements
                   msg.append(", ");
                }
             }
-            LOG.debug(msg.toString());
+            LOG.info(msg.toString());
          }
       }
 
       if (portalSupportedWindowStates == null) {
          final String msg = "Portal supported window states is null!";
-         LOG.error(msg);
+         LOG.severe(msg);
          throw new DriverConfigurationException(msg);
       }
-      LOG.debug("SupportedWindowStateService initialized.");
+      LOG.info("SupportedWindowStateService initialized.");
    }
 
    public boolean isWindowStateSupported(String portletId, String state) {
@@ -140,7 +136,7 @@ public class SupportedWindowStateServiceImpl implements
                      + portletId + "] and window state [" + state + "].  ");
          String msg = errMsg.append(
                "One or both of the arguments is empty or null.").toString();
-         LOG.error(msg);
+         LOG.severe(msg);
          throw new IllegalArgumentException(msg);
       }
 
@@ -169,7 +165,7 @@ public class SupportedWindowStateServiceImpl implements
                      + portletId + "] and window state [" + state + "].  ");
          String msg = errMsg.append(
                "Unable to access the Portlet Registry Service.").toString();
-         LOG.error(msg, e);
+         LOG.log(Level.SEVERE, msg, e);
       }
 
       List<? extends CustomWindowState> customWindowStates = portletAppDD

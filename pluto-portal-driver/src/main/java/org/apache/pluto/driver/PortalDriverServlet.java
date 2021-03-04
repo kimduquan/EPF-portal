@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.servlet.RequestDispatcher;
@@ -50,8 +52,6 @@ import org.apache.pluto.driver.url.PortalURL;
 import org.apache.pluto.driver.url.PortalURL.URLType;
 import org.apache.pluto.driver.util.PageState;
 import org.apache.pluto.driver.util.RenderData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The controller servlet used to drive the Portal Driver. All requests mapped to this servlet will be processed as
@@ -72,7 +72,7 @@ public class PortalDriverServlet extends HttpServlet {
    private static final long   serialVersionUID = 1L;
 
    /** Internal Logger. */
-   private static final Logger LOG              = LoggerFactory.getLogger(PortalDriverServlet.class);
+   private static final Logger LOG              = Logger.getLogger(PortalDriverServlet.class.getName());
 
    /** The Portal Driver sServlet Context */
    private ServletContext      servletContext   = null;
@@ -119,8 +119,8 @@ public class PortalDriverServlet extends HttpServlet {
     *            if an error occurs writing to the response.
     */
    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      if (LOG.isDebugEnabled()) {
-         LOG.debug("Start of PortalDriverServlet.doGet() to process portlet request . . .");
+      if (LOG.isLoggable(Level.INFO)) {
+         LOG.info("Start of PortalDriverServlet.doGet() to process portlet request . . .");
       }
 
       if (contentType != "") {
@@ -135,7 +135,7 @@ public class PortalDriverServlet extends HttpServlet {
          portalURL = portalRequestContext.getRequestedPortalURL();
       } catch (Exception ex) {
          String msg = "Cannot handle request for portal URL. Problem: " + ex.getMessage();
-         LOG.error(msg, ex);
+         LOG.log(Level.SEVERE,msg, ex);
          throw new ServletException(msg, ex);
       }
 
@@ -150,8 +150,8 @@ public class PortalDriverServlet extends HttpServlet {
          PortletWindowConfig windowConfig = PortletWindowConfig.fromId(targetWindow);
          PortletWindowImpl portletWindow = new PortletWindowImpl(container, windowConfig, portalURL);
 
-         if (LOG.isDebugEnabled()) {
-            LOG.debug("Processing " + reqType + " request for window: " + portletWindow.getId().getStringId());
+         if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Processing " + reqType + " request for window: " + portletWindow.getId().getStringId());
          }
 
          try {
@@ -167,7 +167,7 @@ public class PortalDriverServlet extends HttpServlet {
                ps = new PageState(request);
                Writer writer = response.getWriter();
                jsondata = ps.toJSONString();
-               LOG.debug("Ajax Action: returning new page state to client: " + jsondata);
+               LOG.info("Ajax Action: returning new page state to client: " + jsondata);
                writer.write(jsondata);
                break;
             case PartialAction:
@@ -179,7 +179,7 @@ public class PortalDriverServlet extends HttpServlet {
                renderDataMap.put(pid, partialActionResponse.getRenderData());
                ps = new PageState(request, renderDataMap);
                jsondata = ps.toJSONString();
-               LOG.debug("Ajax Action: returning new page state to client: " + jsondata);
+               LOG.info("Ajax Action: returning new page state to client: " + jsondata);
                response.setContentType("application/json");
                Writer responseWriter = response.getWriter();
                responseWriter.write(jsondata);
@@ -189,25 +189,25 @@ public class PortalDriverServlet extends HttpServlet {
                container.doServeResource(portletWindow, request, response);
                break;
             default:
-               LOG.warn("Unknown request: " + reqType);
+               LOG.warning("Unknown request: " + reqType);
             }
          } catch (PortletContainerException ex) {
-            LOG.error(ex.getMessage(), ex);
+            LOG.log(Level.SEVERE,ex.getMessage(), ex);
             throw new ServletException(ex);
          } catch (PortletException ex) {
-            LOG.error(ex.getMessage(), ex);
+        	 LOG.log(Level.SEVERE,ex.getMessage(), ex);
             throw new ServletException(ex);
          }
-         if (LOG.isDebugEnabled()) {
-            LOG.debug(reqType + " request processed.\n");
+         if (LOG.isLoggable(Level.INFO)) {
+            LOG.info(reqType + " request processed.\n");
          }
 
       }
 
       // Otherwise, handle the render request.
       else {
-         if (LOG.isDebugEnabled()) {
-            LOG.debug("Processing render request.");
+         if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Processing render request.");
          }
 
          PageConfig pageConfig = portalURL.getPageConfig(servletContext);
@@ -215,7 +215,7 @@ public class PortalDriverServlet extends HttpServlet {
          if (pageConfig == null) {
             String renderPath = (portalURL == null ? "" : portalURL.getRenderPath());
             String msg = "PageConfig for render path [" + renderPath + "] could not be found.";
-            LOG.error(msg);
+            LOG.severe(msg);
             throw new ServletException(msg);
          }
 
@@ -224,23 +224,23 @@ public class PortalDriverServlet extends HttpServlet {
 
          // Execute header request for each portlet on the page
 
-         if (LOG.isDebugEnabled()) {
-            LOG.debug("Executing header requests for target portlets.");
+         if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Executing header requests for target portlets.");
          }
 
          response.setContentType("text/html;charset=UTF-8");
          doHeaders(request, response, portalURL);
 
-         if (LOG.isDebugEnabled()) {
-            LOG.debug("Dispatching to: " + uri);
+         if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Dispatching to: " + uri);
          }
 
          // Dispatch to the JSP that aggregates the page.
          RequestDispatcher dispatcher = request.getRequestDispatcher(uri);
          dispatcher.forward(request, response);
 
-         if (LOG.isDebugEnabled()) {
-            LOG.debug("Render request processed.\n");
+         if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Render request processed.\n");
          }
       }
    }
@@ -280,7 +280,7 @@ public class PortalDriverServlet extends HttpServlet {
             wcfg = PortletWindowConfig.fromId(pid);
             pwin = new PortletWindowImpl(container, wcfg, purl);
          } catch (Throwable e) {
-            LOG.warn("Could not retrieve configuration for portlet ID: " + pid);
+            LOG.warning("Could not retrieve configuration for portlet ID: " + pid);
             continue;
          }
          
@@ -341,10 +341,10 @@ public class PortalDriverServlet extends HttpServlet {
             }
 
          } catch (PortletContainerException ex) {
-            LOG.error(ex.getMessage(), ex);
+            LOG.log(Level.SEVERE, ex.getMessage(), ex);
             throw new ServletException(ex);
          } catch (PortletException ex) {
-            LOG.error(ex.getMessage(), ex);
+        	 LOG.log(Level.SEVERE, ex.getMessage(), ex);
             throw new ServletException(ex);
          }
       }
@@ -382,7 +382,7 @@ public class PortalDriverServlet extends HttpServlet {
       // and finally the dynamic portlet dependencies
       deps.addAll(dynamicdeps);
 
-      if (LOG.isDebugEnabled()) {
+      if (LOG.isLoggable(Level.INFO)) {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Page dependency list.");
          txt.append(" total deps: ").append(deps.size());
@@ -393,7 +393,7 @@ public class PortalDriverServlet extends HttpServlet {
          for (PageResourceId id : deps) {
             txt.append("\n   ").append(id.toString());
          }
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       // Set the markup resulting from the specified page resources as an attribute

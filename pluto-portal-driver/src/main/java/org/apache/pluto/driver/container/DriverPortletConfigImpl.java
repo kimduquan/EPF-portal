@@ -23,14 +23,12 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 import javax.xml.namespace.QName;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.driver.DriverPortletConfig;
 import org.apache.pluto.container.impl.AbstractPortletConfigImpl;
 import org.apache.pluto.container.om.portlet.CustomWindowState;
@@ -40,7 +38,7 @@ import org.apache.pluto.container.om.portlet.Supports;
 
 public class DriverPortletConfigImpl extends AbstractPortletConfigImpl implements DriverPortletConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DriverPortletConfigImpl.class);
+    private static final Logger LOG = Logger.getLogger(DriverPortletConfigImpl.class.getName());
 
     protected ResourceBundleFactory bundles;
     
@@ -50,8 +48,8 @@ public class DriverPortletConfigImpl extends AbstractPortletConfigImpl implement
     }
 
     public ResourceBundle getResourceBundle(Locale locale) {
-        if(LOG.isDebugEnabled()) {
-            LOG.debug("Resource Bundle requested: "+locale);
+        if(LOG.isLoggable(Level.INFO)) {
+            LOG.info("Resource Bundle requested: "+locale);
         }
         if (bundles == null) {
             bundles = new ResourceBundleFactory(portlet, portlet.getPortletInfo());
@@ -87,7 +85,7 @@ public class DriverPortletConfigImpl extends AbstractPortletConfigImpl implement
             QName qn = prp.getQName();
             prpdefs.put(prpname, qn);
          } else {
-            LOG.warn("Could not get public render parameter definition for identifier: " + prpname);
+            LOG.warning("Could not get public render parameter definition for identifier: " + prpname);
          }
       }
       

@@ -18,14 +18,13 @@ package org.apache.pluto.driver;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.driver.config.AdminConfiguration;
 import org.apache.pluto.driver.services.portal.PageConfig;
@@ -49,7 +48,7 @@ public class TCKDriverServlet extends PortalDriverServlet {
 	private static final long serialVersionUID = 1L;
 
 	/** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(TCKDriverServlet.class);
+    private static final Logger LOG = Logger.getLogger(TCKDriverServlet.class.getName());
     
     private int pageCounter = 0;
     
@@ -148,8 +147,8 @@ public class TCKDriverServlet extends PortalDriverServlet {
      * @param message  message to debug.
      */
     private void debugWithName(String message) {
-    	if (LOG.isDebugEnabled()) {
-    		LOG.debug("[Pluto TCK Driver] " + message);
+    	if (LOG.isLoggable(Level.INFO)) {
+    		LOG.info("[Pluto TCK Driver] " + message);
     	}
     }
     

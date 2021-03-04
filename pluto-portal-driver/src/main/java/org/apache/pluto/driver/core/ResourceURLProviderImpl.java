@@ -18,18 +18,15 @@ package org.apache.pluto.driver.core;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletWindow;
 import org.apache.pluto.container.ResourceURLProvider;
 
 public class ResourceURLProviderImpl implements ResourceURLProvider {
 
-    private static final Logger LOG =
-        LoggerFactory.getLogger(ResourceURLProviderImpl.class);
+    private static final Logger LOG = Logger.getLogger(ResourceURLProviderImpl.class.getName());
 
     private String stringUrl = "";
     private String base = "";
@@ -39,8 +36,8 @@ public class ResourceURLProviderImpl implements ResourceURLProvider {
         PortalRequestContext ctx = PortalRequestContext.getContext(req);
 
         this.base = ctx.createPortalURL().getServerURI();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Resource URL Created with base: " + base);
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Resource URL Created with base: " + base);
         }
     }
 

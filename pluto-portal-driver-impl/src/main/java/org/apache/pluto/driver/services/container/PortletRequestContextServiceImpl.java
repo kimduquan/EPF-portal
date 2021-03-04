@@ -20,10 +20,8 @@ import static javax.portlet.PortletRequest.ACTION_PHASE;
 import static javax.portlet.PortletRequest.EVENT_PHASE;
 import static javax.portlet.PortletRequest.HEADER_PHASE;
 import static javax.portlet.PortletRequest.RENDER_PHASE;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.pluto.container.PortletActionResponseContext;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletEventResponseContext;

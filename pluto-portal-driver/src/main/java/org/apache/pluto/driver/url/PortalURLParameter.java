@@ -18,9 +18,7 @@ package org.apache.pluto.driver.url;
 
 import java.util.Arrays;
 import java.util.HashSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 /**
  * The portal URL parameter.
@@ -30,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @since Sep 30, 2004
  */
 public class PortalURLParameter {
-   private final Logger LOGGER = LoggerFactory.getLogger(PortalURLParameter.class);
+   private final Logger LOGGER = Logger.getLogger(PortalURLParameter.class.getName());
 
    public final static String PARAM_TYPE_RENDER = "rp";
    public final static String PARAM_TYPE_ACTION = "ap";
@@ -80,7 +78,7 @@ public class PortalURLParameter {
       this.values = values;
       this.type = type;
       if (!allowedTypes.contains(type)) {
-         LOGGER.warn("Parameter type: " + type + " is not in allowed set: " + allowedTypes.toString());
+         LOGGER.warning("Parameter type: " + type + " is not in allowed set: " + allowedTypes.toString());
       }
    }
 
@@ -90,7 +88,7 @@ public class PortalURLParameter {
 
    public void setType(String type) {
       if (!allowedTypes.contains(type)) {
-         LOGGER.warn("Parameter type: " + type + " is not in allowed set: " + allowedTypes.toString());
+         LOGGER.warning("Parameter type: " + type + " is not in allowed set: " + allowedTypes.toString());
       }
       this.type = type;
    }

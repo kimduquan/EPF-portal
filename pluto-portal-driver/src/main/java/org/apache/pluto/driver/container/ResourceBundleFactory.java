@@ -21,9 +21,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.pluto.container.om.portlet.PortletDefinition;
 import org.apache.pluto.container.om.portlet.PortletInfo;
 import org.apache.pluto.container.util.StringManager;
@@ -35,7 +34,7 @@ import org.apache.pluto.container.util.StringManager;
  */
 class ResourceBundleFactory {
 
-   private static final Logger         LOG        = LoggerFactory.getLogger(ResourceBundleFactory.class);
+   private static final Logger LOG = Logger.getLogger(ResourceBundleFactory.class.getName());
 
    private static final StringManager  EXCEPTIONS = StringManager.getManager(ResourceBundleFactory.class.getPackage().getName());
 
@@ -80,17 +79,17 @@ class ResourceBundleFactory {
          defaultBundle = new InlinePortletResourceBundle(defaultTitle, defaultTitle, "");
       }
 
-      if (LOG.isDebugEnabled()) {
+      if (LOG.isLoggable(Level.INFO)) {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Bundle name: ").append(bundleName);
          txt.append(", default ").append(defaultBundle.toString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 
    public ResourceBundle getResourceBundle(Locale locale) {
-      if (LOG.isDebugEnabled()) {
-         LOG.debug("Resource Bundle: " + bundleName + " : " + locale + " requested. ");
+      if (LOG.isLoggable(Level.INFO)) {
+         LOG.info("Resource Bundle: " + bundleName + " : " + locale + " requested. ");
       }
 
       // If allready loaded for this local, return immediately!
@@ -108,11 +107,11 @@ class ResourceBundleFactory {
             bundles.put(locale, defaultBundle);
          }
       } catch (MissingResourceException mre) {
-         if (bundleName != null && LOG.isWarnEnabled()) {
-            LOG.warn(EXCEPTIONS.getString("warning.resourcebundle.notfound", bundleName, mre.getMessage()));
+         if (bundleName != null && LOG.isLoggable(Level.WARNING)) {
+            LOG.warning(EXCEPTIONS.getString("warning.resourcebundle.notfound", bundleName, mre.getMessage()));
          }
-         if (LOG.isDebugEnabled()) {
-            LOG.debug("Using default bundle for locale (" + locale + ").");
+         if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Using default bundle for locale (" + locale + ").");
          }
          bundles.put(locale, defaultBundle);
       }

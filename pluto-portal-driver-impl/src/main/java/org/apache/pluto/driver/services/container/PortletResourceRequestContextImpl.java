@@ -19,7 +19,8 @@ package org.apache.pluto.driver.services.container;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
@@ -32,7 +33,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.apache.pluto.container.PortletAsyncManager;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletInvokerService;
@@ -42,8 +42,6 @@ import org.apache.pluto.container.impl.HttpServletPortletRequestWrapper;
 import org.apache.pluto.container.impl.HttpServletPortletResponseWrapper;
 import org.apache.pluto.container.impl.ResourceParametersImpl;
 import org.apache.pluto.container.impl.ServletPortletSessionProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @version $Id$
@@ -53,10 +51,10 @@ public class PortletResourceRequestContextImpl extends PortletRequestContextImpl
       PortletResourceRequestContext {
 
    /** Logger. */
-   private static final Logger  LOG     = LoggerFactory.getLogger(PortletResourceRequestContextImpl.class);
+   private static final Logger LOG = Logger.getLogger(PortletResourceRequestContextImpl.class.getName());
    @SuppressWarnings("unused")
-   private static final boolean isDebug = LOG.isDebugEnabled();
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
 
    private ResourceResponse         response;
    private PortletAsyncContextImpl  actx;
@@ -184,7 +182,7 @@ public class PortletResourceRequestContextImpl extends PortletRequestContextImpl
          txt.append("\nmethod_servlet_path:      ").append(hreq.getServletPath());
          txt.append("\nmethod_path_info:      ").append(hreq.getPathInfo());
          txt.append("\nmethod_query_string:      ").append(hreq.getQueryString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       // Set portlet-scoped attributes directly on resource request
@@ -248,7 +246,7 @@ public class PortletResourceRequestContextImpl extends PortletRequestContextImpl
          txt.append("\nmethod_servlet_path:      ").append(wreq.getServletPath());
          txt.append("\nmethod_path_info:      ").append(wreq.getPathInfo());
          txt.append("\nmethod_query_string:      ").append(wreq.getQueryString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       return actx;
@@ -266,7 +264,7 @@ public class PortletResourceRequestContextImpl extends PortletRequestContextImpl
       AsyncContext ac = getServletRequest().startAsync();
       if (actx == null) {
          // this should not happen, the wrapper is created during the resource request
-         LOG.error("====>>> Wrapper invocation invalid before resource async started.");
+         LOG.severe("====>>> Wrapper invocation invalid before resource async started.");
       } else {
          actx.setWrapped(ac);
       }
@@ -285,7 +283,7 @@ public class PortletResourceRequestContextImpl extends PortletRequestContextImpl
       AsyncContext ac = getServletRequest().startAsync(request, response);
       if (actx == null) {
          // this should not happen, the wrapper is created during the resource request
-         LOG.error("====>>> Wrapper invocation invalid before resource async started.");
+         LOG.severe("====>>> Wrapper invocation invalid before resource async started.");
       } else {
          actx.setWrapped(ac);
       }

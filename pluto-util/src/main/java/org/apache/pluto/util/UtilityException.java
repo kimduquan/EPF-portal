@@ -24,7 +24,12 @@ import java.io.File;
  */
 public class UtilityException extends Exception {
 
-    private File installDir;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private File installDir;
 
     public UtilityException() {
     }

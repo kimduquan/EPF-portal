@@ -18,16 +18,14 @@ package org.apache.pluto.driver.container;
 
 import java.util.Map;
 import java.util.WeakHashMap;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
-
 import org.apache.pluto.container.PortletAppDescriptorService;
 import org.apache.pluto.container.PortletContainerException;
 import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
 import org.apache.pluto.container.om.portlet.impl.ConfigurationHolder;
 import org.apache.pluto.container.util.StringManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Simple caching mechanism used to manage portlet descriptors. This mechanism
@@ -44,9 +42,8 @@ import org.slf4j.LoggerFactory;
 public class PortletDescriptorRegistry {
    
    /** Logger. */
-   private static final Logger LOG = LoggerFactory
-         .getLogger(PortletDescriptorRegistry.class);
-   private static final boolean isDebug = LOG.isDebugEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletDescriptorRegistry.class.getName());
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
 
    /** Exception Messages. */
    private static final StringManager EXCEPTIONS  = StringManager.getManager(PortletDescriptorRegistry.class
@@ -119,7 +116,7 @@ public class PortletDescriptorRegistry {
       if (holder != null) {
          
          if (isDebug) {
-            LOG.debug("Registering config initializer. ctx path: " + contextPath);
+            LOG.info("Registering config initializer. ctx path: " + contextPath);
          }
          
          portletApp = holder.getPad();

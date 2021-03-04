@@ -19,16 +19,15 @@ package org.apache.pluto.driver.services.portal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.pluto.container.PageResourceId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  */
 public class PageConfig {
 
-   private static final Logger LOG = LoggerFactory.getLogger(PageConfig.class);
+   private static final Logger LOG = Logger.getLogger(PageConfig.class.getName());
 
    private String name;
    private String uri;
@@ -38,8 +37,8 @@ public class PageConfig {
 
    public PageConfig() {
       this.portletIds = new ArrayList<String>();
-      if (LOG.isTraceEnabled()) {
-         LOG.debug("Constructor.");
+      if (LOG.isLoggable(Level.FINE)) {
+         LOG.info("Constructor.");
      }
    }
    
@@ -52,16 +51,16 @@ public class PageConfig {
          PageResourceId resid = new PageResourceId(name, scope, version);
          pageResources.add(resid);
       } else {
-         LOG.warn("Resource name cannot be null.");
+         LOG.warning("Resource name cannot be null.");
       }
 
-      if (LOG.isDebugEnabled()) {
+      if (LOG.isLoggable(Level.INFO)) {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Adding resource dependency. # deps: ").append(pageResources.size());
          txt.append(", name: ").append(name);
          txt.append(", scope: ").append(scope);
          txt.append(", version: ").append(version);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 
@@ -71,8 +70,8 @@ public class PageConfig {
 
    public void setName(String name) {
       this.name = name;
-      if (LOG.isTraceEnabled()) {
-         LOG.debug("Page Name = " + name);
+      if (LOG.isLoggable(Level.FINE)) {
+         LOG.info("Page Name = " + name);
      }
    }
 
@@ -94,8 +93,8 @@ public class PageConfig {
 
    public void addPortlet(String contextPath, String portletName) {
       String pid = PortletWindowConfig.createPortletId(contextPath, portletName, createPlacementId());
-      if (LOG.isDebugEnabled()) {
-         LOG.debug("Add Portlet ID = " + pid);
+      if (LOG.isLoggable(Level.INFO)) {
+         LOG.info("Add Portlet ID = " + pid);
       }
       synchronized(portletIds) {
          portletIds.add(pid);

@@ -25,10 +25,9 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.util.UtilityException;
 import org.apache.pluto.util.assemble.AbstractArchiveAssembler;
 import org.apache.pluto.util.assemble.AssemblerConfig;
@@ -41,7 +40,7 @@ import org.apache.pluto.util.assemble.io.JarStreamingAssembly;
  */
 public class EarAssembler extends AbstractArchiveAssembler {
 
-    private static final Logger LOG = LoggerFactory.getLogger( EarAssembler.class );
+    private static final Logger LOG = Logger.getLogger( EarAssembler.class.getName() );
     private static final int BUFLEN = 1024 * 8; // 8kb
     
     public void assembleInternal( AssemblerConfig config ) throws UtilityException, IOException {
@@ -65,8 +64,8 @@ public class EarAssembler extends AbstractArchiveAssembler {
                 // back to the EAR archive.
                 if ( entry.getName().toLowerCase().endsWith( ".war" ) ) {                                        
                     
-                    if ( LOG.isDebugEnabled() ) {
-                        LOG.debug( "Assembling war file " + entry.getName() );
+                    if ( LOG.isLoggable(Level.INFO) ) {
+                        LOG.info( "Assembling war file " + entry.getName() );
                     }
                     
                     // keep a handle to the AssemblySink so we can write out

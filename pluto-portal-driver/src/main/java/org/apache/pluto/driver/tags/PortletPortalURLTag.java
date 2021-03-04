@@ -40,7 +40,12 @@ public class PortletPortalURLTag extends BodyTagSupport {
 
     // Private Member Variables ------------------------------------------------
 
-    /** The window state to be encoded in the portal URL. */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** The window state to be encoded in the portal URL. */
     private String windowState;
 
     /** The portlet mode to be encoded in the portal URL. */

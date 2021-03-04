@@ -24,12 +24,11 @@ import java.io.InputStream;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
-
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.util.assemble.Assembler;
 
 /** 
@@ -39,7 +38,7 @@ import org.apache.pluto.util.assemble.Assembler;
  */
 public class JarStreamingAssembly {
     
-    private static final Logger LOG = LoggerFactory.getLogger( JarStreamingAssembly.class );
+    private static final Logger LOG = Logger.getLogger( JarStreamingAssembly.class.getName() );
 
     /**
      * Reads the source JarInputStream, copying entries to the destination JarOutputStream. 
@@ -125,20 +124,20 @@ public class JarStreamingAssembly {
                 dest.putNextEntry(servletXmlEntry);
                 IOUtils.write(webXmlBytes, dest);
                 
-                if ( LOG.isDebugEnabled() ) {
-                    LOG.debug( "Jar stream " + source + " successfully assembled." );
+                if ( LOG.isLoggable(Level.INFO) ) {
+                    LOG.info( "Jar stream " + source + " successfully assembled." );
                 }
             } else {                
-                if ( LOG.isDebugEnabled() ) {
-                    LOG.debug( "No portlet XML file was found, assembly was not required." );
+                if ( LOG.isLoggable(Level.INFO) ) {
+                    LOG.info( "No portlet XML file was found, assembly was not required." );
                 }                
 
                 //copy the original, unmodified web.xml entry to the destination
                 dest.putNextEntry(servletXmlEntry);
                 IOUtils.write(servletXmlBuffer, dest);
                 
-                if ( LOG.isDebugEnabled() ) {
-                    LOG.debug( "Jar stream " + source + " successfully assembled." );
+                if ( LOG.isLoggable(Level.INFO) ) {
+                    LOG.info( "Jar stream " + source + " successfully assembled." );
                 }
             }            
             

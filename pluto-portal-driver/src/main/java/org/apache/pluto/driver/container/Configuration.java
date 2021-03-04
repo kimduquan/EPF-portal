@@ -20,9 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Central location for Configuration info.
@@ -31,8 +30,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Configuration {
 
-    private static final Logger LOG =
-        LoggerFactory.getLogger(Configuration.class);
+    private static final Logger LOG = Logger.getLogger(Configuration.class.getName());
 
     public static final ResourceBundle BUNDLE =
         ResourceBundle.getBundle("org.apache.pluto.driver.container.pluto-configuration");
@@ -60,8 +58,8 @@ public class Configuration {
 
     public static String getPortletAppDescriptorServiceImpl() {
         String impl = BUNDLE.getString(DESCRIPTOR_SERVICE);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Using Descriptor Service Impl: " + impl);
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Using Descriptor Service Impl: " + impl);
         }
         return impl;
     }
@@ -94,7 +92,7 @@ public class Configuration {
                 String test = BUNDLE.getString(PREVENT_UNECESSARY_CROSS_CONTEXT);
                 prevent = new Boolean(test);
             } catch (MissingResourceException mre) {
-                LOG.warn(mre.getMessage());
+                LOG.warning(mre.getMessage());
                 prevent = Boolean.FALSE;
             }
         }

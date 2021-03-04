@@ -22,7 +22,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletRequest;
 import javax.portlet.WindowState;
 import javax.servlet.ServletContext;
@@ -30,7 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
-
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletWindow;
 import org.apache.pluto.container.om.portlet.ContainerRuntimeOption;
@@ -43,8 +43,6 @@ import org.apache.pluto.driver.core.PortletWindowImpl;
 import org.apache.pluto.driver.services.portal.PortletWindowConfig;
 import org.apache.pluto.driver.url.PortalURL;
 import org.apache.pluto.tags.el.ExpressionEvaluatorProxy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The portlet tag is used to render a portlet specified by the portlet ID.
@@ -57,7 +55,7 @@ public class PortletTag extends BodyTagSupport {
    private static final long     serialVersionUID = 7369029503826395301L;
 
    /** Logger. */
-   private static final Logger   LOG              = LoggerFactory.getLogger(PortletTag.class);
+   private static final Logger LOG = Logger.getLogger(PortletTag.class.getName());
 
    /** Status constant for failed rendering. */
    public static final int       FAILED           = 0;
@@ -127,8 +125,8 @@ public class PortletTag extends BodyTagSupport {
 
       PortletWindowConfig windowConfig = PortletWindowConfig.fromId(evaluatedPortletId);
 
-      if (LOG.isDebugEnabled()) {
-         LOG.debug("Rendering Portlet Window: " + windowConfig);
+      if (LOG.isLoggable(Level.INFO)) {
+         LOG.info("Rendering Portlet Window: " + windowConfig);
       }
 
       // Retrieve the current portal URL.
@@ -161,7 +159,7 @@ public class PortletTag extends BodyTagSupport {
          pw.flush();
          txt.append("\n");
          txt.append(sw.toString());
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       }
 
       // Create portal servlet response to wrap the original HTTP servlet response.
@@ -278,8 +276,8 @@ public class PortletTag extends BodyTagSupport {
    private void evaluatePortletId() throws JspException {
       ExpressionEvaluatorProxy proxy = ExpressionEvaluatorProxy.getProxy();
       Object obj = proxy.evaluate(portletId, pageContext);
-      if (LOG.isDebugEnabled()) {
-         LOG.debug("Evaluated portletId to: " + obj);
+      if (LOG.isLoggable(Level.INFO)) {
+         LOG.info("Evaluated portletId to: " + obj);
       }
       evaluatedPortletId = (String) obj;
    }

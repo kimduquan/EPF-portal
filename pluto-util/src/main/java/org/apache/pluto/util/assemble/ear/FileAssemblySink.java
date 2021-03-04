@@ -24,16 +24,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 /**
  * Stores assembled bytes in an underlying <code>File</code>.
  */
 class FileAssemblySink extends AssemblySink {
     
-    private static final Logger LOG = LoggerFactory.getLogger( FileAssemblySink.class );
+    private static final Logger LOG = Logger.getLogger( FileAssemblySink.class.getName());
     private File sink = null;
     
     FileAssemblySink(File file) throws FileNotFoundException {

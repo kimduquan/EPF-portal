@@ -23,10 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.ActionParameters;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletSession;
@@ -37,7 +35,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.apache.pluto.container.ContainerServices;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletEnvironmentService;
@@ -57,17 +54,15 @@ import org.apache.pluto.container.util.StringManager;
 import org.apache.pluto.driver.core.PortalRequestContext;
 import org.apache.pluto.driver.url.PortalURL;
 import org.apache.pluto.driver.url.PortletParameterFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @version $Id$
  * 
  */
 public class PortletRequestContextImpl implements PortletRequestContext {
-   private static final Logger       LOG                  = LoggerFactory.getLogger(PortletRequestContextImpl.class);
-   private static final boolean      isTrace              = LOG.isTraceEnabled();
-   private static final boolean      isDebug              = LOG.isDebugEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletRequestContextImpl.class.getName());
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
    
    private static final StringManager EXCEPTIONS =
        StringManager.getManager(PortletRequestImpl.class.getPackage().getName());
@@ -202,12 +197,12 @@ public class PortletRequestContextImpl implements PortletRequestContext {
          String phase) {
       this.dispatchedServletRequest = wrappedServletRequest;
       this.queryParams = queryParams;
-      if (LOG.isTraceEnabled()) {
+      if (LOG.isLoggable(Level.FINE)) {
          StringBuilder txt = new StringBuilder();
          txt.append("Added query parameters.");
          txt.append(" Phase: ").append(phase);
          txt.append(", names: ").append(queryParams.keySet());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 
@@ -218,8 +213,8 @@ public class PortletRequestContextImpl implements PortletRequestContext {
    public void endDispatch() {
       this.dispatchedServletRequest = null;
       this.queryParams = null;
-      if (LOG.isTraceEnabled()) {
-         LOG.debug("deleted query parameters.");
+      if (LOG.isLoggable(Level.FINE)) {
+         LOG.info("deleted query parameters.");
       }
    }
 
@@ -353,7 +348,7 @@ public class PortletRequestContextImpl implements PortletRequestContext {
    @Override
    public PortletSession getPortletSession(boolean create) {
       if (isDebug) {
-         LOG.debug("Retrieving portlet session (create=" + create + ")");
+         LOG.info("Retrieving portlet session (create=" + create + ")");
       }
 
       if ((cachedPortletSession == null) || cachedPortletSession.isInvalidated()) {
@@ -390,7 +385,7 @@ public class PortletRequestContextImpl implements PortletRequestContext {
                long currentInactiveTime = System.currentTimeMillis() - lastAccesstime;
                if (currentInactiveTime > maxInactiveTime) {
                   if (isDebug) {
-                     LOG.debug("The underlying HttpSession is expired and " + "should be invalidated.");
+                     LOG.info("The underlying HttpSession is expired and " + "should be invalidated.");
                   }
                   httpSession.invalidate();
                   httpSession = getServletRequest().getSession(create);
@@ -403,7 +398,7 @@ public class PortletRequestContextImpl implements PortletRequestContext {
       
          if (httpSession == null) {
             if (isDebug) {
-               LOG.debug("The underlying HttpSession is not available: " + "no session will be returned.");
+               LOG.info("The underlying HttpSession is not available: " + "no session will be returned.");
             }
             return null;
          }
@@ -525,7 +520,7 @@ public class PortletRequestContextImpl implements PortletRequestContext {
          StringBuilder txt = new StringBuilder();
          txt.append("Dispatcher type: ").append(type);
          txt.append(", executing request body: ").append(executingRequestBody);
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
       if (executingRequestBody && (type != DispatcherType.ASYNC)) {
          type = DispatcherType.REQUEST;

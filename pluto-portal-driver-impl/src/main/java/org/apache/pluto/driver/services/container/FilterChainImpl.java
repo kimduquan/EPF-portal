@@ -17,10 +17,12 @@
 package org.apache.pluto.driver.services.container;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.portlet.ActionRequest;
@@ -46,10 +48,7 @@ import javax.portlet.filter.HeaderFilter;
 import javax.portlet.filter.HeaderFilterChain;
 import javax.portlet.filter.RenderFilter;
 import javax.portlet.filter.ResourceFilter;
-
 import org.apache.pluto.container.om.portlet.Filter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A <code>FilterChain</code> is an object provided by the portlet container to
@@ -62,8 +61,8 @@ import org.slf4j.LoggerFactory;
  * @version 2.0
  */
 public class FilterChainImpl implements FilterChain, HeaderFilterChain {
-   private static final Logger LOG = LoggerFactory.getLogger(FilterChainImpl.class);
-   private static final boolean isDebug = LOG.isDebugEnabled();
+   private static final Logger LOG = Logger.getLogger(FilterChainImpl.class.getName());
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
    
 
    private List<Filter>   filterList      = new ArrayList<Filter>();
@@ -91,13 +90,13 @@ public class FilterChainImpl implements FilterChain, HeaderFilterChain {
    }
 
    private Object loadFilter(Filter filter) throws InstantiationException, IllegalAccessException,
-         ClassNotFoundException {
+         ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
       Object obj = null;
       Class<?> fcls = loader.loadClass(filter.getFilterClass());
       if (fcls != null) {
          if (beanmgr == null) {
             // CDI is not active
-            obj = fcls.newInstance();
+            obj = fcls.getConstructor().newInstance();
          } else {
             // CDI active ... instantiate as bean to enable contextual features
             Set<Bean<?>> beans = beanmgr.getBeans(fcls);
@@ -105,18 +104,18 @@ public class FilterChainImpl implements FilterChain, HeaderFilterChain {
             if (bean != null) {
                obj = beanmgr.getReference(bean, bean.getBeanClass(), beanmgr.createCreationalContext(bean));
             } else {
-               LOG.warn("Could not get bean reference: " + filter.getFilterClass());
-               obj = fcls.newInstance();
+               LOG.warning("Could not get bean reference: " + filter.getFilterClass());
+               obj = fcls.getConstructor().newInstance();
             }
          }
          if (isDebug) {
             StringBuilder txt = new StringBuilder();
             txt.append("Loaded filter for: ").append(fcls.getCanonicalName());
             txt.append(", bean manager active: ").append(beanmgr != null);
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
       } else {
-         LOG.error("Could not load class: " + filter.getFilterClass());
+         LOG.severe("Could not load class: " + filter.getFilterClass());
       }
       return obj;
    }
@@ -191,7 +190,9 @@ public class FilterChainImpl implements FilterChain, HeaderFilterChain {
             e.printStackTrace();
          } catch (ClassNotFoundException e) {
             e.printStackTrace();
-         }
+         } catch (Exception e) {
+             e.printStackTrace();
+          }
       } else {
          portlet.processAction(request, response);
       }
@@ -215,7 +216,9 @@ public class FilterChainImpl implements FilterChain, HeaderFilterChain {
             e.printStackTrace();
          } catch (ClassNotFoundException e) {
             e.printStackTrace();
-         }
+         } catch (Exception e) {
+             e.printStackTrace();
+          }
       } else {
          eventPortlet.processEvent(request, response);
       }
@@ -239,7 +242,9 @@ public class FilterChainImpl implements FilterChain, HeaderFilterChain {
             e.printStackTrace();
          } catch (ClassNotFoundException e) {
             e.printStackTrace();
-         }
+         } catch (Exception e) {
+             e.printStackTrace();
+          }
       } else {
          portlet.render(request, response);
       }
@@ -263,7 +268,9 @@ public class FilterChainImpl implements FilterChain, HeaderFilterChain {
             e.printStackTrace();
          } catch (ClassNotFoundException e) {
             e.printStackTrace();
-         }
+         } catch (Exception e) {
+             e.printStackTrace();
+          }
       } else {
          headerPortlet.renderHeaders(request, response);
       }
@@ -287,7 +294,9 @@ public class FilterChainImpl implements FilterChain, HeaderFilterChain {
             e.printStackTrace();
          } catch (ClassNotFoundException e) {
             e.printStackTrace();
-         }
+         } catch (Exception e) {
+             e.printStackTrace();
+          }
       } else {
          resourceServingPortlet.serveResource(request, response);
       }

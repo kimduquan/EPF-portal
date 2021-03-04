@@ -17,17 +17,15 @@
 package org.apache.pluto.driver.services.container;
 
 import java.util.Locale;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletRequestContext;
 import org.apache.pluto.container.PortletResourceResponseContext;
 import org.apache.pluto.container.PortletWindow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @version $Id$
@@ -36,8 +34,8 @@ import org.slf4j.LoggerFactory;
 public class PortletResourceResponseContextImpl extends PortletMimeResponseContextImpl implements
                 PortletResourceResponseContext
 {
-   private static final Logger    LOGGER  = LoggerFactory.getLogger(PortletResourceResponseContextImpl.class);
-   private static final boolean   isTrace = LOGGER.isTraceEnabled();
+   private static final Logger    LOGGER  = Logger.getLogger(PortletResourceResponseContextImpl.class.getName());
+   private static final boolean   isTrace = LOGGER.isLoggable(Level.FINE);
     
     public PortletResourceResponseContextImpl(PortletContainer container, HttpServletRequest containerRequest,
           HttpServletResponse containerResponse, PortletWindow window, PortletRequestContext requestContext)
@@ -52,7 +50,7 @@ public class PortletResourceResponseContextImpl extends PortletMimeResponseConte
            StringBuilder txt = new StringBuilder("Setting character encoding.");
            txt.append(" charset: ").append(charset);
            txt.append(" isClosed: ").append(isClosed());
-           LOGGER.trace(txt.toString());
+           LOGGER.fine(txt.toString());
         }
         if (!isClosed())
         {
@@ -90,7 +88,7 @@ public class PortletResourceResponseContextImpl extends PortletMimeResponseConte
          StringBuilder txt = new StringBuilder("Setting character encoding.");
          txt.append(" status code: ").append(sc);
          txt.append(" isClosed: ").append(isClosed());
-         LOGGER.trace(txt.toString());
+         LOGGER.fine(txt.toString());
       }
       if (!isClosed()) {
          getServletResponse().setStatus(sc);

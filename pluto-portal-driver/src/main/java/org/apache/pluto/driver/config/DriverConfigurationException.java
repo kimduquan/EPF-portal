@@ -22,7 +22,12 @@ package org.apache.pluto.driver.config;
  */
 public class DriverConfigurationException extends RuntimeException {
 
-    public DriverConfigurationException() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public DriverConfigurationException() {
     }
 
     public DriverConfigurationException(String message) {

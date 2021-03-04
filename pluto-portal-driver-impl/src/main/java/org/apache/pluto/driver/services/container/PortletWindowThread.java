@@ -21,7 +21,8 @@ import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.Event;
 import javax.portlet.PortletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,9 +36,6 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletContainerException;
 import org.apache.pluto.container.PortletWindow;
@@ -48,7 +46,7 @@ import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
 public class PortletWindowThread extends Thread {
 	
 	/** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(PortletWindowThread.class);
+    private static final Logger LOG = Logger.getLogger(PortletWindowThread.class.getName());
     
     private PortletContainer container;
     
@@ -132,11 +130,11 @@ public class PortletWindowThread extends Thread {
 					container.doEvent(portletWindow, request, response, event);	
 //				}
 			} catch (PortletException e) {
-				LOG.warn(e.getMessage(),e);
+				LOG.log(Level.WARNING, e.getMessage(),e);
 			} catch (IOException e) {
-				LOG.warn(e.getMessage(),e);
+				LOG.log(Level.WARNING, e.getMessage(),e);
 			} catch (PortletContainerException e) {
-				LOG.warn(e.getMessage(),e);
+				LOG.log(Level.WARNING, e.getMessage(),e);
 			}	
 		}
 	}

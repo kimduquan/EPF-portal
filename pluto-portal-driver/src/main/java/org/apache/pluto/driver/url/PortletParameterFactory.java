@@ -21,7 +21,6 @@ package org.apache.pluto.driver.url;
 import static org.apache.pluto.driver.url.PortalURLParameter.PARAM_TYPE_ACTION;
 import static org.apache.pluto.driver.url.PortalURLParameter.PARAM_TYPE_RENDER;
 import static org.apache.pluto.driver.url.PortalURLParameter.PARAM_TYPE_RESOURCE;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,12 +28,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.pluto.container.PortletRequestContext;
 import org.apache.pluto.driver.services.portal.PublicRenderParameterMapper;
 import org.apache.pluto.driver.url.PortalURL.URLType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -46,10 +44,10 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class PortletParameterFactory {
-   private static final Logger LOGGER = LoggerFactory.getLogger(PortletParameterFactory.class);
-   private final static boolean isTrace = LOGGER.isTraceEnabled();
+   private static final Logger LOGGER = Logger.getLogger(PortletParameterFactory.class.getName());
+   private final static boolean isTrace = LOGGER.isLoggable(Level.FINE);
    @SuppressWarnings("unused")
-   private final static boolean isDebug = LOGGER.isDebugEnabled();
+   private final static boolean isDebug = LOGGER.isLoggable(Level.INFO);
    
    private PortalURL url;
    
@@ -166,7 +164,7 @@ public class PortletParameterFactory {
                sep = ", ";
             }
          }
-         LOGGER.trace(sb.toString());
+         LOGGER.fine(sb.toString());
       }
       return parameters;
    }
@@ -245,7 +243,7 @@ public class PortletParameterFactory {
                sep = ", ";
             }
          }
-         LOGGER.trace(sb.toString());
+         LOGGER.fine(sb.toString());
       }
       return parameters;
    }
@@ -270,7 +268,7 @@ public class PortletParameterFactory {
       }
       
       if (isTrace) {
-         LOGGER.debug("getPublicParameterMap returning " + parameters.size() + " parameters.");
+         LOGGER.info("getPublicParameterMap returning " + parameters.size() + " parameters.");
       }
       
       return parameters;
@@ -302,7 +300,7 @@ public class PortletParameterFactory {
          StringBuilder txt = new StringBuilder("Add PRP. Window: ");
          txt.append(windowId).append(", name: ").append(name)
                .append(", values = ").append(Arrays.toString(values));
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       int index = prpMapper.getIndex(windowId, name);
       if (index >= 0) {
@@ -312,7 +310,7 @@ public class PortletParameterFactory {
                "Public render parameter for window: ");
          txt.append(windowId).append(", name: ").append(name)
                .append(" not found in mapper");
-         LOGGER.warn(txt.toString());
+         LOGGER.warning(txt.toString());
       }
    }
 
@@ -321,7 +319,7 @@ public class PortletParameterFactory {
       if (isTrace) {
          StringBuilder txt = new StringBuilder("Remove PRP. Window: ");
          txt.append(windowId).append(", name: ").append(name);
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       int index = prpMapper.getIndex(windowId, name);
       if (index >= 0) {
@@ -330,7 +328,7 @@ public class PortletParameterFactory {
          StringBuilder txt = new StringBuilder("Public render parameter for window: ");
          txt.append(windowId).append(", name: ").append(name)
             .append(" not found in mapper");
-         LOGGER.warn(txt.toString());
+         LOGGER.warning(txt.toString());
       }
    }
 
@@ -339,7 +337,7 @@ public class PortletParameterFactory {
       if (isTrace) {
          StringBuilder txt = new StringBuilder("Window: ");
          txt.append(windowId).append(", name: ").append(name);
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       int index = prpMapper.getIndex(windowId, name);
       return (index >= 0);
@@ -372,7 +370,7 @@ public class PortletParameterFactory {
          txt.append("Window ID: ").append(windowId);
          txt.append(", URL / Parameter type: ").append(type);
          txt.append(", names: ").append(names.toString());
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
 
       return names;
@@ -391,7 +389,7 @@ public class PortletParameterFactory {
          txt.append("name: ").append(name);
          txt.append(", URL / Parameter type: ").append(type);
          txt.append(", window ID: ").append(windowId);
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       
       if (url.getType() == URLType.Render && isPublicRenderParameter(windowId, name)) {
@@ -402,7 +400,7 @@ public class PortletParameterFactory {
                vals = vals.clone();
             }
          } else {
-            LOGGER.debug("Public render parameter name not found in index.");
+            LOGGER.info("Public render parameter name not found in index.");
          }
       } else {
          for (PortalURLParameter p : url.getParameters()) {
@@ -443,7 +441,7 @@ public class PortletParameterFactory {
          txt.append(", values: ").append(Arrays.toString(values));
          txt.append(", type: ").append(type);
          txt.append(", window ID: ").append(windowId);
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       
       if (url.getType() == URLType.Render && isPublicRenderParameter(windowId, name)) {
@@ -453,7 +451,7 @@ public class PortletParameterFactory {
             PortalURLParameter pup = new PortalURLParameter(windowId, name, values, type);
             url.setParameter(pup);
          } else {
-            LOGGER.warn("Unsupported URL / Parameter type: " + url.getType());
+            LOGGER.warning("Unsupported URL / Parameter type: " + url.getType());
          }
       }
    }
@@ -471,7 +469,7 @@ public class PortletParameterFactory {
          txt.append("name: ").append(name);
          txt.append(", type: ").append(type);
          txt.append(", window ID: ").append(windowId);
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
       if (isPublicRenderParameter(windowId, name)) {
          throw new IllegalArgumentException("Cannot set a public render parameter to null. Parameter name: " + name);
@@ -508,7 +506,7 @@ public class PortletParameterFactory {
                txt.append("\nName: ").append(name);
                txt.append(", Values: ").append(Arrays.toString(qp.get(name)));
             }
-            LOGGER.debug(txt.toString());
+            LOGGER.info(txt.toString());
          }
 
          if (type.equals(PARAM_TYPE_RENDER)) {
@@ -557,7 +555,7 @@ public class PortletParameterFactory {
             txt.append("\nName: ").append(name);
             txt.append(", Values: ").append(Arrays.toString(params.get(name)));
          }
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
 
       return params;
@@ -590,7 +588,7 @@ public class PortletParameterFactory {
          txt.append(", PRP index: ").append(index);
          txt.append(", window ID: ").append(windowId);
          txt.append(", Values: ").append(Arrays.toString(values));
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
 
    }
@@ -620,7 +618,7 @@ public class PortletParameterFactory {
          txt.append(", type: ").append(type);
          txt.append(", PRP index: ").append(index);
          txt.append(", window ID: ").append(windowId);
-         LOGGER.debug(txt.toString());
+         LOGGER.info(txt.toString());
       }
 
    }
@@ -645,7 +643,7 @@ public class PortletParameterFactory {
       }
       
       if (isTrace) {
-         LOGGER.debug("Public render parameter names: " + names.toString());
+         LOGGER.info("Public render parameter names: " + names.toString());
       }
 
       return names;

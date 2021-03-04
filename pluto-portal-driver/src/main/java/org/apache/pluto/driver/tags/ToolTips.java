@@ -18,13 +18,11 @@ package org.apache.pluto.driver.tags;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.ListResourceBundle;
-
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A class encapsulating access to portlet mode and windowstate tooltips.
@@ -58,7 +56,7 @@ class ToolTips
         }
         BUNDLE = bundle;
     }
-    private static final Logger LOG = LoggerFactory.getLogger(ToolTips.class);
+    private static final Logger LOG = Logger.getLogger(ToolTips.class.getName());
 
     static final ToolTips MAXIMIZE = new ToolTips(BUNDLE.getString("tooltip.windowstate.maximized"));
     static final ToolTips MINIMIZE = new ToolTips(BUNDLE.getString("tooltip.windowstate.minimized"));
@@ -81,7 +79,7 @@ class ToolTips
         try {
             tip.append(BUNDLE.getString("tooltip.mode." + mode));
         } catch (MissingResourceException e) {
-            LOG.warn("No tooltip found for portlet mode [" + mode + "]", e);
+            LOG.log(Level.WARNING, "No tooltip found for portlet mode [" + mode + "]", e);
         }
         return new ToolTips(tip.toString());
     }
@@ -91,7 +89,7 @@ class ToolTips
         try {
             tip.append(BUNDLE.getString("tooltip.windowstate." + state));
         } catch (MissingResourceException e) {
-            LOG.warn("No tooltip found for window state [" + state + "]", e);
+        	LOG.log(Level.WARNING, "No tooltip found for window state [" + state + "]", e);
         }
         return new ToolTips(tip.toString());
     }

@@ -16,11 +16,9 @@
  */
 package org.apache.pluto.driver.core;
 
+import java.util.logging.Logger;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletContainerException;
 import org.apache.pluto.container.PortletWindow;
@@ -36,7 +34,7 @@ import org.apache.pluto.driver.url.PortalURL;
 public class PortletWindowImpl implements PortletWindow {
 
     /** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(PortletWindowImpl.class);
+    private static final Logger LOG = Logger.getLogger(PortletWindowImpl.class.getName());
     
     // Private Member Variables ------------------------------------------------
 
@@ -64,7 +62,7 @@ public class PortletWindowImpl implements PortletWindow {
         catch (PortletContainerException ex)
         {
             String message = "Unable to load Portlet App Deployment Descriptor:"+ ex.getMessage();
-            LOG.warn(message);
+            LOG.warning(message);
             throw new RuntimeException(message);
         }
     }

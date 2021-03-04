@@ -21,16 +21,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.driver.AttributeKeys;
 import org.apache.pluto.driver.PortalDriverServlet;
 import org.apache.pluto.driver.config.DriverConfiguration;
@@ -41,7 +39,7 @@ import org.apache.pluto.driver.services.portal.RenderConfigService;
 
 public class PageAdminPortlet extends GenericPlutoPortlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PageAdminPortlet.class);
+    private static final Logger LOG = Logger.getLogger(PageAdminPortlet.class.getName());
     private static final String JSP_DIR = "/WEB-INF/fragments/admin/page/";
     private static final String VIEW_PAGE = JSP_DIR + "view.jsp";
     private static final String EDIT_PAGE = JSP_DIR + "edit.jsp";
@@ -66,7 +64,7 @@ public class PageAdminPortlet extends GenericPlutoPortlet {
 			persistPages();
 		} catch (IOException e) {
 			String msg = "Problem persisting configuration changes. Changes will not be persisted.";
-			LOG.error(msg, e);
+			LOG.log(Level.SEVERE,msg, e);
 			//TODO: send message back to UI
 		}
 		//TODO: send 'success' message back to UI
@@ -101,7 +99,7 @@ public class PageAdminPortlet extends GenericPlutoPortlet {
         String page = request.getParameter("newPage");//newPage text input element
         //Check if page is null or empty
         if (page == null || page.equals("")) {
-			LOG.warn("Page parameter is null or empty. Page addition will be ignored.");
+			LOG.warning("Page parameter is null or empty. Page addition will be ignored.");
 			//TODO: send message back to UI
         	return;
         }
@@ -136,13 +134,13 @@ public class PageAdminPortlet extends GenericPlutoPortlet {
         //make sure we are not deleting the default page
 		String defaultPage = getDefaultPage();
 	    if (page.equalsIgnoreCase(defaultPage)) {
-			LOG.warn("Trying to delete the default page. Page deletion will be ignored.");
+			LOG.warning("Trying to delete the default page. Page deletion will be ignored.");
 			//TODO: send message back to UI
 	    	return;
 	    }
         //make sure we are not deleting the Pluto Admin page
 		if (page.equalsIgnoreCase("Pluto Admin")) {
-			LOG.warn("Trying to delete the Pluto Admin page. Page deletion will be ignored.");
+			LOG.warning("Trying to delete the Pluto Admin page. Page deletion will be ignored.");
 			return;
 		}
 

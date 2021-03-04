@@ -21,7 +21,8 @@ package org.apache.pluto.driver.services.container;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletAsyncEvent;
 import javax.portlet.PortletAsyncListener;
 import javax.portlet.ResourceRequest;
@@ -32,12 +33,9 @@ import javax.servlet.AsyncListener;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.pluto.container.PortletInvokerService;
 import org.apache.pluto.container.PortletResourceResponseContext;
 import org.apache.pluto.container.impl.HttpServletPortletRequestWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Manages the listeners registered by the application. Releases portal resources when 
@@ -48,9 +46,9 @@ import org.slf4j.LoggerFactory;
 public class PortletAsyncContextListener implements AsyncListener {
    
    /** Logger. */
-   private static final Logger LOG = LoggerFactory.getLogger(PortletAsyncContextListener.class);
-   private static final boolean isDebug = LOG.isDebugEnabled();
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final Logger LOG = Logger.getLogger(PortletAsyncContextListener.class.getName());
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
    
    
    // Data for one listener
@@ -115,7 +113,7 @@ public class PortletAsyncContextListener implements AsyncListener {
          }
          txt.append(", # AsyncListeners: ").append(hcnt);
          txt.append(", # PortletAsyncListeners: ").append(pcnt);
-         LOG.trace(txt.toString());
+         LOG.fine(txt.toString());
       }
    }
 
@@ -196,7 +194,7 @@ public class PortletAsyncContextListener implements AsyncListener {
       }
 
       if (isDebug) {
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
    }
@@ -239,7 +237,7 @@ public class PortletAsyncContextListener implements AsyncListener {
 
       txt.append(", Exception: ").append(evt.getThrowable().getMessage());
       if (isDebug) {
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 
@@ -275,7 +273,7 @@ public class PortletAsyncContextListener implements AsyncListener {
       StringBuilder txt = new StringBuilder(128);
       txt.append("Async started again after ").append(delta).append(" milliseconds.");
       if (isDebug) {
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       // need to add this listener again so it gets called when finally complete.
@@ -333,10 +331,10 @@ public class PortletAsyncContextListener implements AsyncListener {
       }
 
       if (warn) {
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       } else {
          if (isDebug) {
-            LOG.debug(txt.toString());
+            LOG.info(txt.toString());
          }
       }
    }

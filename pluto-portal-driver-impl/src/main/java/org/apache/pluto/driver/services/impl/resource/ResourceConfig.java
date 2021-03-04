@@ -20,14 +20,13 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.pluto.container.PageResourceId;
 import org.apache.pluto.driver.services.portal.PageConfig;
 import org.apache.pluto.driver.services.portal.PageResources;
 import org.apache.pluto.driver.services.portal.PropertyConfigService;
 import org.apache.pluto.driver.services.portal.RenderConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Encapsulation of the Pluto Driver ResourceConfig Info.
@@ -39,8 +38,7 @@ public class ResourceConfig implements PropertyConfigService
 {
 
     /** Internal Logger. */
-    private static final Logger LOG =
-        LoggerFactory.getLogger(ResourceConfig.class);
+    private static final Logger LOG = Logger.getLogger(ResourceConfig.class.getName());
 
     /** The name of the portal. */
     private String portalName;
@@ -190,16 +188,16 @@ public class ResourceConfig implements PropertyConfigService
           PageResourceId resid = new PageResourceId(name, scope, version);
           defaultPageResources.add(resid);
        } else {
-          LOG.warn("Resource name cannot be null.");
+          LOG.warning("Resource name cannot be null.");
        }
 
-       if (LOG.isDebugEnabled()) {
+       if (LOG.isLoggable(Level.INFO)) {
           StringBuilder txt = new StringBuilder(128);
           txt.append("Adding resource dependency. # deps: ").append(defaultPageResources.size());
           txt.append(", name: ").append(name);
           txt.append(", scope: ").append(scope);
           txt.append(", version: ").append(version);
-          LOG.debug(txt.toString());
+          LOG.info(txt.toString());
        }
     }
 
@@ -236,7 +234,7 @@ public class ResourceConfig implements PropertyConfigService
           defaultPageResources.add(new PageResourceId("pluto.js", "org.apache.portals", "3.0.0"));
        }
        
-       if (LOG.isDebugEnabled()) {
+       if (LOG.isLoggable(Level.INFO)) {
           StringBuilder txt = new StringBuilder(128);
           txt.append("Logging config info.\n");
           txt.append(pageResources.toString());
@@ -253,7 +251,7 @@ public class ResourceConfig implements PropertyConfigService
                 }
              }
           }
-          LOG.debug(txt.toString());
+          LOG.info(txt.toString());
        }
     }
 

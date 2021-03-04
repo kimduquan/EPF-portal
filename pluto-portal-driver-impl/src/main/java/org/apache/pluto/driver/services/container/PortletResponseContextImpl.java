@@ -21,7 +21,6 @@ import static javax.portlet.PortletRequest.HEADER_PHASE;
 import static javax.portlet.PortletRequest.RENDER_PHASE;
 import static javax.portlet.PortletRequest.RESOURCE_PHASE;
 import static org.apache.pluto.driver.url.PortalURLParameter.PARAM_TYPE_RENDER;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,13 +28,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.logging.Logger;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletConfig;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.pluto.container.HeaderData;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletRequestContext;
@@ -48,8 +46,6 @@ import org.apache.pluto.container.ResourceURLProvider;
 import org.apache.pluto.driver.core.PortalRequestContext;
 import org.apache.pluto.driver.url.PortalURL;
 import org.apache.pluto.driver.url.PortalURLParameter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 
@@ -60,7 +56,7 @@ import org.w3c.dom.Element;
 public abstract class PortletResponseContextImpl implements PortletResponseContext {
 
    /** Logger. */
-   private static final Logger      LOG               = LoggerFactory.getLogger(PortletResponseContextImpl.class);
+   private static final Logger LOG = Logger.getLogger(PortletResponseContextImpl.class.getName());
 
    private PortletContainer         container;
    private HttpServletRequest       containerRequest;
@@ -186,7 +182,7 @@ public abstract class PortletResponseContextImpl implements PortletResponseConte
          StringBuilder txt = new StringBuilder(128);
          txt.append("Ignoring attempt to add document head element with key: ").append(key);
          txt.append(" rather than the required: ").append(MimeResponse.MARKUP_HEAD_ELEMENT);
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       } else {
          if (!isClosed() && isSetPropsAllowed && element != null) {
             if (lifecycle.equals(RENDER_PHASE) || lifecycle.equals(HEADER_PHASE)) {
@@ -200,12 +196,12 @@ public abstract class PortletResponseContextImpl implements PortletResponseConte
       if (value == null) {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Ignoring attempt to add property with null value. Key: ").append(key);
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       } else if (!key.matches(VALID_HEADER_CHARS)) {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Ignoring attempt to add key containing disallowed characters. Key: ").append(key);
          txt.append(", value: ").append(value);
-        LOG.warn(txt.toString());
+        LOG.warning(txt.toString());
       } else {
          // header names are case insensitive. allow setting all headers 
          // during the resource phase.
@@ -213,7 +209,7 @@ public abstract class PortletResponseContextImpl implements PortletResponseConte
             StringBuilder txt = new StringBuilder(128);
             txt.append("Ignoring disallowed HTTP header: ").append(key);
             txt.append(" with value: ").append(value);
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
          } else {
             if (!isClosed() && isSetPropsAllowed) {
                if (lifecycle.matches(RESOURCE_PHASE)) {
@@ -231,12 +227,12 @@ public abstract class PortletResponseContextImpl implements PortletResponseConte
       if (value == null) {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Ignoring attempt to add property with null value. Key: ").append(key);
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       } else if (!key.matches(VALID_HEADER_CHARS)) {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Ignoring attempt to add key containing disallowed characters. Key: ").append(key);
          txt.append(", value: ").append(value);
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       } else {
          // header names are case insensitive. allow setting all headers 
          // during the resource phase.
@@ -244,7 +240,7 @@ public abstract class PortletResponseContextImpl implements PortletResponseConte
             StringBuilder txt = new StringBuilder(128);
             txt.append("Ignoring disallowed HTTP header: ").append(key);
             txt.append(" with value: ").append(value);
-            LOG.warn(txt.toString());
+            LOG.warning(txt.toString());
          } else {
             if (!isClosed() && isSetPropsAllowed) {
                if (lifecycle.matches(RESOURCE_PHASE)) {

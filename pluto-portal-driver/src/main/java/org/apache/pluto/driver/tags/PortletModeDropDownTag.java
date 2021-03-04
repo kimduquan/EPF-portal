@@ -21,7 +21,8 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletMode;
 import javax.servlet.ServletContext;
@@ -31,9 +32,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletContainerException;
 import org.apache.pluto.container.PortletWindow;
@@ -58,7 +56,7 @@ public class PortletModeDropDownTag extends BodyTagSupport {
 
 
 	/** Logger. */
-    private static final Logger LOG = LoggerFactory.getLogger(PortletModeDropDownTag.class);
+    private static final Logger LOG = Logger.getLogger(PortletModeDropDownTag.class.getName());
         
     
     // Private Member Variables ------------------------------------------------
@@ -120,8 +118,8 @@ public class PortletModeDropDownTag extends BodyTagSupport {
         }
         catch(RuntimeException ex) 
         {
-        	  if (LOG.isDebugEnabled()) {
-                  LOG.debug("The portlet " + windowConfig.getPortletName() + " is not available. Is already deployed?");
+        	  if (LOG.isLoggable(Level.INFO)) {
+                  LOG.info("The portlet " + windowConfig.getPortletName() + " is not available. Is already deployed?");
               }
         }
 		
@@ -207,8 +205,8 @@ public class PortletModeDropDownTag extends BodyTagSupport {
     private void evaluatePortletId() throws JspException {
         Object obj = ExpressionEvaluatorManager.evaluate(
                 "portletId", portletId, String.class, this, pageContext);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Evaluated portletId to: " + obj);
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Evaluated portletId to: " + obj);
         }
         evaluatedPortletId = (String) obj;
     }
@@ -263,7 +261,7 @@ public class PortletModeDropDownTag extends BodyTagSupport {
 			res.append(".decoration-name");
 			decorationName = bundle.getString(res.toString());
 		} catch (Exception e) {
-			LOG.debug("Problem finding decoration-name for custom mode: " + mode.toString());
+			LOG.info("Problem finding decoration-name for custom mode: " + mode.toString());
 		}
 		return decorationName;
     }

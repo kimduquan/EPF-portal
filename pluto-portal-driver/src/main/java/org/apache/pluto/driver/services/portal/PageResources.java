@@ -25,10 +25,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.pluto.container.PageResourceId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is a container for configured resources such as style sheets and javascript 
@@ -38,10 +37,10 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class PageResources {
-   private static final Logger LOG = LoggerFactory.getLogger(PageResources.class);
-   private static final boolean isDebug = LOG.isDebugEnabled();
+   private static final Logger LOG = Logger.getLogger(PageResources.class.getName());
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
    @SuppressWarnings("unused")
-   private static final boolean isTrace = LOG.isTraceEnabled();
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
    
    public enum Type {CSS, SCRIPT, MARKUP};
    
@@ -136,7 +135,7 @@ public class PageResources {
          txt.append(", id: ").append(id.toString());
          txt.append(", type: ").append((type == null) ? "null" : type.toString());
          txt.append(", source: ").append(source);
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       }
 
       if (isDebug) {
@@ -145,7 +144,7 @@ public class PageResources {
          txt.append(", id: ").append(id.toString());
          txt.append(", type: ").append((type == null) ? "null" : type.toString());
          txt.append(", source: ").append(source);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
    
@@ -196,7 +195,7 @@ public class PageResources {
          StringBuilder txt = new StringBuilder();
          txt.append("Effective page resource ID: ");
          txt.append((effectiveId == null) ? "null" : effectiveId.toString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       
       if (effectiveId != null) {
@@ -235,11 +234,11 @@ public class PageResources {
             txt.append(src.source);
             break;
          default:
-            LOG.warn("Unknown page resource type: " + src.type.toString());
+            LOG.warning("Unknown page resource type: " + src.type.toString());
          }
          markup = txt.toString();
       } else {
-         LOG.warn("Unknown page resource ID: " + resid.toString());
+         LOG.warning("Unknown page resource ID: " + resid.toString());
       }
       
       return markup;
@@ -367,7 +366,7 @@ public class PageResources {
                      txt.append(", New version string: ").append(newVersion);
                      txt.append(", Current digits: ").append(Arrays.asList(currDecimals));
                      txt.append(", New digits: ").append(Arrays.asList(newDecimals));
-                     LOG.debug(txt.toString());
+                     LOG.info(txt.toString());
                   }
                   
                   // replace the current item in the list with the new item, as it
@@ -394,7 +393,7 @@ public class PageResources {
             txt.append("\n").append(id.toString());
          }
          txt.append("\n\nResulting markup:\n").append(markup.toString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
       
       return (markup.length() == 0) ? null : markup.toString();

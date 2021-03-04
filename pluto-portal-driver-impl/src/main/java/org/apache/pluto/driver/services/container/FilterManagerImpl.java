@@ -18,6 +18,7 @@ package org.apache.pluto.driver.services.container;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.enterprise.inject.spi.BeanManager;
 import javax.portlet.ActionRequest;
@@ -36,15 +37,12 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.ResourceServingPortlet;
-
 import org.apache.pluto.container.FilterManager;
 import org.apache.pluto.container.PortletWindow;
 import org.apache.pluto.container.om.portlet.Filter;
 import org.apache.pluto.container.om.portlet.FilterMapping;
 import org.apache.pluto.container.om.portlet.PortletApplicationDefinition;
 import org.apache.pluto.container.om.portlet.PortletDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -55,7 +53,7 @@ import org.slf4j.LoggerFactory;
  */
 public class FilterManagerImpl implements FilterManager{
    @SuppressWarnings("unused")
-   private static final Logger LOG = LoggerFactory.getLogger(FilterManagerImpl.class);
+   private static final Logger LOG = Logger.getLogger(FilterManagerImpl.class.getName());
    
     private FilterChainImpl filterchain;
     private PortletApplicationDefinition portletApp;

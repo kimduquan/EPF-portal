@@ -25,7 +25,6 @@ import static javax.portlet.PortletRequest.RENDER_PHASE;
 import static javax.portlet.PortletRequest.RESOURCE_PHASE;
 import static org.apache.pluto.driver.url.PortalURLParameter.PARAM_TYPE_RENDER;
 import static org.apache.pluto.driver.url.PortalURLParameter.PARAM_TYPE_RESOURCE;
-
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -38,14 +37,12 @@ import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletSession;
-
 import org.apache.pluto.container.PortletRequestContext;
 import org.apache.pluto.container.PortletResponseContext;
 import org.apache.pluto.driver.url.PortletParameterFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Provides the functionality for the action scoped request attribute runtime option. The action scoped request
@@ -54,10 +51,10 @@ import org.slf4j.LoggerFactory;
  * @author Scott Nicklous
  */
 public class ActionScopedRequestAttributeHandler {
-   private static final Logger       LOG                = LoggerFactory.getLogger(ActionScopedRequestAttributeHandler.class);
-   private static final boolean      isDebug            = LOG.isDebugEnabled();
+   private static final Logger LOG = Logger.getLogger(ActionScopedRequestAttributeHandler.class.getName());
+   private static final boolean isDebug = LOG.isLoggable(Level.INFO);
    @SuppressWarnings("unused")
-   private static final boolean      isTrace            = LOG.isTraceEnabled();
+   private static final boolean isTrace = LOG.isLoggable(Level.FINE);
 
    // for checking the attribute names
    private static final List<String> disallowedPrefixes = new ArrayList<String>();
@@ -74,7 +71,7 @@ public class ActionScopedRequestAttributeHandler {
          t.printStackTrace(pw);
          pw.flush();
          txt.append(sw.toString());
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       }
 
       if (configBundle != null) {
@@ -93,7 +90,7 @@ public class ActionScopedRequestAttributeHandler {
          txt.append("Bundle could be read: ").append(configBundle != null);
          txt.append(", disallowed prefixes: ").append(disallowedPrefixes.toString());
          txt.append(", disallowed names: ").append(disallowedNames.toString());
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
    }
 
@@ -154,7 +151,7 @@ public class ActionScopedRequestAttributeHandler {
          if (requestContext != null) {
             txt.append(", portletConfig null: ").append(requestContext.getPortletConfig() == null);
          }
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       Map<String, String[]> options = requestContext.getPortletConfig().getContainerRuntimeOptions();
@@ -178,7 +175,7 @@ public class ActionScopedRequestAttributeHandler {
          StringBuilder txt = new StringBuilder(128);
          txt.append("Bad actionScopedRequestAttributes runtime option. Values: ");
          txt.append(Arrays.toString(vals));
-         LOG.warn(txt.toString());
+         LOG.warning(txt.toString());
       }
       
       String[] scopeId = null;
@@ -278,7 +275,7 @@ public class ActionScopedRequestAttributeHandler {
          txt.append(", scope id: ").append((scopeId == null) ? "null" : Arrays.toString(scopeId));
          txt.append(", current index: ").append(currentIndex);
          txt.append(", option values: ").append((vals == null) ? "null" : Arrays.toString(vals));
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
    }
@@ -318,7 +315,7 @@ public class ActionScopedRequestAttributeHandler {
          txt.append(", scope id: ").append((sessionData == null) ? "null" : sessionData.id);
          txt.append(", index: ").append(index);
          txt.append(", action scope param values: ").append((asvals == null) ? "null" : Arrays.toString(asvals));
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       return index;
@@ -381,7 +378,7 @@ public class ActionScopedRequestAttributeHandler {
          txt.append(", index: ").append(currentIndex);
          txt.append(", active: ").append(active);
          txt.append(", active map is null: ").append(activeMap == null);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       return value;
@@ -404,7 +401,7 @@ public class ActionScopedRequestAttributeHandler {
          txt.append(", index: ").append(currentIndex);
          txt.append(", active: ").append(active);
          txt.append(", active map is null: ").append(activeMap == null);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
    }
@@ -427,7 +424,7 @@ public class ActionScopedRequestAttributeHandler {
          txt.append(", index: ").append(currentIndex);
          txt.append(", active: ").append(active);
          txt.append(", active map is null: ").append(activeMap == null);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       return names;
@@ -460,7 +457,7 @@ public class ActionScopedRequestAttributeHandler {
          txt.append(", index: ").append(currentIndex);
          txt.append(", settable: ").append(settable);
          txt.append(", active map is null: ").append(activeMap == null);
-         LOG.debug(txt.toString());
+         LOG.info(txt.toString());
       }
 
       return attribSet;

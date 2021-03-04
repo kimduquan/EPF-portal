@@ -18,10 +18,9 @@ package org.apache.pluto.util.assemble;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.util.UtilityException;
 
 /**
@@ -32,7 +31,7 @@ import org.apache.pluto.util.UtilityException;
  */
 public abstract class AbstractArchiveAssembler extends WebXmlRewritingAssembler {
 
-    private static final Logger LOG = LoggerFactory.getLogger( AbstractArchiveAssembler.class );
+    private static final Logger LOG = Logger.getLogger( AbstractArchiveAssembler.class.getName());
     
     /**
      * This implementation throws <code>UtilityException</code> if the source
@@ -56,8 +55,8 @@ public abstract class AbstractArchiveAssembler extends WebXmlRewritingAssembler 
             }
 
             if ( performInPlaceAssembly( config ) ) {
-                    if ( LOG.isDebugEnabled() ) {
-                        LOG.debug( "Performing in-place assembly of " + config.getSource().getAbsolutePath() );
+                    if ( LOG.isLoggable(Level.INFO) ) {
+                        LOG.info( "Performing in-place assembly of " + config.getSource().getAbsolutePath() );
                     }
                     dest = File.createTempFile( source.getName(), ".tmp" );
                     config.setDestination( dest );
@@ -69,8 +68,8 @@ public abstract class AbstractArchiveAssembler extends WebXmlRewritingAssembler 
                         FileUtils.copyFile( dest, source );
                     }
             } else {
-                if ( LOG.isDebugEnabled() ) {
-                    LOG.debug( "Performing assembly of " + config.getSource().getAbsolutePath() + " to " + 
+                if ( LOG.isLoggable(Level.INFO) ) {
+                    LOG.info( "Performing assembly of " + config.getSource().getAbsolutePath() + " to " + 
                             config.getDestination().getAbsolutePath() );
                 }
                 File destFile = dest;
@@ -88,7 +87,7 @@ public abstract class AbstractArchiveAssembler extends WebXmlRewritingAssembler 
             }
             
         } catch ( IOException e ) {
-            LOG.error( "Assembly failed: "+ e.getMessage() );
+            LOG.severe( "Assembly failed: "+ e.getMessage() );
             throw new UtilityException( e.getMessage(), e );
         }        
     }

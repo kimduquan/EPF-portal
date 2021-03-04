@@ -19,13 +19,11 @@ package org.apache.pluto.driver.container;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.portlet.PortletRequest;
 import javax.portlet.PreferencesValidator;
 import javax.portlet.ValidatorException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.pluto.container.PortletPreference;
 import org.apache.pluto.container.PortletContainerException;
 import org.apache.pluto.container.PortletPreferencesService;
@@ -48,8 +46,7 @@ public class DefaultPortletPreferencesService
 implements PortletPreferencesService {
 
 	/** Logger. */
-	private static final Logger LOG = LoggerFactory.getLogger(
-			DefaultPortletPreferencesService.class);
+	private static final Logger LOG = Logger.getLogger(DefaultPortletPreferencesService.class.getName());
 
 
 	// Private Member Variables ------------------------------------------------
@@ -137,13 +134,13 @@ implements PortletPreferencesService {
         String key = getFormattedKey(portletWindow, request);
         Map<String,PortletPreference> preferences = storage.get(key);
         if (preferences == null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No portlet preferences found for: " + key);
+            if (LOG.isLoggable(Level.INFO)) {
+                LOG.info("No portlet preferences found for: " + key);
             }
             return Collections.emptyMap();
         } else {
-        	if (LOG.isDebugEnabled()) {
-        		LOG.debug("Got " + preferences.size() + " stored preferences.");
+        	if (LOG.isLoggable(Level.INFO)) {
+        		LOG.info("Got " + preferences.size() + " stored preferences.");
         	}
         	return clonePreferences(preferences);
         }
@@ -172,8 +169,8 @@ implements PortletPreferencesService {
     throws PortletContainerException {
         String key = getFormattedKey(portletWindow, request);
         storage.put(key, clonePreferences(preferences));
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Portlet preferences stored for: " + key);
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Portlet preferences stored for: " + key);
         }
     }
 
@@ -231,8 +228,8 @@ implements PortletPreferencesService {
         if (portletPreferencesDD != null) {
             String className = portletPreferencesDD.getPreferencesValidator();
             if (className != null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Creating preferences validator: " + className);
+                if (LOG.isLoggable(Level.INFO)) {
+                    LOG.info("Creating preferences validator: " + className);
                 }
                 ClassLoader loader = Thread.currentThread().getContextClassLoader();
                 try {
@@ -240,16 +237,16 @@ implements PortletPreferencesService {
                     validator = (PreferencesValidator) clazz.newInstance();
                     cache.put(portletDD, validator);
                 } catch (InstantiationException ex) {
-                    LOG.error("Error instantiating validator.", ex);
+                    LOG.log(Level.SEVERE,"Error instantiating validator.", ex);
                     throw new ValidatorException(ex, null);
                 } catch (IllegalAccessException ex) {
-                    LOG.error("Error instantiating validator.", ex);
+                	LOG.log(Level.SEVERE,"Error instantiating validator.", ex);
                     throw new ValidatorException(ex, null);
                 } catch (ClassNotFoundException ex) {
-                    LOG.error("Error instantiating validator.", ex);
+                	LOG.log(Level.SEVERE,"Error instantiating validator.", ex);
                     throw new ValidatorException(ex, null);
                 } catch (ClassCastException ex) {
-                    LOG.error("Error casting instance to PreferencesValidator.", ex);
+                	LOG.log(Level.SEVERE,"Error casting instance to PreferencesValidator.", ex);
                     throw new ValidatorException(ex, null);
                 }
             }
