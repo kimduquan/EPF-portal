@@ -278,7 +278,7 @@ public class JSR168ConfigurationProcessor extends ConfigurationProcessor {
             for (PortletNameType pnt : pct.getPortletName()) {
                if (!isValidIdentifier(pnt.getValue())) {
                   String warning = "Bad portlet name: " + pnt.getValue();
-                  LOG.warn(warning);
+                  LOG.warning(warning);
                   throw new IllegalArgumentException(warning);
                }
             }
