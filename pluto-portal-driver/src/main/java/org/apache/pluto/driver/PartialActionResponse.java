@@ -17,11 +17,9 @@
 package org.apache.pluto.driver;
 
 import org.apache.pluto.driver.util.RenderData;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 

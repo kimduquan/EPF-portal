@@ -35,6 +35,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-remote-resources-plugin</artifactId>
+				<version>1.7.0</version>
 				<executions>
 					<execution>
 						<goals>
@@ -50,6 +51,7 @@
 			<!-- Don't attach source or javadoc archive (for release plugin) -->
 			<plugin>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.1</version>
 				<configuration>
 					<attach>false</attach>
 				</configuration>

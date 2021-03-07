@@ -18,15 +18,19 @@ package org.apache.pluto.driver;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import org.apache.pluto.container.PortletContainer;
 import org.apache.pluto.container.PortletContainerException;
 import org.apache.pluto.driver.config.AdminConfiguration;
 import org.apache.pluto.driver.config.DriverConfiguration;
 import org.apache.pluto.driver.config.DriverConfigurationException;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.ContextLoaderListener;
+import javax.servlet.annotation.WebListener;
 
 /**
  * Listener used to start up / shut down the Pluto Portal Driver upon startup /
@@ -45,7 +49,9 @@ import org.springframework.web.context.ContextLoaderListener;
  * @version $Revision$ $Date$
  * @since Sep 22, 2004
  */
-public class PortalStartupListener extends ContextLoaderListener
+@WebListener
+@ApplicationScoped
+public class PortalStartupListener implements ServletContextListener
 {
 
     /**
@@ -69,6 +75,15 @@ public class PortalStartupListener extends ContextLoaderListener
     private static final String ADMIN_CONFIG_KEY = AttributeKeys.DRIVER_ADMIN_CONFIG;
 
     private static ServletContext servletContext;
+    
+    @Inject @Named("DriverConfiguration")
+    private Instance<DriverConfiguration> driverConfigurationInstance;
+    
+    @Inject @Named("AdminConfiguration")
+    private Instance<AdminConfiguration> adminConfigurationInstance;
+    
+    @Inject @Named("PortletContainer")
+    private Instance<PortletContainer> portletContainerInstance;
 
     public static ServletContext getServletContext()
     {
@@ -100,32 +115,16 @@ public class PortalStartupListener extends ContextLoaderListener
         final ServletContext servletContext = event.getServletContext();
 
         PortalStartupListener.servletContext = servletContext;
-        super.contextInitialized(event);
-        WebApplicationContext springContext = null;
-
-        try
-        {
-            springContext = (WebApplicationContext)
-                    servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-
-        } catch (RuntimeException ex)
-        {
-            String msg = "Problem getting Spring context: " + ex.getMessage();
-            LOG.log(Level.SEVERE, msg, ex);
-            throw ex;
-        }
 
         LOG.info(" [1a] Loading DriverConfiguration. . . ");
-        DriverConfiguration driverConfiguration = (DriverConfiguration)
-                springContext.getBean("DriverConfiguration");
+        DriverConfiguration driverConfiguration = driverConfigurationInstance.get();
 
         LOG.info(" [1b] Registering DriverConfiguration. . .");
         servletContext.setAttribute(DRIVER_CONFIG_KEY, driverConfiguration);
 
 
         LOG.info(" [2a] Loading Optional AdminConfiguration. . .");
-        AdminConfiguration adminConfiguration = (AdminConfiguration)
-                springContext.getBean("AdminConfiguration");
+        AdminConfiguration adminConfiguration = adminConfigurationInstance.get();
 
         if (adminConfiguration != null)
         {
@@ -141,7 +140,7 @@ public class PortalStartupListener extends ContextLoaderListener
 
         // Create portlet container.
         LOG.info(" [1] Creating portlet container...");
-        PortletContainer container = (PortletContainer) springContext.getBean("PortletContainer");
+        PortletContainer container = portletContainerInstance.get();
 
         // Save portlet container to the servlet context scope.
         servletContext.setAttribute(CONTAINER_KEY, container);
@@ -170,7 +169,6 @@ public class PortalStartupListener extends ContextLoaderListener
         {
             LOG.info("********** Pluto Portal Driver Shut Down **********\n\n");
         }
-        super.contextDestroyed(event);
     }
 
 

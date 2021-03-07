@@ -73,10 +73,10 @@
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
-		</dependency>
+		</dependency>-->
 		<dependency>
 		    <groupId>clojure-interop</groupId>
 		    <artifactId>javax.activity</artifactId>
@@ -128,6 +128,17 @@
 			</exclusions>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-core -->
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<!--   
@@ -147,7 +158,9 @@
 		<plugins>
 			<!-- Surefire Plugin: Exec Tests ===================================== -->
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version>
 				<configuration>
 					<includes>
 						<include>**/*Test.java</include>
@@ -186,7 +199,7 @@
 					</instructions>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!--<plugin>
 				<groupId>org.jvnet.jaxb2.maven2</groupId>
 				<artifactId>maven-jaxb2-plugin</artifactId>
 				<version>0.14.0</version>
@@ -234,7 +247,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
 		</plugins>
 	</build>
 </project>

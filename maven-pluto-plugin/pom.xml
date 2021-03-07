@@ -83,6 +83,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-plugin-plugin</artifactId>
+				<version>3.6.0</version>
 				<configuration>
 					<goalPrefix>pluto2</goalPrefix>
 				</configuration>

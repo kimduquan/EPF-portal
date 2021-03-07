@@ -25,13 +25,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.pluto.driver.AttributeKeys;
 import org.apache.pluto.driver.config.DriverConfiguration;
@@ -41,7 +39,6 @@ import org.apache.pluto.driver.services.portal.PublicRenderParameterMapper;
 import org.apache.pluto.driver.url.PortalURL;
 import org.apache.pluto.driver.url.PortalURLParameter;
 import org.apache.pluto.driver.url.PortalURLPublicParameter;
-import org.springframework.security.web.csrf.CsrfToken;
 
 /**
  * @author Scott Nicklous
@@ -53,8 +50,7 @@ import org.springframework.security.web.csrf.CsrfToken;
  *
  */
 public class PageState {
-
-   private CsrfToken               csrfToken;
+	
    private DriverConfiguration     drvrConfig;
    private PageConfig              pageConfig;
    private PortalRequestContext    portalRC;
@@ -74,7 +70,6 @@ public class PageState {
             .getAttribute(AttributeKeys.DRIVER_CONFIG);
       servletContext = portalRC.getServletContext();
       pageConfig = portalUrl.getPageConfig(servletContext);
-      csrfToken = (CsrfToken)request.getAttribute(CsrfToken.class.getName());
    }
 
    public PageState(HttpServletRequest request, Map<String, RenderData> renderDataMap) {
@@ -83,19 +78,11 @@ public class PageState {
    }
 
    public String getCsrfParameterName() {
-      if (csrfToken == null) {
-         return "";
-      }
-
-      return csrfToken.getParameterName();
+	   return "";
    }
 
    public String getCsrfParameterValue() {
-      if (csrfToken == null) {
-         return "";
-      }
-
-      return csrfToken.getToken();
+	   return "";
    }
 
    /**

@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.annotation.WebFilter;
 
 /**
  * The controller filter used to drive static portlet pages (see
@@ -45,6 +46,11 @@ import java.util.logging.Logger;
  * @version 1.0
  * @since March 28, 2006
  */
+@WebFilter(
+		filterName = "plutoPortalDriver", 
+		asyncSupported = true, 
+		urlPatterns = {"/about.jsp", "/about.jsp/*"}
+		)
 public class PortalDriverFilter implements Filter {
 
     /**

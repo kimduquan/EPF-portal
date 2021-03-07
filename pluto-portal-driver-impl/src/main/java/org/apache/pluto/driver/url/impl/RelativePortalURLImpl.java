@@ -42,7 +42,6 @@ import org.apache.pluto.driver.url.PortalURLParameter;
 import org.apache.pluto.driver.url.PortalURLParser;
 import org.apache.pluto.driver.url.PortalURLPublicParameter;
 import org.apache.pluto.driver.url.PortletParameterFactory;
-import org.springframework.security.web.csrf.CsrfToken;
 
 /**
  * The portal URL.
@@ -125,9 +124,8 @@ public class RelativePortalURLImpl implements PortalURL {
       this.urlParser = urlParser;
       this.servletRequest = req;
       this.cloneId = (++cloneCtr) + 10000;
-      CsrfToken csrfToken = (CsrfToken)req.getAttribute(CsrfToken.class.getName());
-      this.csrfParameterName = csrfToken.getParameterName();
-      this.csrfParameterValue = csrfToken.getToken();
+      this.csrfParameterName = "";
+      this.csrfParameterValue = "";
       if (isDebug) {
          LOG.info("Constructed URL, clone ID: " + cloneId);
       }
